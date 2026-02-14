@@ -1,25 +1,46 @@
 .sidenav-container {
     height: 100%;
+    background: transparent; // Let body background show through
 }
 
 .sidenav {
     width: 250px;
-    background-color: white;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    background: var(--surface-glass);
+    backdrop-filter: blur(var(--blur-md));
+    border-right: var(--glass-border);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    margin-right: 10px; // Spacing from content if needed, or remove for flush
+    box-shadow: var(--shadow-md);
 }
 
 .main-content {
-    padding: 20px;
-    min-height: calc(100vh - 64px - 50px); // approx toolbar height and footer height
+    padding: 24px;
+    min-height: calc(100vh - 64px - 50px);
+
+    // Fade in animation for content
+    animation: fadeIn 0.4s ease-out;
 }
 
 mat-sidenav-content {
     display: flex;
     flex-direction: column;
+    background: transparent;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 600px) {
     .main-content {
-        padding: 10px;
+        padding: 16px;
     }
 }

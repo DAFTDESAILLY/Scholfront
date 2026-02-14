@@ -1,10 +1,31 @@
-.spacer {
-    flex: 1 1 auto;
-}
-
 .navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    // Glassmorphism
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(var(--blur-md));
+    border-bottom: var(--glass-border);
+    box-shadow: var(--shadow-sm) !important;
+    color: var(--text-main) !important;
+
+    // Height & Spacing
+    height: 64px;
+    padding: 0 24px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+// Toolbar title
+span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    background: linear-gradient(to right, var(--primary-600), var(--primary-400));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

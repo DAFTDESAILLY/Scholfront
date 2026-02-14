@@ -1,56 +1,82 @@
+@use 'sass:color';
+
 .dashboard-container {
-    padding: 20px;
+    padding: 0; // Padding handled by main-content
 }
 
 h1 {
-    margin-bottom: 20px;
-    color: #333;
+    margin-bottom: 24px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.025em;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
 }
 
 .stat-card {
+    border-radius: var(--radius-lg);
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    // Base gradient for all cards
+    background: var(--surface-card);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg) !important;
+    }
+
     mat-card-content {
         display: flex;
         align-items: center;
-        padding: 20px !important;
+        padding: 24px !important;
+        position: relative;
+        z-index: 1;
     }
 
+    // Icon container
     .stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
         margin-right: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
         mat-icon {
-            font-size: 30px;
-            width: 30px;
-            height: 30px;
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
             color: white;
         }
 
         &.blue {
-            background-color: #2196F3;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
 
         &.green {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
         }
 
         &.orange {
-            background-color: #FF9800;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
         }
 
         &.purple {
-            background-color: #9C27B0;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
         }
     }
 
@@ -59,14 +85,20 @@ h1 {
         flex-direction: column;
 
         .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            font-family: 'Poppins', sans-serif;
         }
 
         .stat-label {
-            color: #757575;
-            font-size: 14px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
         }
     }
 }
@@ -74,7 +106,7 @@ h1 {
 .dashboard-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    gap: 24px;
 
     @media (max-width: 960px) {
         grid-template-columns: 1fr;
@@ -84,29 +116,76 @@ h1 {
 .activity-card,
 .welcome-card {
     height: 100%;
+
+    mat-card-header {
+        padding: 24px 24px 16px;
+
+        mat-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    }
+
+    mat-card-content {
+        padding: 0 24px 24px;
+    }
 }
 
 .quick-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px;
+    margin-top: 16px;
 
     button {
         width: 100%;
         text-align: left;
         justify-content: flex-start;
+        height: 48px;
+        border-radius: 12px;
+        padding-left: 16px;
+        font-weight: 500;
+
+        mat-icon {
+            margin-right: 12px;
+        }
     }
 }
 
-mat-icon.info {
-    color: #2196F3;
-}
+// Activity List Items
+mat-list-item {
+    border-radius: 8px;
+    margin-bottom: 8px;
 
-mat-icon.success {
-    color: #4CAF50;
-}
+    &:hover {
+        background-color: var(--primary-50);
+    }
 
-mat-icon.warning {
-    color: #FF9800;
+    mat-icon {
+        background-color: var(--primary-100);
+        padding: 8px;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+
+        &.info {
+            color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        &.success {
+            color: #10b981;
+            background-color: #d1fae5;
+        }
+
+        &.warning {
+            color: #f59e0b;
+            background-color: #fef3c7;
+        }
+    }
 }

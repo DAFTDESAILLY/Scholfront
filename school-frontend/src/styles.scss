@@ -1,6 +1,44 @@
 @use '@angular/material' as mat;
 @use 'material-theme' as theme;
-@use 'variables' as *;
+
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
+
+// =============================================================================
+// CSS VARIABLES - MODERN THEME
+// =============================================================================
+:root {
+  // Primary Palette (Deep Indigo/Blue)
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-400: #818cf8;
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+
+  // Secondary/Accent (Emerald & Violet)
+  --secondary-500: #10b981; // Success/Teal
+  --accent-500: #8b5cf6; // Violet
+
+  // Neutral / Surface
+  --bg-body: #f3f4f6; // Light gray-blue
+  --surface-card: rgba(255, 255, 255, 0.85);
+  --surface-glass: rgba(255, 255, 255, 0.7);
+
+  // Text
+  --text-main: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+
+  // Effects
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --blur-md: 12px;
+}
 
 // Apply the theme
 html {
@@ -14,7 +52,148 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: mat.get-theme-color(theme.$theme, background);
-  color: mat.get-theme-color(theme.$theme, on-background);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.025em;
+}
+
+// =============================================================================
+// COMPONENT OVERRIDES
+// =============================================================================
+
+// Material Cards - Modern Clean Look
+.mat-mdc-card {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  background: var(--surface-card) !important;
+  border: var(--glass-border);
+  backdrop-filter: blur(var(--blur-md));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md) !important;
+  }
+}
+
+// Buttons
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-500)) !important;
+  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3) !important;
+  border-radius: 8px !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    box-shadow: 0 6px 12px rgba(79, 70, 229, 0.4) !important;
+    transform: translateY(-1px);
+  }
+}
+
+// Form Fields
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: white !important;
+    border-radius: 8px !important;
+  }
+}
+
+// Inputs
+input.mat-mdc-input-element {
+  font-family: 'Inter', sans-serif !important;
+}
+
+// Icons
+.material-icons {
+  vertical-align: middle;
+}
+
+// =============================================================================
+// UTILITIES
+// =============================================================================
+
+.glass-panel {
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--blur-md));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--primary-600), var(--accent-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// =============================================================================
+// GLOBAL TABLE STYLES
+// =============================================================================
+
+.table-container {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+
+  table.mat-mdc-table {
+    width: 100%;
+    background: transparent;
+
+    thead {
+      background: var(--primary-50);
+
+      tr.mat-mdc-header-row {
+        height: 52px;
+
+        th.mat-mdc-header-cell {
+          font-weight: 600;
+          color: var(--primary-700);
+          font-size: 0.875rem;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          border-bottom: 2px solid var(--primary-100);
+        }
+      }
+    }
+
+    tbody {
+      tr.mat-mdc-row {
+        height: 56px;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: var(--primary-50);
+        }
+
+        td.mat-mdc-cell {
+          font-size: 0.95rem;
+          color: var(--text-main);
+          border-bottom: 1px solid var(--primary-50);
+        }
+      }
+    }
+  }
+
+  .mat-mdc-paginator {
+    background: transparent;
+    border-top: 1px solid var(--primary-50);
+  }
 }
