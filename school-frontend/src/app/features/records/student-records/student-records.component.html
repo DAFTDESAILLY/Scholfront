@@ -1,0 +1,38 @@
+<mat-card class="records-card">
+    <mat-card-header>
+        <mat-card-title>Student Records</mat-card-title>
+        <mat-card-subtitle>Manage documents and files</mat-card-subtitle>
+        <div class="header-actions">
+            <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+            <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+                <mat-icon>cloud_upload</mat-icon> Upload File
+            </button>
+        </div>
+    </mat-card-header>
+
+    <mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
+
+    <mat-card-content>
+        <mat-list *ngIf="files.length > 0; else noFiles">
+            <mat-list-item *ngFor="let file of files">
+                <mat-icon matListItemIcon>description</mat-icon>
+                <div matListItemTitle>{{ file.name }}</div>
+                <div matListItemLine>{{ file.createdAt | date }} - {{ (file.size / 1024).toFixed(2) }} KB</div>
+                <div matListItemMeta>
+                    <button mat-icon-button color="primary" (click)="downloadFile(file)">
+                        <mat-icon>download</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteFile(file)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+
+        <ng-template #noFiles>
+            <div class="no-files">
+                <p>No files uploaded for this student yet.</p>
+            </div>
+        </ng-template>
+    </mat-card-content>
+</mat-card>

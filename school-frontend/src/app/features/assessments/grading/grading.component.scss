@@ -1,0 +1,37 @@
+.grading-container {
+    padding: 20px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    button {
+        height: 56px;
+    }
+}
+
+.grading-table {
+    overflow: auto;
+
+    table {
+        width: 100%;
+    }
+}
+
+.score-field {
+    width: 80px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,0 +1,38 @@
+.attendance-container {
+    padding: 20px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    button {
+        height: 56px; // Align with form fields
+    }
+}
+
+.attendance-table {
+    overflow: auto;
+
+    table {
+        width: 100%;
+    }
+}
+
+.dense-field {
+    width: 100%;
+    font-size: 12px;
+}
+
+mat-radio-button {
+    margin-right: 10px;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}

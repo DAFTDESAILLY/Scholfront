@@ -1,0 +1,53 @@
+<div class="form-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ isEditMode ? 'Editar' : 'Crear' }} Contexto</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="contextForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej. Primavera 2026">
+                    <mat-error *ngIf="contextForm.get('name')?.hasError('required')">El nombre es requerido</mat-error>
+                    <mat-error *ngIf="contextForm.get('name')?.hasError('minlength')">El nombre debe tener al menos 3
+                        caracteres</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nivel</mat-label>
+                    <mat-select formControlName="level">
+                        <mat-option value="Preescolar">Preescolar</mat-option>
+                        <mat-option value="Primaria">Primaria</mat-option>
+                        <mat-option value="Secundaria">Secundaria</mat-option>
+                        <mat-option value="Preparatoria">Preparatoria</mat-option>
+                        <mat-option value="Universidad">Universidad</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="contextForm.get('level')?.hasError('required')">El nivel es requerido</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Institución</mat-label>
+                    <input matInput formControlName="institution" placeholder="Ej. Universidad Tecnológica">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Estado</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="active">Activo</mat-option>
+                        <mat-option value="archived">Archivado</mat-option>
+                        <mat-option value="inactive">Inactivo</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="contextForm.get('status')?.hasError('required')">El estado es
+                        requerido</mat-error>
+                </mat-form-field>
+
+                <div class="actions">
+                    <button mat-button type="button" routerLink="/contexts">Cancelar</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="contextForm.invalid">
+                        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

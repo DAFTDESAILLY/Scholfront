@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+
+// Define the theme object
+$theme: mat.define-theme((color: (theme-type: light,
+                primary: mat.$azure-palette,
+                tertiary: mat.$blue-palette,
+            ),
+            typography: (plain-family: Roboto,
+            ),
+            density: (scale: 0,
+            )));
+
+@mixin apply-theme() {
+    @include mat.all-component-themes($theme);
+}

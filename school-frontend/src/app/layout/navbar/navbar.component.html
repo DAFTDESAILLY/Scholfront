@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="navbar">
+    <button mat-icon-button (click)="toggleSidenav.emit()" aria-label="Alternar menú lateral">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>Gestión Escolar</span>
+
+    <span class="spacer"></span>
+
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menú de usuario">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            <span>Perfil</span>
+        </button>
+        <button mat-menu-item (click)="onLogout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Cerrar Sesión</span>
+        </button>
+    </mat-menu>
+</mat-toolbar>

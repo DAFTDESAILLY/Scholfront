@@ -1,0 +1,82 @@
+<div class="form-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ isEditMode ? 'Editar' : 'Registrar' }} Estudiante</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="firstName" placeholder="Juan">
+                        <mat-error *ngIf="studentForm.get('firstName')?.hasError('required')">El nombre es
+                            requerido</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Apellido</mat-label>
+                        <input matInput formControlName="lastName" placeholder="Pérez">
+                        <mat-error *ngIf="studentForm.get('lastName')?.hasError('required')">El apellido es
+                            requerido</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>ID Estudiante</mat-label>
+                        <input matInput formControlName="studentId" placeholder="ej. 2026001">
+                        <mat-error *ngIf="studentForm.get('studentId')?.hasError('required')">El ID es
+                            requerido</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Correo Electrónico</mat-label>
+                        <input matInput formControlName="email" type="email" placeholder="juan.perez@ejemplo.com">
+                        <mat-error *ngIf="studentForm.get('email')?.hasError('required')">El correo es
+                            requerido</mat-error>
+                        <mat-error *ngIf="studentForm.get('email')?.hasError('email')">Formato de correo
+                            inválido</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput formControlName="phone" placeholder="555-555-5555">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Fecha de Nacimiento</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Dirección</mat-label>
+                    <textarea matInput formControlName="address" rows="2"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Estado</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="active">Activo</mat-option>
+                        <mat-option value="inactive">Inactivo</mat-option>
+                        <mat-option value="graduated">Graduado</mat-option>
+                        <mat-option value="dropped">Dado de Baja</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="studentForm.get('status')?.hasError('required')">El estado es
+                        requerido</mat-error>
+                </mat-form-field>
+
+                <div class="actions">
+                    <button mat-button type="button" routerLink="/students">Cancelar</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="studentForm.invalid">
+                        {{ isEditMode ? 'Actualizar' : 'Confirmar' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

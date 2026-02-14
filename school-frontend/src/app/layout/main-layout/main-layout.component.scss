@@ -1,0 +1,25 @@
+.sidenav-container {
+    height: 100%;
+}
+
+.sidenav {
+    width: 250px;
+    background-color: white;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.main-content {
+    padding: 20px;
+    min-height: calc(100vh - 64px - 50px); // approx toolbar height and footer height
+}
+
+mat-sidenav-content {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 600px) {
+    .main-content {
+        padding: 10px;
+    }
+}
