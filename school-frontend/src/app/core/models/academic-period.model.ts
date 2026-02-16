@@ -1,6 +1,7 @@
 export interface AcademicPeriod {
     id: number;
     contextId: number;
+    name: string;
     type: 'trimestre' | 'cuatrimestre' | 'semestre' | 'anual';
     startDate: Date;
     endDate: Date;

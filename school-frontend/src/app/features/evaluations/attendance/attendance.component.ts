@@ -19,12 +19,14 @@ import { NotificationService } from '../../../core/services/notification.service
 import { Subject } from '../../../core/models/subject.model';
 import { Student } from '../../../core/models/student.model';
 import { Attendance } from '../../../core/models/attendance.model';
+import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-attendance',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         ReactiveFormsModule,
         FormsModule,
         MatCardModule,

@@ -12,6 +12,7 @@ import { ContextsService } from '../../../../core/services/contexts.service';
 import { Context } from '../../../../core/models/context.model';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { LoadingService } from '../../../../core/services/loading.service';
+import { HelpIconComponent } from '../../../../shared/components/help-icon/help-icon.component';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -19,6 +20,7 @@ import { finalize } from 'rxjs';
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         RouterLink,
         MatTableModule,
         MatPaginatorModule,

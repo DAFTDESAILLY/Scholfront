@@ -1,0 +1,50 @@
+<div class="profile-container">
+    <mat-card class="profile-card">
+        <mat-card-header>
+            <div mat-card-avatar class="profile-header-image">
+                <mat-icon>account_circle</mat-icon>
+            </div>
+            <mat-card-title>Mi Perfil</mat-card-title>
+            <mat-card-subtitle>Información de cuenta</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="info-row">
+                <mat-icon>email</mat-icon>
+                <div class="info-details">
+                    <span class="label">Correo Electrónico</span>
+                    <span class="value">{{ user?.email || 'No disponible' }}</span>
+                </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="info-row">
+                <mat-icon>badge</mat-icon>
+                <div class="info-details">
+                    <span class="label">ID de Usuario</span>
+                    <span class="value">{{ user?.id || 'Desconocido' }}</span>
+                </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- Placeholder para más info si se implementa el endpoint completo de perfil -->
+            <div class="info-row" *ngIf="user?.name">
+                <mat-icon>person</mat-icon>
+                <div class="info-details">
+                    <span class="label">Nombre</span>
+                    <span class="value">{{ user.name }}</span>
+                </div>
+            </div>
+
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            <button mat-stroked-button color="warn" (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                Cerrar Sesión
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

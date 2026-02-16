@@ -11,12 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { GroupsService } from '../../../../core/services/groups.service';
 import { Group } from '../../../../core/models/group.model';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { HelpIconComponent } from '../../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-group-list',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         RouterLink,
         MatTableModule,
         MatPaginatorModule,

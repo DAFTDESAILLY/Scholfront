@@ -48,6 +48,10 @@ export const routes: Routes = [
             {
                 path: 'records',
                 loadChildren: () => import('./features/records/records.routes').then(m => m.RECORDS_ROUTES)
+            },
+            {
+                path: 'profile',
+                loadChildren: () => import('./features/profile/profile.routes').then(m => m.PROFILE_ROUTES)
             }
         ]
     }

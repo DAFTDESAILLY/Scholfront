@@ -1,0 +1,35 @@
+.form-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.date-row,
+.select-row {
+    display: flex;
+    gap: 16px;
+
+    mat-form-field {
+        flex: 1;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+
+    .date-row,
+    .select-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}

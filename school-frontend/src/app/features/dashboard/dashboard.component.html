@@ -1,5 +1,9 @@
 <div class="dashboard-container">
-    <h1>Tablero</h1>
+    <div class="header">
+        <h1>Tablero</h1>
+        <app-help-icon
+            message="Bienvenido al Panel de Control. Aquí puedes ver un resumen de las estadísticas clave de la escuela y la actividad reciente."></app-help-icon>
+    </div>
 
     <div class="stats-grid" *ngIf="stats">
         <mat-card class="stat-card">

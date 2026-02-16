@@ -11,12 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { SubjectsService } from '../../../../core/services/subjects.service';
 import { Subject } from '../../../../core/models/subject.model';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { HelpIconComponent } from '../../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-subject-list',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         RouterLink,
         MatTableModule,
         MatPaginatorModule,

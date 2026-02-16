@@ -1,7 +1,11 @@
 <div class="attendance-container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Control de Asistencia</mat-card-title>
+            <mat-card-title class="title-row">
+                Control de Asistencia
+                <app-help-icon
+                    message="Registra la asistencia diaria de los estudiantes por grupo y materia. Selecciona una fecha para comenzar."></app-help-icon>
+            </mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <form [formGroup]="attendanceForm" class="filter-form">

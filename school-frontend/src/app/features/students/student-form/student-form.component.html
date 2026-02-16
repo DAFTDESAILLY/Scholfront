@@ -25,15 +25,11 @@
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>ID Estudiante</mat-label>
                         <input matInput formControlName="studentId" placeholder="ej. 2026001">
-                        <mat-error *ngIf="studentForm.get('studentId')?.hasError('required')">El ID es
-                            requerido</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Correo Electrónico</mat-label>
                         <input matInput formControlName="email" type="email" placeholder="juan.perez@ejemplo.com">
-                        <mat-error *ngIf="studentForm.get('email')?.hasError('required')">El correo es
-                            requerido</mat-error>
                         <mat-error *ngIf="studentForm.get('email')?.hasError('email')">Formato de correo
                             inválido</mat-error>
                     </mat-form-field>

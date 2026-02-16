@@ -14,12 +14,14 @@ import { StudentsService } from '../../../core/services/students.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Subject } from '../../../core/models/subject.model';
 import { Evaluation } from '../../../core/models/evaluation.model';
+import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-grading',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         ReactiveFormsModule,
         FormsModule,
         MatCardModule,
@@ -85,15 +87,23 @@ export class GradingComponent implements OnInit {
     onLoadGrades() {
         if (this.filterForm.valid) {
             const evaluationId = this.filterForm.get('evaluationId')?.value;
-            // Load all students for now (mock)
+            // TODO: Add loading indicator
+            this.gradingData = []; // Reset data
+
             this.studentsService.getAll()
                 .pipe(
                     catchError(error => {
-                        console.warn('No se pudieron cargar los estudiantes.');
+                        console.error('Error loading students:', error);
+                        this.notificationService.error('No se pudieron cargar los estudiantes. Verifique la conexión.');
                         return of([]);
                     })
                 )
                 .subscribe(students => {
+                    if (students.length === 0) {
+                        this.notificationService.warning('No se encontraron estudiantes registrados.');
+                        return;
+                    }
+
                     // Here we would merge with existing grades if any
                     this.gradingData = students.map(student => ({
                         studentId: student.id,
@@ -101,7 +111,11 @@ export class GradingComponent implements OnInit {
                         score: 0,
                         feedback: ''
                     }));
+
+                    this.notificationService.success(`${students.length} estudiantes cargados.`);
                 });
+        } else {
+            this.notificationService.warning('Por favor seleccione una materia y una evaluación.');
         }
     }
 
@@ -114,11 +128,24 @@ export class GradingComponent implements OnInit {
             feedback: item.feedback
         }));
 
+        console.log('📤 Guardando calificaciones:', { grades });
+
         this.evaluationsService.saveGrades(grades).subscribe({
             next: () => {
-                this.notificationService.success('Grades saved successfully');
+                this.notificationService.success('Calificaciones guardadas exitosamente');
             },
-            error: () => { }
+            error: (err) => {
+                console.error('❌ Error guardando calificaciones:', err);
+                console.error('❌ Detalles del error:', err.error);
+
+                let errorMsg = 'Error al guardar calificaciones';
+                if (err.error?.message) {
+                    errorMsg = `Error: ${err.error.message}`;
+                    console.error('❌ Mensaje del backend:', err.error.message);
+                }
+
+                this.notificationService.error(errorMsg);
+            }
         });
     }
 }

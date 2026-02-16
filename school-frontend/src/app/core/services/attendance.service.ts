@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Attendance } from '../models/attendance.model';
 
@@ -12,8 +13,12 @@ export class AttendanceService {
 
     constructor(private http: HttpClient) { }
 
-    saveBatch(attendanceData: any[]): Observable<any> {
-        return this.http.post<any>(`${this.apiUrl}/batch`, { attendance: attendanceData });
+    saveBatch(attendanceData: any[]): Observable<any[]> {
+        // Backend doesn't support batch, so we send individual requests
+        const requests = attendanceData.map(record =>
+            this.http.post<Attendance>(this.apiUrl, record)
+        );
+        return forkJoin(requests);
     }
 
     getBySubjectAndDate(subjectId: number, date: string): Observable<Attendance[]> {

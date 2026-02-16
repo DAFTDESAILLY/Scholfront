@@ -1,3 +1,8 @@
+.title-row {
+    display: flex;
+    align-items: center;
+}
+
 .students-container {
     padding: 0; // Padding handled by main content
 }
@@ -8,14 +13,20 @@
     align-items: center;
     margin-bottom: 24px;
 
-    h2 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin: 0;
-        background: linear-gradient(to right, var(--text-main), var(--primary-600));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(to right, var(--text-main), var(--primary-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     }
 }
 

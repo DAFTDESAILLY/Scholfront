@@ -11,12 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { StudentsService } from '../../../core/services/students.service';
 import { Student } from '../../../core/models/student.model';
 import { NotificationService } from '../../../core/services/notification.service';
+import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-student-list',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         RouterLink,
         MatTableModule,
         MatPaginatorModule,

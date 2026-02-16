@@ -8,12 +8,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { DashboardService, DashboardStats, RecentActivity } from '../../core/services/dashboard.service';
+import { HelpIconComponent } from '../../shared/components/help-icon/help-icon.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule,
+    HelpIconComponent,
     MatCardModule,
     MatIconModule,
     MatButtonModule,

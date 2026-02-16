@@ -8,12 +8,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConsentsService } from '../../../core/services/consents.service';
 import { ConsentType } from '../../../core/models/consent.model';
 import { catchError, of } from 'rxjs';
+import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-consent-types',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         MatTableModule,
         MatButtonModule,
         MatIconModule,

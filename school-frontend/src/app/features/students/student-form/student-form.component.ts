@@ -49,8 +49,8 @@ export class StudentFormComponent implements OnInit {
         this.studentForm = this.fb.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            studentId: ['', Validators.required],
+            email: ['', [Validators.email]],
+            studentId: [''],
             phone: [''],
             address: [''],
             dateOfBirth: [''],
@@ -71,16 +71,31 @@ export class StudentFormComponent implements OnInit {
             })
         ).subscribe(student => {
             if (student) {
-                this.studentForm.patchValue(student);
+                // Split fullName into firstName and lastName
+                const nameParts = student.fullName.split(' ');
+                const lastName = nameParts.length > 1 ? nameParts.pop() : '';
+                const firstName = nameParts.join(' ');
+
+                this.studentForm.patchValue({
+                    ...student,
+                    firstName: firstName,
+                    lastName: lastName
+                });
             }
         });
     }
 
     onSubmit() {
         if (this.studentForm.valid) {
+            const formData = { ...this.studentForm.value };
+            formData.fullName = `${formData.firstName} ${formData.lastName}`.trim();
+            // Remove individual name fields as backend expects fullName
+            delete formData.firstName;
+            delete formData.lastName;
+
             const operation = this.isEditMode
-                ? this.studentsService.update(this.studentId!, this.studentForm.value)
-                : this.studentsService.create(this.studentForm.value);
+                ? this.studentsService.update(this.studentId!, formData)
+                : this.studentsService.create(formData);
 
             operation.subscribe({
                 next: () => {

@@ -1,7 +1,11 @@
 <div class="container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Tipos de Consentimiento</mat-card-title>
+            <mat-card-title class="title-row">
+                Tipos de Consentimiento
+                <app-help-icon
+                    message="Configura los tipos de permisos y autorizaciones requeridos (ej. uso de imagen, salidas escolares)."></app-help-icon>
+            </mat-card-title>
             <button mat-raised-button color="primary" (click)="openCreateDialog()">
                 <mat-icon>add</mat-icon>
                 Nuevo Tipo

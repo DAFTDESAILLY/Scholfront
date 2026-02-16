@@ -21,11 +21,14 @@ export class SidebarComponent {
     navItems = [
         { label: 'Tablero', icon: 'dashboard', route: '/dashboard' },
         { label: 'Académico', icon: 'school', route: '/contexts' },
+        { label: 'Periodos', icon: 'date_range', route: '/periods' },
+        { label: 'Materias', icon: 'library_books', route: '/subjects' },
+        { label: 'Grupos', icon: 'class', route: '/groups' },
         { label: 'Estudiantes', icon: 'people', route: '/students' },
         { label: 'Asistencia', icon: 'event_available', route: '/evaluations/attendance' },
+        { label: 'Evaluaciones', icon: 'assignment', route: '/evaluations/definitions' },
         { label: 'Calificaciones', icon: 'grade', route: '/evaluations/grading' },
         { label: 'Consentimientos', icon: 'privacy_tip', route: '/consents' },
         { label: 'Registros', icon: 'description', route: '/records' }
-        // { label: 'Archivos', icon: 'folder', route: '/files' } // TODO: Implementar módulo de archivos
     ];
 }

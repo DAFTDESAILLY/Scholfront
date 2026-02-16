@@ -12,12 +12,14 @@ import { PeriodsService } from '../../../../core/services/periods.service';
 import { AcademicPeriod } from '../../../../core/models/academic-period.model';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { DatePipe } from '@angular/common';
+import { HelpIconComponent } from '../../../../shared/components/help-icon/help-icon.component';
 
 @Component({
     selector: 'app-period-list',
     standalone: true,
     imports: [
         CommonModule,
+        HelpIconComponent,
         RouterLink,
         MatTableModule,
         MatPaginatorModule,

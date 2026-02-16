@@ -1,7 +1,11 @@
 <div class="grading-container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Calificaciones</mat-card-title>
+            <mat-card-title class="title-row">
+                Calificaciones
+                <app-help-icon
+                    message="Asigna calificaciones a los estudiantes para cada evaluación y periodo académico."></app-help-icon>
+            </mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <form [formGroup]="filterForm" class="filter-form">

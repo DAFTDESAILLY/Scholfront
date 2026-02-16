@@ -80,16 +80,27 @@ export class SubjectFormComponent implements OnInit {
 
     onSubmit() {
         if (this.subjectForm.valid) {
+            // ✅ Convert groupId to number to ensure backend validation passes
+            const subjectData = {
+                ...this.subjectForm.value,
+                groupId: +this.subjectForm.value.groupId
+            };
+
+            console.log('📤 Sending subject data:', subjectData);
+
             const operation = this.isEditMode
-                ? this.subjectsService.update(this.subjectId!, this.subjectForm.value)
-                : this.subjectsService.create(this.subjectForm.value);
+                ? this.subjectsService.update(this.subjectId!, subjectData)
+                : this.subjectsService.create(subjectData);
 
             operation.subscribe({
                 next: () => {
                     this.notificationService.success(`Subject ${this.isEditMode ? 'updated' : 'created'} successfully`);
                     this.router.navigate(['/subjects']);
                 },
-                error: () => { }
+                error: (err) => {
+                    console.error('❌ Error saving subject:', err);
+                    this.notificationService.error('Error saving subject');
+                }
             });
         }
     }
