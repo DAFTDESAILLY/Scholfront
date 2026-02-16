@@ -1,6 +1,6 @@
 export interface Grade {
     id: number;
-    assessmentId: number;
+    evaluationId: number;
     studentId: number;
     score: number;
     feedback?: string;

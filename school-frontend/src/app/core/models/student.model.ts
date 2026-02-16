@@ -1,13 +1,13 @@
 export interface Student {
     id: number;
-    firstName: string;
-    lastName: string;
+    fullName: string;              // ← Backend usa fullName (no firstName/lastName)
     email: string;
-    studentId: string; // Matricula
-    phone?: string;
     address?: string;
-    dateOfBirth?: Date;
-    status: 'active' | 'inactive' | 'graduated' | 'dropped';
-    createdAt: Date;
-    updatedAt: Date;
+    enrollmentId?: string;         // ← Backend usa enrollmentId (no studentId)
+    birthDate?: Date | string;     // ← Backend usa birthDate (no dateOfBirth)
+    parentPhone?: string;          // ← Backend usa parentPhone (no phone)
+    notes?: string;
+    status: 'active' | 'inactive' | 'archived';  // ← Backend usa estos valores
+    createdAt: Date | string;
+    updatedAt: Date | string;
 }

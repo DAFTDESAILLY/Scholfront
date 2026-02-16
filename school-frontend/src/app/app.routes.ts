@@ -38,8 +38,12 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/students/students.routes').then(m => m.STUDENTS_ROUTES)
             },
             {
-                path: 'assessments',
-                loadChildren: () => import('./features/assessments/assessments.routes').then(m => m.ASSESSMENTS_ROUTES)
+                path: 'evaluations',
+                loadChildren: () => import('./features/evaluations/evaluations.routes').then(m => m.EVALUATIONS_ROUTES)
+            },
+            {
+                path: 'consents',
+                loadChildren: () => import('./features/consents/consents.routes').then(m => m.CONSENTS_ROUTES)
             },
             {
                 path: 'records',

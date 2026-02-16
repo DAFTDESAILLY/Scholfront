@@ -8,7 +8,7 @@ import { AcademicPeriod } from '../models/academic-period.model';
     providedIn: 'root'
 })
 export class PeriodsService {
-    private apiUrl = `${environment.apiUrl}/periods`;
+    private apiUrl = `${environment.apiUrl}/academic-periods`;
 
     constructor(private http: HttpClient) { }
 

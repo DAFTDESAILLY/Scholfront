@@ -8,7 +8,7 @@ import { SchoolFile } from '../models/school-file.model';
     providedIn: 'root'
 })
 export class RecordsService {
-    private apiUrl = `${environment.apiUrl}/files`;
+    private apiUrl = `${environment.apiUrl}/student-records`;
 
     constructor(private http: HttpClient) { }
 

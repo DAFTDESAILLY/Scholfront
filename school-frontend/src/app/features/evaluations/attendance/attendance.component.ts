@@ -97,7 +97,7 @@ export class AttendanceComponent implements OnInit {
     prepareAttendanceData() {
         this.attendanceData = this.students.map(student => ({
             studentId: student.id,
-            studentName: `${student.firstName} ${student.lastName}`,
+            studentName: student.fullName,
             status: 'present',
             notes: ''
         }));

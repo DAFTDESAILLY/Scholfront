@@ -45,15 +45,24 @@ export class LoginComponent {
     onSubmit() {
         if (this.loginForm.valid) {
             this.authService.login(this.loginForm.value).subscribe({
-                next: () => {
-                    this.notificationService.success('Login successful');
+                next: (response) => {
+                    console.log('✅ Login exitoso:', response);
+                    console.log('✅ Token guardado');
+
+                    // Verificar que el usuario se puede obtener
+                    const currentUser = this.authService.getCurrentUser();
+                    console.log('✅ Usuario actual:', currentUser);
+
+                    this.notificationService.success('Login exitoso');
                     this.router.navigate(['/dashboard']);
                 },
                 error: (err) => {
-                    // Error handling is partly done by interceptor, but we can handle specific UI feedback here if needed
-                    // The interceptor shows notification, so maybe we don't need to do anything here unless we want specific field errors
+                    console.error('❌ Error en login:', err);
+                    this.notificationService.error('Error al iniciar sesión');
                 }
             });
+        } else {
+            this.notificationService.error('Por favor completa todos los campos correctamente');
         }
     }
 }

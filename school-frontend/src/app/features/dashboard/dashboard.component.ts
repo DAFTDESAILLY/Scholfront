@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterLink } from '@angular/router';
+import { catchError, of } from 'rxjs';
 import { DashboardService, DashboardStats, RecentActivity } from '../../core/services/dashboard.service';
 
 @Component({
@@ -34,7 +35,27 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboardData() {
-    this.dashboardService.getStats().subscribe(data => this.stats = data);
-    this.dashboardService.getRecentActivity().subscribe(data => this.activities = data);
+    this.dashboardService.getStats()
+      .pipe(
+        catchError(error => {
+          console.warn('No se pudieron cargar las estadísticas del dashboard. Backend no disponible.');
+          return of({
+            totalStudents: 0,
+            totalGroups: 0,
+            totalSubjects: 0,
+            activePeriods: 0
+          });
+        })
+      )
+      .subscribe(data => this.stats = data);
+
+    this.dashboardService.getRecentActivity()
+      .pipe(
+        catchError(error => {
+          console.warn('No se pudo cargar la actividad reciente. Backend no disponible.');
+          return of([]);
+        })
+      )
+      .subscribe(data => this.activities = data);
   }
 }

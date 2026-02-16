@@ -2,33 +2,33 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Assessment } from '../models/assessment.model';
+import { Evaluation } from '../models/evaluation.model';
 import { Grade } from '../models/grade.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AssessmentsService {
-    private apiUrl = `${environment.apiUrl}/assessments`;
+export class EvaluationsService {
+    private apiUrl = `${environment.apiUrl}/evaluations`;
     private gradesUrl = `${environment.apiUrl}/grades`;
 
     constructor(private http: HttpClient) { }
 
-    // Assessments
-    getAll(): Observable<Assessment[]> {
-        return this.http.get<Assessment[]>(this.apiUrl);
+    // Evaluations
+    getAll(): Observable<Evaluation[]> {
+        return this.http.get<Evaluation[]>(this.apiUrl);
     }
 
-    getBySubject(subjectId: number): Observable<Assessment[]> {
-        return this.http.get<Assessment[]>(`${this.apiUrl}?subjectId=${subjectId}`);
+    getBySubject(subjectId: number): Observable<Evaluation[]> {
+        return this.http.get<Evaluation[]>(`${this.apiUrl}?subjectId=${subjectId}`);
     }
 
-    create(data: any): Observable<Assessment> {
-        return this.http.post<Assessment>(this.apiUrl, data);
+    create(data: any): Observable<Evaluation> {
+        return this.http.post<Evaluation>(this.apiUrl, data);
     }
 
-    update(id: number, data: any): Observable<Assessment> {
-        return this.http.patch<Assessment>(`${this.apiUrl}/${id}`, data);
+    update(id: number, data: any): Observable<Evaluation> {
+        return this.http.patch<Evaluation>(`${this.apiUrl}/${id}`, data);
     }
 
     delete(id: number): Observable<void> {

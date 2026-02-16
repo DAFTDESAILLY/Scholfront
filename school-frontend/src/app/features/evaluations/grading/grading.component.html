@@ -16,9 +16,9 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Evaluación</mat-label>
-                    <mat-select formControlName="assessmentId">
-                        <mat-option *ngFor="let assessment of assessments" [value]="assessment.id">
-                            {{ assessment.name }} ({{ assessment.type }})
+                    <mat-select formControlName="evaluationId">
+                        <mat-option *ngFor="let evaluation of evaluations" [value]="evaluation.id">
+                            {{ evaluation.name }} ({{ evaluation.type }})
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

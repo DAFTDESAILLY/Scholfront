@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ContextsService } from '../../../../core/services/contexts.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -40,15 +41,16 @@ export class ContextFormComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private contextsService: ContextsService,
+        private authService: AuthService,  // ✅ Agregar AuthService
         private router: Router,
         private route: ActivatedRoute,
         private notificationService: NotificationService
     ) {
+        // ✅ CORREGIDO - Solo campos permitidos por el DTO
         this.contextForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
-            level: ['', Validators.required],
-            institution: [''],
-            status: ['active', Validators.required]
+            level: ['', Validators.required]
+            // institution y status eliminados
         });
     }
 
@@ -65,26 +67,58 @@ export class ContextFormComponent implements OnInit {
             })
         ).subscribe(context => {
             if (context) {
-                this.contextForm.patchValue(context);
+                this.contextForm.patchValue({
+                    name: context.name,
+                    level: context.level
+                });
             }
         });
     }
 
     onSubmit() {
-        if (this.contextForm.valid) {
-            const operation = this.isEditMode
-                ? this.contextsService.update(this.contextId!, this.contextForm.value)
-                : this.contextsService.create(this.contextForm.value);
-
-            operation.subscribe({
-                next: () => {
-                    this.notificationService.success(`Context ${this.isEditMode ? 'updated' : 'created'} successfully`);
-                    this.router.navigate(['/contexts']);
-                },
-                error: (err) => {
-                    // handled by interceptor
-                }
-            });
+        if (this.contextForm.invalid) {
+            this.notificationService.error('Por favor completa todos los campos');
+            return;
         }
+
+        // ✅ Debug adicional
+        const token = localStorage.getItem('access_token');
+        console.log('Token existe:', !!token);
+
+        const currentUser = this.authService.getCurrentUser();
+        console.log('Current user:', currentUser);
+
+        if (!currentUser || !currentUser.id) {
+            console.error('No hay usuario logueado');
+            this.notificationService.error('Usuario no autenticado');
+            this.router.navigate(['/auth/login']);
+            return;
+        }
+
+        const contextData = {
+            name: this.contextForm.value.name,
+            level: this.contextForm.value.level,
+            userId: currentUser.id
+        };
+
+        console.log('Enviando datos:', contextData);
+
+        const operation = this.isEditMode
+            ? this.contextsService.update(this.contextId!, contextData)
+            : this.contextsService.create(contextData);
+
+        operation.subscribe({
+            next: () => {
+                this.notificationService.success(`Contexto ${this.isEditMode ? 'actualizado' : 'creado'} exitosamente`);
+                this.router.navigate(['/contexts']);
+            },
+            error: (err) => {
+                console.error('Error completo:', err);
+                if (err.error?.message) {
+                    console.error('Mensaje del servidor:', err.error.message);
+                }
+                this.notificationService.error('Error al guardar el contexto');
+            }
+        });
     }
 }

@@ -22,8 +22,9 @@ export class SidebarComponent {
         { label: 'Tablero', icon: 'dashboard', route: '/dashboard' },
         { label: 'Académico', icon: 'school', route: '/contexts' },
         { label: 'Estudiantes', icon: 'people', route: '/students' },
-        { label: 'Asistencia', icon: 'event_available', route: '/assessments/attendance' },
-        { label: 'Calificaciones', icon: 'grade', route: '/assessments/grading' },
+        { label: 'Asistencia', icon: 'event_available', route: '/evaluations/attendance' },
+        { label: 'Calificaciones', icon: 'grade', route: '/evaluations/grading' },
+        { label: 'Consentimientos', icon: 'privacy_tip', route: '/consents' },
         { label: 'Registros', icon: 'description', route: '/records' }
         // { label: 'Archivos', icon: 'folder', route: '/files' } // TODO: Implementar módulo de archivos
     ];

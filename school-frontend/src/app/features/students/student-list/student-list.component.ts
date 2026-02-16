@@ -30,7 +30,7 @@ import { NotificationService } from '../../../core/services/notification.service
     styleUrls: ['./student-list.component.scss']
 })
 export class StudentListComponent implements OnInit {
-    displayedColumns: string[] = ['studentId', 'name', 'email', 'status', 'actions'];
+    displayedColumns: string[] = ['id', 'enrollmentId', 'fullName', 'email', 'status', 'actions'];
     dataSource!: MatTableDataSource<Student>;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -48,11 +48,25 @@ export class StudentListComponent implements OnInit {
     loadStudents() {
         this.studentsService.getAll().subscribe({
             next: (data) => {
+                console.log('Estudiantes cargados:', data);
                 this.dataSource = new MatTableDataSource(data);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
+
+                this.dataSource.filterPredicate = (data: Student, filter: string) => {
+                    const searchStr = (
+                        data.id.toString() +
+                        data.fullName +
+                        (data.email || '') +
+                        (data.enrollmentId || '')
+                    ).toLowerCase();
+                    return searchStr.includes(filter);
+                };
             },
-            error: () => { }
+            error: (err) => {
+                console.error('Error cargando estudiantes:', err);
+                this.notificationService.error('Error al cargar estudiantes');
+            }
         });
     }
 
@@ -66,13 +80,16 @@ export class StudentListComponent implements OnInit {
     }
 
     deleteStudent(id: number) {
-        if (confirm('Are you sure you want to delete this student?')) {
+        if (confirm('¿Estás seguro de eliminar este estudiante?')) {
             this.studentsService.delete(id).subscribe({
                 next: () => {
-                    this.notificationService.success('Student deleted successfully');
+                    this.notificationService.success('Estudiante eliminado exitosamente');
                     this.loadStudents();
                 },
-                error: () => { }
+                error: (err) => {
+                    console.error('Error eliminando estudiante:', err);
+                    this.notificationService.error('Error al eliminar estudiante');
+                }
             });
         }
     }

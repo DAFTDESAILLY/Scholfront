@@ -1,4 +1,4 @@
-export interface Assessment {
+export interface Evaluation {
     id: number;
     subjectId: number;
     periodId: number;

@@ -79,4 +79,21 @@ export class AuthService {
         }
         // Optionally fetch user details or set user state
     }
+
+    getCurrentUser(): { id: number; email: string } | null {
+        const token = this.getToken();
+        if (!token) return null;
+
+        try {
+            // Decodificar JWT para obtener el payload
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return {
+                id: payload.sub || payload.userId || payload.id, // Ajustar según tu JWT
+                email: payload.email
+            };
+        } catch (error) {
+            console.error('Error decodificando token:', error);
+            return null;
+        }
+    }
 }

@@ -8,12 +8,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
-import { AssessmentsService } from '../../../core/services/assessments.service';
+import { EvaluationsService } from '../../../core/services/evaluations.service';
 import { SubjectsService } from '../../../core/services/subjects.service';
 import { StudentsService } from '../../../core/services/students.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Subject } from '../../../core/models/subject.model';
-import { Assessment } from '../../../core/models/assessment.model';
+import { Evaluation } from '../../../core/models/evaluation.model';
 
 @Component({
     selector: 'app-grading',
@@ -35,20 +35,20 @@ import { Assessment } from '../../../core/models/assessment.model';
 export class GradingComponent implements OnInit {
     filterForm: FormGroup;
     subjects: Subject[] = [];
-    assessments: Assessment[] = [];
+    evaluations: Evaluation[] = [];
     gradingData: any[] = [];
     displayedColumns: string[] = ['name', 'score', 'feedback'];
 
     constructor(
         private fb: FormBuilder,
-        private assessmentsService: AssessmentsService,
+        private evaluationsService: EvaluationsService,
         private subjectsService: SubjectsService,
         private studentsService: StudentsService,
         private notificationService: NotificationService
     ) {
         this.filterForm = this.fb.group({
             subjectId: ['', Validators.required],
-            assessmentId: ['', Validators.required]
+            evaluationId: ['', Validators.required]
         });
     }
 
@@ -72,19 +72,19 @@ export class GradingComponent implements OnInit {
     }
 
     loadAssessments(subjectId: number) {
-        this.assessmentsService.getBySubject(subjectId)
+        this.evaluationsService.getBySubject(subjectId)
             .pipe(
                 catchError(error => {
                     console.warn('No se pudieron cargar las evaluaciones.');
                     return of([]);
                 })
             )
-            .subscribe(data => this.assessments = data);
+            .subscribe(data => this.evaluations = data);
     }
 
     onLoadGrades() {
         if (this.filterForm.valid) {
-            const assessmentId = this.filterForm.get('assessmentId')?.value;
+            const evaluationId = this.filterForm.get('evaluationId')?.value;
             // Load all students for now (mock)
             this.studentsService.getAll()
                 .pipe(
@@ -97,7 +97,7 @@ export class GradingComponent implements OnInit {
                     // Here we would merge with existing grades if any
                     this.gradingData = students.map(student => ({
                         studentId: student.id,
-                        studentName: `${student.firstName} ${student.lastName}`,
+                        studentName: student.fullName,
                         score: 0,
                         feedback: ''
                     }));
@@ -106,15 +106,15 @@ export class GradingComponent implements OnInit {
     }
 
     saveGrades() {
-        const assessmentId = this.filterForm.get('assessmentId')?.value;
+        const evaluationId = this.filterForm.get('evaluationId')?.value;
         const grades = this.gradingData.map(item => ({
-            assessmentId,
+            evaluationId,
             studentId: item.studentId,
             score: item.score,
             feedback: item.feedback
         }));
 
-        this.assessmentsService.saveGrades(grades).subscribe({
+        this.evaluationsService.saveGrades(grades).subscribe({
             next: () => {
                 this.notificationService.success('Grades saved successfully');
             },
