@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
-import { catchError, of, forkJoin } from 'rxjs';
+import { catchError, of, forkJoin, firstValueFrom } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -121,14 +121,19 @@ export class GradingComponent implements OnInit {
                     // Create a map of existing grades by studentAssignmentId for quick lookup
                     const gradesMap = new Map(grades.map(grade => [grade.studentAssignmentId, grade]));
 
-                    // Fetch student assignments for each student to get their studentAssignmentId
-                    const studentDataPromises = students.map(async (student) => {
-                        try {
-                            const assignments = await this.studentAssignmentsService
-                                .getAssignmentsByStudent(student.id)
-                                .pipe(catchError(() => of([])))
-                                .toPromise();
-                            
+                    // Fetch all student assignments in parallel
+                    const assignmentRequests = students.map(student =>
+                        this.studentAssignmentsService
+                            .getAssignmentsByStudent(student.id)
+                            .pipe(catchError(() => of([])))
+                    );
+
+                    try {
+                        const allAssignments = await firstValueFrom(forkJoin(assignmentRequests));
+                        
+                        // Map students with their assignments and grades
+                        this.gradingData = students.map((student, index) => {
+                            const assignments = allAssignments[index];
                             // Get the first active assignment (unassignedAt is null), or any assignment if none are active
                             const activeAssignment = assignments?.find(a => !a.unassignedAt) || assignments?.[0];
                             const studentAssignmentId = activeAssignment?.id || student.id;
@@ -144,27 +149,17 @@ export class GradingComponent implements OnInit {
                                 feedback: existingGrade?.feedback || '',
                                 hasExistingGrade: !!existingGrade
                             };
-                        } catch (error) {
-                            console.warn(`Could not fetch assignments for student ${student.id}:`, error);
-                            // Fallback to using studentId
-                            return {
-                                studentId: student.id,
-                                studentAssignmentId: student.id,
-                                studentName: student.fullName,
-                                score: 0,
-                                feedback: '',
-                                hasExistingGrade: false
-                            };
-                        }
-                    });
+                        });
 
-                    // Wait for all student data to be loaded
-                    this.gradingData = await Promise.all(studentDataPromises);
-                    this.isLoading = false;
-
-                    this.notificationService.success(
-                        `${students.length} estudiantes cargados. ${grades.length} calificaciones existentes.`
-                    );
+                        this.isLoading = false;
+                        this.notificationService.success(
+                            `${students.length} estudiantes cargados. ${grades.length} calificaciones existentes.`
+                        );
+                    } catch (error) {
+                        this.isLoading = false;
+                        console.error('Error loading assignments:', error);
+                        this.notificationService.error('Error al cargar las asignaciones. Verifique la conexión.');
+                    }
                 },
                 error: (error) => {
                     this.isLoading = false;
