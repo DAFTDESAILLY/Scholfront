@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
-import { catchError, of } from 'rxjs';
+import { catchError, of, forkJoin, firstValueFrom } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EvaluationsService } from '../../../core/services/evaluations.service';
 import { SubjectsService } from '../../../core/services/subjects.service';
 import { StudentsService } from '../../../core/services/students.service';
+import { StudentAssignmentsService } from '../../../core/services/student-assignments.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Subject } from '../../../core/models/subject.model';
 import { Evaluation } from '../../../core/models/evaluation.model';
@@ -29,7 +31,8 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
         MatSelectModule,
         MatButtonModule,
         MatTableModule,
-        MatInputModule
+        MatInputModule,
+        MatProgressSpinnerModule
     ],
     templateUrl: './grading.component.html',
     styleUrls: ['./grading.component.scss']
@@ -39,13 +42,16 @@ export class GradingComponent implements OnInit {
     subjects: Subject[] = [];
     evaluations: Evaluation[] = [];
     gradingData: any[] = [];
-    displayedColumns: string[] = ['name', 'score', 'feedback'];
+    displayedColumns: string[] = ['name', 'score', 'feedback', 'status'];
+    isLoading: boolean = false;
+    isSaving: boolean = false;
 
     constructor(
         private fb: FormBuilder,
         private evaluationsService: EvaluationsService,
         private subjectsService: SubjectsService,
         private studentsService: StudentsService,
+        private studentAssignmentsService: StudentAssignmentsService,
         private notificationService: NotificationService
     ) {
         this.filterForm = this.fb.group({
@@ -87,54 +93,120 @@ export class GradingComponent implements OnInit {
     onLoadGrades() {
         if (this.filterForm.valid) {
             const evaluationId = this.filterForm.get('evaluationId')?.value;
-            // TODO: Add loading indicator
+            this.isLoading = true;
             this.gradingData = []; // Reset data
 
-            this.studentsService.getAll()
-                .pipe(
+            // Load students and existing grades in parallel
+            forkJoin({
+                students: this.studentsService.getAll().pipe(
                     catchError(error => {
                         console.error('Error loading students:', error);
-                        this.notificationService.error('No se pudieron cargar los estudiantes. Verifique la conexión.');
+                        return of([]);
+                    })
+                ),
+                grades: this.evaluationsService.getGradesByEvaluation(evaluationId).pipe(
+                    catchError(error => {
+                        console.warn('No existing grades found:', error);
                         return of([]);
                     })
                 )
-                .subscribe(students => {
+            }).subscribe({
+                next: async ({ students, grades }) => {
                     if (students.length === 0) {
+                        this.isLoading = false;
                         this.notificationService.warning('No se encontraron estudiantes registrados.');
                         return;
                     }
 
-                    // Here we would merge with existing grades if any
-                    this.gradingData = students.map(student => ({
-                        studentId: student.id,
-                        studentName: student.fullName,
-                        score: 0,
-                        feedback: ''
-                    }));
+                    // Create a map of existing grades by studentAssignmentId for quick lookup
+                    const gradesMap = new Map(grades.map(grade => [grade.studentAssignmentId, grade]));
 
-                    this.notificationService.success(`${students.length} estudiantes cargados.`);
-                });
+                    // Fetch all student assignments in parallel
+                    const assignmentRequests = students.map(student =>
+                        this.studentAssignmentsService
+                            .getAssignmentsByStudent(student.id)
+                            .pipe(catchError(() => of([])))
+                    );
+
+                    try {
+                        const allAssignments = await firstValueFrom(forkJoin(assignmentRequests));
+                        
+                        // Map students with their assignments and grades
+                        this.gradingData = students.map((student, index) => {
+                            const assignments = allAssignments[index];
+                            // Get the first active assignment (unassignedAt is null), or any assignment if none are active
+                            const activeAssignment = assignments?.find(a => !a.unassignedAt) || assignments?.[0];
+                            const studentAssignmentId = activeAssignment?.id ?? student.id;
+                            
+                            // Try to find existing grade using the studentAssignmentId
+                            const existingGrade = gradesMap.get(studentAssignmentId);
+                            
+                            return {
+                                studentId: student.id,
+                                studentAssignmentId: studentAssignmentId,
+                                studentName: student.fullName,
+                                score: existingGrade?.score ?? 0,
+                                feedback: existingGrade?.feedback ?? '',
+                                hasExistingGrade: !!existingGrade
+                            };
+                        });
+
+                        this.isLoading = false;
+                        this.notificationService.success(
+                            `${students.length} estudiantes cargados. ${grades.length} calificaciones existentes.`
+                        );
+                    } catch (error) {
+                        this.isLoading = false;
+                        console.error('Error loading assignments:', error);
+                        this.notificationService.error('Error al cargar las asignaciones. Verifique la conexión.');
+                    }
+                },
+                error: (error) => {
+                    this.isLoading = false;
+                    console.error('Error loading data:', error);
+                    this.notificationService.error('Error al cargar los datos. Verifique la conexión.');
+                }
+            });
         } else {
             this.notificationService.warning('Por favor seleccione una materia y una evaluación.');
         }
     }
 
     saveGrades() {
-        const evaluationId = this.filterForm.get('evaluationId')?.value;
-        const grades = this.gradingData.map(item => ({
-            evaluationId,
-            studentId: item.studentId,
+        // Validate that there is at least one grade with a score > 0
+        const gradesWithScores = this.gradingData.filter(item => item.score > 0);
+        if (gradesWithScores.length === 0) {
+            this.notificationService.warning('Por favor ingrese al menos una calificación antes de guardar.');
+            return;
+        }
+
+        this.isSaving = true;
+        const evaluationItemId = this.filterForm.get('evaluationId')?.value;
+        
+        // Map to the correct field names expected by backend
+        // Only send grades with score > 0 to match validation
+        const grades = gradesWithScores.map(item => ({
+            evaluationItemId,
+            studentAssignmentId: item.studentAssignmentId,
             score: item.score,
-            feedback: item.feedback
+            feedback: item.feedback ?? ''
         }));
 
         console.log('📤 Guardando calificaciones:', { grades });
 
         this.evaluationsService.saveGrades(grades).subscribe({
             next: () => {
+                this.isSaving = false;
+                // Mark all saved grades
+                this.gradingData.forEach(item => {
+                    if (item.score > 0) {
+                        item.hasExistingGrade = true;
+                    }
+                });
                 this.notificationService.success('Calificaciones guardadas exitosamente');
             },
             error: (err) => {
+                this.isSaving = false;
                 console.error('❌ Error guardando calificaciones:', err);
                 console.error('❌ Detalles del error:', err.error);
 

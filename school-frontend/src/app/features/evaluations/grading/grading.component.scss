@@ -45,3 +45,15 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.grade-status {
+    color: #4caf50;
+    font-size: 20px;
+    font-weight: bold;
+}

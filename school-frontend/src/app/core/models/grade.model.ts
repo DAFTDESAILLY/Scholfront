@@ -1,7 +1,7 @@
 export interface Grade {
     id: number;
-    evaluationId: number;
-    studentId: number;
+    evaluationItemId: number;
+    studentAssignmentId: number;
     score: number;
     feedback?: string;
     createdAt: Date;
