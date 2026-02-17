@@ -23,7 +23,7 @@ interface GradingRow {
     studentAssignmentId: number;
     score: number;
     feedback: string;
-    gradeId?: number; // ID de la calificación si ya existe
+    gradeId?: number; // Grade ID if it already exists
 }
 
 @Component({
@@ -149,13 +149,13 @@ export class GradingComponent implements OnInit {
                     return;
                 }
 
-                // Crear mapa de calificaciones existentes por studentAssignmentId
+                // Create map of existing grades by studentAssignmentId
                 const gradesMap = new Map();
                 existingGrades.forEach(grade => {
                     gradesMap.set(grade.studentAssignmentId, grade);
                 });
 
-                // Mapear asignaciones a filas de calificación
+                // Map assignments to grading rows
                 this.gradingData = assignments
                     .filter(assignment => assignment.unassignedAt === null || assignment.unassignedAt === undefined)
                     .map(assignment => {
@@ -188,7 +188,7 @@ export class GradingComponent implements OnInit {
             return;
         }
 
-        // Validar que al menos una calificación tenga un score válido
+        // Validate that at least one grade has a valid score
         const hasValidScores = this.gradingData.some(row => row.score > 0);
         if (!hasValidScores) {
             this.notificationService.warning('Por favor ingrese al menos una calificación antes de guardar');
@@ -197,10 +197,10 @@ export class GradingComponent implements OnInit {
 
         const evaluationId = this.filterForm.get('evaluationId')?.value;
 
-        // Mapear al formato correcto que espera el backend
+        // Map to the correct format expected by the backend
         const grades = this.gradingData.map(item => ({
-            evaluationItemId: evaluationId,           // ✅ Nombre correcto
-            studentAssignmentId: item.studentAssignmentId, // ✅ Nombre correcto
+            evaluationItemId: evaluationId,           // ✅ Correct field name
+            studentAssignmentId: item.studentAssignmentId, // ✅ Correct field name
             score: item.score,
             feedback: item.feedback || ''
         }));
@@ -214,7 +214,7 @@ export class GradingComponent implements OnInit {
                 this.notificationService.success('Calificaciones guardadas exitosamente');
                 this.isSaving = false;
                 
-                // Recargar las calificaciones para reflejar los cambios
+                // Reload grades to reflect changes
                 this.onLoadGrades();
             },
             error: (err) => {

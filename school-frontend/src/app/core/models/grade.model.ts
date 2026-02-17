@@ -7,7 +7,7 @@ export interface Grade {
     createdAt: Date | string;
     updatedAt: Date | string;
     
-    // Relaciones opcionales
+    // Optional relations
     studentAssignment?: {
         id: number;
         studentId: number;
