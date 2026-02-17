@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,33 +8,21 @@ import { SchoolFile } from '../models/school-file.model';
     providedIn: 'root'
 })
 export class FilesService {
-    private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/files`;
 
-    uploadFile(file: File, category?: string): Observable<SchoolFile> {
+    constructor(private http: HttpClient) { }
+
+    getAll(): Observable<SchoolFile[]> {
+        return this.http.get<SchoolFile[]>(this.apiUrl);
+    }
+
+    upload(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
-        if (category) formData.append('category', category);
-
-        return this.http.post<SchoolFile>(this.apiUrl, formData);
+        return this.http.post(`${this.apiUrl}/upload`, formData);
     }
 
-    getFiles(category?: string): Observable<SchoolFile[]> {
-        const url = category ? `${this.apiUrl}?category=${category}` : this.apiUrl;
-        return this.http.get<SchoolFile[]>(url);
-    }
-
-    getFile(id: number): Observable<SchoolFile> {
-        return this.http.get<SchoolFile>(`${this.apiUrl}/${id}`);
-    }
-
-    downloadFile(id: number): Observable<Blob> {
-        return this.http.get(`${this.apiUrl}/${id}/download`, {
-            responseType: 'blob'
-        });
-    }
-
-    deleteFile(id: number): Observable<void> {
+    delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 }

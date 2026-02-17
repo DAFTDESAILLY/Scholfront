@@ -38,13 +38,34 @@ export class ConsentsService {
         );
     }
 
+    private consentTypes: any[] = [
+        { id: 1, name: 'Conducta', description: 'Registro de conducta', isActive: true, recordType: 'conducta' },
+        { id: 2, name: 'Tutoría', description: 'Sesiones de tutoría', isActive: true, recordType: 'tutoría' },
+        { id: 3, name: 'Médico', description: 'Historial médico', isActive: true, recordType: 'médico' },
+        { id: 4, name: 'Cognitivo', description: 'Evaluaciones cognitivas', isActive: true, recordType: 'cognitivo' }
+    ];
+
     getConsentTypes(): Observable<any[]> {
-        return of([
-            { id: 1, name: 'Conducta', description: 'Registro de conducta', isActive: true },
-            { id: 2, name: 'Tutoría', description: 'Sesiones de tutoría', isActive: true },
-            { id: 3, name: 'Médico', description: 'Historial médico', isActive: true },
-            { id: 4, name: 'Cognitivo', description: 'Evaluaciones cognitivas', isActive: true }
-        ]);
+        return of(this.consentTypes);
+    }
+
+    createConsentType(type: any): Observable<any> {
+        const newType = {
+            ...type,
+            id: this.consentTypes.length + 1,
+            isActive: true
+        };
+        this.consentTypes.push(newType);
+        return of(newType);
+    }
+
+    updateConsentType(id: number, type: any): Observable<any> {
+        const index = this.consentTypes.findIndex(t => t.id === id);
+        if (index !== -1) {
+            this.consentTypes[index] = { ...this.consentTypes[index], ...type };
+            return of(this.consentTypes[index]);
+        }
+        return of(null);
     }
 
     revokeConsent(id: number, revokedBy: string, reason: string): Observable<StudentShareConsent> {

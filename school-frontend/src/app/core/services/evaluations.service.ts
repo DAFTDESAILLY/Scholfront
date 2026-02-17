@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Evaluation } from '../models/evaluation.model';
 import { Grade } from '../models/grade.model';
@@ -20,7 +21,10 @@ export class EvaluationsService {
     }
 
     getBySubject(subjectId: number): Observable<Evaluation[]> {
-        return this.http.get<Evaluation[]>(`${this.apiUrl}?subjectId=${subjectId}`);
+        // Backend doesn't support filtering by subjectId yet, so we fetch all and filter client-side
+        return this.http.get<Evaluation[]>(this.apiUrl).pipe(
+            map(evaluations => evaluations.filter(e => Number(e.subjectId) === Number(subjectId)))
+        );
     }
 
     create(data: any): Observable<Evaluation> {
@@ -44,7 +48,5 @@ export class EvaluationsService {
         return this.http.get<Grade[]>(`${this.gradesUrl}?evaluationId=${evaluationId}`);
     }
 
-    getGradesByEvaluation(evaluationItemId: number): Observable<Grade[]> {
-        return this.http.get<Grade[]>(`${this.gradesUrl}/by-evaluation/${evaluationItemId}`);
-    }
+
 }

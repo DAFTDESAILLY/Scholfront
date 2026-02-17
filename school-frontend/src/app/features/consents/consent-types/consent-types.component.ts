@@ -9,6 +9,7 @@ import { ConsentsService } from '../../../core/services/consents.service';
 import { ConsentType } from '../../../core/models/consent.model';
 import { catchError, of } from 'rxjs';
 import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
+import { ConsentTypeDialogComponent } from './consent-type-dialog/consent-type-dialog.component';
 
 @Component({
     selector: 'app-consent-types',
@@ -59,13 +60,46 @@ export class ConsentTypesComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        // TODO: Implementar dialog de creación
-        console.log('Create dialog not yet implemented');
+        const dialogRef = this.dialog.open(ConsentTypeDialogComponent, {
+            width: '500px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.isLoading = true;
+                this.consentsService.createConsentType(result).subscribe({
+                    next: () => {
+                        this.loadConsentTypes();
+                    },
+                    error: (err) => {
+                        console.error('Error creating consent type:', err);
+                        this.isLoading = false;
+                    }
+                });
+            }
+        });
     }
 
     openEditDialog(consentType: ConsentType): void {
-        // TODO: Implementar dialog de edición
-        console.log('Edit dialog not yet implemented for type:', consentType);
+        const dialogRef = this.dialog.open(ConsentTypeDialogComponent, {
+            width: '500px',
+            data: consentType
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.isLoading = true;
+                this.consentsService.updateConsentType(consentType.id, result).subscribe({
+                    next: () => {
+                        this.loadConsentTypes();
+                    },
+                    error: (err) => {
+                        console.error('Error updating consent type:', err);
+                        this.isLoading = false;
+                    }
+                });
+            }
+        });
     }
 
     // deleteConsentType removed as types are static

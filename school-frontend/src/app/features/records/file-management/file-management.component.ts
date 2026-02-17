@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RecordsService } from '../../../core/services/records.service';
+import { FilesService } from '../../../core/services/files.service';
 import { SchoolFile } from '../../../core/models/school-file.model';
 
 @Component({
@@ -24,14 +24,14 @@ export class FileManagementComponent implements OnInit {
     files: SchoolFile[] = [];
     displayedColumns: string[] = ['name', 'type', 'size', 'date', 'actions'];
 
-    constructor(private recordsService: RecordsService) { }
+    constructor(private filesService: FilesService) { }
 
     ngOnInit() {
         this.loadFiles();
     }
 
     loadFiles() {
-        this.recordsService.getAll().subscribe(data => this.files = data);
+        this.filesService.getAll().subscribe(data => this.files = data);
     }
 
     downloadFile(file: SchoolFile) {

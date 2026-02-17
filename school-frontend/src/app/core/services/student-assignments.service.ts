@@ -20,6 +20,10 @@ export class StudentAssignmentsService {
         return this.http.get<StudentAssignment>(`${this.apiUrl}/${id}`);
     }
 
+    findByStudent(studentId: number): Observable<StudentAssignment[]> {
+        return this.http.get<StudentAssignment[]>(`${this.apiUrl}/student/${studentId}`);
+    }
+
     create(assignment: any): Observable<StudentAssignment> {
         return this.http.post<StudentAssignment>(this.apiUrl, assignment);
     }

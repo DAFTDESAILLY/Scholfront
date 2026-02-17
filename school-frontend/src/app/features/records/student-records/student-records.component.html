@@ -1,37 +1,64 @@
 <mat-card class="records-card">
     <mat-card-header>
-        <mat-card-title>Student Records</mat-card-title>
-        <mat-card-subtitle>Manage documents and files</mat-card-subtitle>
-        <div class="header-actions">
-            <input type="file" #fileInput hidden (change)="onFileSelected($event)">
-            <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
-                <mat-icon>cloud_upload</mat-icon> Upload File
-            </button>
-        </div>
+        <mat-card-title>Expediente del Alumno</mat-card-title>
+        <mat-card-subtitle>Historial de conducta, tutoría y otros registros</mat-card-subtitle>
     </mat-card-header>
 
-    <mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
-
     <mat-card-content>
-        <mat-list *ngIf="files.length > 0; else noFiles">
-            <mat-list-item *ngFor="let file of files">
-                <mat-icon matListItemIcon>description</mat-icon>
-                <div matListItemTitle>{{ file.name }}</div>
-                <div matListItemLine>{{ file.createdAt | date }} - {{ (file.size / 1024).toFixed(2) }} KB</div>
+        <!-- Form to add new record -->
+        <form [formGroup]="recordForm" class="record-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Tipo de Registro</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option value="conducta">Conducta</mat-option>
+                    <mat-option value="tutoría">Tutoría</mat-option>
+                    <mat-option value="médico">Médico</mat-option>
+                    <mat-option value="cognitivo">Cognitivo</mat-option>
+                </mat-select>
+                <mat-error *ngIf="recordForm.get('type')?.hasError('required')">Requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descripción / Observación</mat-label>
+                <textarea matInput formControlName="description" rows="2"
+                    placeholder="Detalles del evento..."></textarea>
+                <mat-error *ngIf="recordForm.get('description')?.hasError('required')">Requerido</mat-error>
+            </mat-form-field>
+
+            <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="createRecord()"
+                    [disabled]="recordForm.invalid || isCreating">
+                    <mat-icon>save</mat-icon> Guardar Registro
+                </button>
+            </div>
+        </form>
+
+        <mat-divider></mat-divider>
+
+        <h3>Historial</h3>
+        <mat-list *ngIf="records.length > 0; else noRecords">
+            <mat-list-item *ngFor="let record of records" class="record-item">
+                <mat-icon matListItemIcon [ngClass]="record.type">{{
+                    record.type === 'conducta' ? 'warning' :
+                    record.type === 'tutoría' ? 'school' :
+                    record.type === 'médico' ? 'medical_services' : 'psychology'
+                    }}</mat-icon>
+                <div matListItemTitle class="record-title">
+                    <span class="type-badge">{{ record.type | titlecase }}</span>
+                    <span class="date">{{ record.createdAt | date:'medium' }}</span>
+                </div>
+                <div matListItemLine class="record-desc">{{ record.description }}</div>
                 <div matListItemMeta>
-                    <button mat-icon-button color="primary" (click)="downloadFile(file)">
-                        <mat-icon>download</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn" (click)="deleteFile(file)">
+                    <button mat-icon-button color="warn" (click)="deleteRecord(record)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
             </mat-list-item>
         </mat-list>
 
-        <ng-template #noFiles>
-            <div class="no-files">
-                <p>No files uploaded for this student yet.</p>
+        <ng-template #noRecords>
+            <div class="no-records">
+                <p>No hay registros en el expediente de este alumno.</p>
             </div>
         </ng-template>
     </mat-card-content>

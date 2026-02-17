@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -28,35 +28,44 @@ export class StudentConsentsComponent implements OnInit {
     private consentsService = inject(ConsentsService);
     private route = inject(ActivatedRoute);
 
-    studentId!: number;
+    @Input() studentId?: number;
     consents: StudentShareConsent[] = [];
     displayedColumns: string[] = ['consentType', 'grantedBy', 'grantedAt', 'expiresAt', 'status', 'actions'];
     isLoading = false;
 
     ngOnInit(): void {
-        this.studentId = Number(this.route.snapshot.paramMap.get('studentId'));
-        this.loadConsents();
+        if (!this.studentId) {
+            const id = this.route.snapshot.paramMap.get('studentId') || this.route.snapshot.paramMap.get('id');
+            if (id) {
+                this.studentId = +id;
+            }
+        }
+
+        if (this.studentId) {
+            this.loadConsents();
+        }
     }
 
     loadConsents(): void {
         this.isLoading = true;
-        this.consentsService.getStudentConsents(this.studentId)
-            .pipe(
+        if (this.studentId) {
+            this.consentsService.getStudentConsents(this.studentId).pipe(
                 catchError(error => {
                     console.warn('No se pudieron cargar los consentimientos. Backend no disponible.');
                     return of([]);
                 })
             )
-            .subscribe({
-                next: (consents) => {
-                    this.consents = consents;
-                    this.isLoading = false;
-                },
-                error: (err: any) => {
-                    console.error('Error loading consents:', err);
-                    this.isLoading = false;
-                }
-            });
+                .subscribe({
+                    next: (consents) => {
+                        this.consents = consents;
+                        this.isLoading = false;
+                    },
+                    error: (err: any) => {
+                        console.error('Error loading consents:', err);
+                        this.isLoading = false;
+                    }
+                });
+        }
     }
 
     getConsentStatus(consent: StudentShareConsent): string {

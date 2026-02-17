@@ -4,9 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar'; // For upload progress
-import { RecordsService } from '../../../core/services/records.service';
-import { SchoolFile } from '../../../core/models/school-file.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StudentRecordsService } from '../../../core/services/records.service';
+import { ConsentsService } from '../../../core/services/consents.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -19,24 +22,34 @@ import { ActivatedRoute } from '@angular/router';
         MatButtonModule,
         MatListModule,
         MatIconModule,
-        MatProgressBarModule
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        ReactiveFormsModule
     ],
     templateUrl: './student-records.component.html',
     styleUrls: ['./student-records.component.scss']
 })
 export class StudentRecordsComponent implements OnInit {
     @Input() studentId?: number;
-    files: SchoolFile[] = [];
-    isUploading = false;
+    records: any[] = [];
+    isCreating = false;
+    recordForm: FormGroup;
 
     constructor(
-        private recordsService: RecordsService,
+        private recordsService: StudentRecordsService,
         private route: ActivatedRoute,
-        private notificationService: NotificationService
-    ) { }
+        private notificationService: NotificationService,
+        private shareConsentsService: ConsentsService, // To get record types
+        private fb: FormBuilder
+    ) {
+        this.recordForm = this.fb.group({
+            type: ['', Validators.required],
+            description: ['', Validators.required]
+        });
+    }
 
     ngOnInit() {
-        // If not passed as input, try to get from route
         if (!this.studentId) {
             const id = this.route.snapshot.paramMap.get('id');
             if (id) {
@@ -45,49 +58,50 @@ export class StudentRecordsComponent implements OnInit {
         }
 
         if (this.studentId) {
-            this.loadFiles();
+            this.loadRecords();
         }
     }
 
-    loadFiles() {
+    loadRecords() {
         if (this.studentId) {
-            this.recordsService.getByStudent(this.studentId).subscribe(data => this.files = data);
+            this.recordsService.getByStudent(this.studentId).subscribe(data => this.records = data);
         }
     }
 
-    onFileSelected(event: any) {
-        const file: File = event.target.files[0];
-        if (file && this.studentId) {
-            this.isUploading = true;
-            const metadata = { studentId: this.studentId };
+    createRecord() {
+        if (this.recordForm.valid && this.studentId) {
+            this.isCreating = true;
+            const newRecord = {
+                studentId: this.studentId,
+                contextId: 1, // Default context
+                ...this.recordForm.value
+            };
 
-            this.recordsService.upload(file, metadata).subscribe({
-                next: (newFile) => {
-                    this.notificationService.success('File uploaded successfully');
-                    this.files.push(newFile);
-                    this.isUploading = false;
+            this.recordsService.create(newRecord).subscribe({
+                next: (record) => {
+                    this.notificationService.success('Registro creado exitosamente');
+                    this.records.push(record);
+                    this.recordForm.reset();
+                    this.isCreating = false;
                 },
-                error: () => {
-                    this.isUploading = false;
+                error: (err) => {
+                    console.error('Error creating record:', err);
+                    this.notificationService.error('Error al crear el registro');
+                    this.isCreating = false;
                 }
             });
         }
     }
 
-    deleteFile(file: SchoolFile) {
-        if (confirm(`Are you sure you want to delete ${file.name}?`)) {
-            this.recordsService.delete(file.id).subscribe({
+    deleteRecord(record: any) {
+        if (confirm('¿Estás seguro de eliminar este registro?')) {
+            this.recordsService.delete(record.id).subscribe({
                 next: () => {
-                    this.notificationService.success('File deleted successfully');
-                    this.files = this.files.filter(f => f.id !== file.id);
+                    this.notificationService.success('Registro eliminado');
+                    this.records = this.records.filter(r => r.id !== record.id);
                 },
-                error: () => { }
+                error: () => this.notificationService.error('Error al eliminar registro')
             });
         }
-    }
-
-    downloadFile(file: SchoolFile) {
-        // Logic to download file, e.g., opening URL in new tab
-        window.open(file.url, '_blank');
     }
 }

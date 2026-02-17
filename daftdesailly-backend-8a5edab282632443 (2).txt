@@ -1,0 +1,6370 @@
+Directory structure:
+└── daftdesailly-backend/
+    ├── README.md
+    ├── CÓDIGO DE ENTITIES – TYPEORM (V1).md
+    ├── docker-compose.yml
+    ├── DOCUMENTACIÓN TÉCNICA V1 (CONGELADA).md
+    ├── Documento de requerimientos base de datos.md
+    ├── logs.txt
+    ├── logs_error.txt
+    ├── logs_utf8.txt
+    └── backend/
+        ├── README.md
+        ├── check-grade.js
+        ├── Dockerfile
+        ├── eslint.config.mjs
+        ├── nest-cli.json
+        ├── package.json
+        ├── test-attendance.js
+        ├── test-db.js
+        ├── test-evaluation.js
+        ├── test-grades-batch.js
+        ├── test-output-eval.txt
+        ├── test-output-grade-check.txt
+        ├── test-output-grades-2.txt
+        ├── test-output-grades.txt
+        ├── test-output.txt
+        ├── tsconfig.build.json
+        ├── tsconfig.json
+        ├── .prettierrc
+        ├── src/
+        │   ├── app.controller.spec.ts
+        │   ├── app.controller.ts
+        │   ├── app.module.ts
+        │   ├── app.service.ts
+        │   ├── main.ts
+        │   ├── academic/
+        │   │   ├── academic-periods/
+        │   │   │   ├── academic-periods.controller.ts
+        │   │   │   ├── academic-periods.module.ts
+        │   │   │   ├── academic-periods.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-academic-period.dto.ts
+        │   │   │   │   └── update-academic-period.dto.ts
+        │   │   │   └── entities/
+        │   │   │       └── academic-period.entity.ts
+        │   │   ├── contexts/
+        │   │   │   ├── contexts.controller.ts
+        │   │   │   ├── contexts.module.ts
+        │   │   │   ├── contexts.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-context.dto.ts
+        │   │   │   │   └── update-context.dto.ts
+        │   │   │   └── entities/
+        │   │   │       └── context.entity.ts
+        │   │   ├── groups/
+        │   │   │   ├── groups.controller.ts
+        │   │   │   ├── groups.module.ts
+        │   │   │   ├── groups.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-group.dto.ts
+        │   │   │   │   └── update-group.dto.ts
+        │   │   │   └── entities/
+        │   │   │       └── group.entity.ts
+        │   │   └── subjects/
+        │   │       ├── subjects.controller.ts
+        │   │       ├── subjects.module.ts
+        │   │       ├── subjects.service.ts
+        │   │       ├── dto/
+        │   │       │   ├── create-subject.dto.ts
+        │   │       │   └── update-subject.dto.ts
+        │   │       └── entities/
+        │   │           └── subject.entity.ts
+        │   ├── assessments/
+        │   │   ├── attendance/
+        │   │   │   ├── attendance.controller.ts
+        │   │   │   ├── attendance.module.ts
+        │   │   │   ├── attendance.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-attendance.dto.ts
+        │   │   │   │   └── update-attendance.dto.ts
+        │   │   │   └── entities/
+        │   │   │       └── attendance.entity.ts
+        │   │   ├── evaluations/
+        │   │   │   ├── evaluations.controller.ts
+        │   │   │   ├── evaluations.module.ts
+        │   │   │   ├── evaluations.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-evaluation.dto.ts
+        │   │   │   │   └── update-evaluation.dto.ts
+        │   │   │   └── entities/
+        │   │   │       └── evaluation-item.entity.ts
+        │   │   └── grades/
+        │   │       ├── grades.controller.ts
+        │   │       ├── grades.module.ts
+        │   │       ├── grades.service.ts
+        │   │       ├── dto/
+        │   │       │   ├── create-grade.dto.ts
+        │   │       │   └── update-grade.dto.ts
+        │   │       └── entities/
+        │   │           └── grade.entity.ts
+        │   ├── auth/
+        │   │   ├── auth.controller.ts
+        │   │   ├── auth.module.ts
+        │   │   ├── auth.service.ts
+        │   │   ├── refresh-token.entity.ts
+        │   │   ├── dto/
+        │   │   │   └── login.dto.ts
+        │   │   └── strategies/
+        │   │       ├── at.strategy.ts
+        │   │       └── rt.strategy.ts
+        │   ├── common/
+        │   │   ├── common.module.ts
+        │   │   ├── decorators/
+        │   │   │   └── public.decorator.ts
+        │   │   ├── guards/
+        │   │   │   └── at.guard.ts
+        │   │   └── interceptors/
+        │   │       └── activity-tracker.interceptor.ts
+        │   ├── dashboard/
+        │   │   ├── dashboard.controller.ts
+        │   │   ├── dashboard.module.ts
+        │   │   └── dashboard.service.ts
+        │   ├── files/
+        │   │   ├── files.controller.ts
+        │   │   ├── files.module.ts
+        │   │   ├── files.service.ts
+        │   │   ├── dto/
+        │   │   │   ├── create-file.dto.ts
+        │   │   │   └── update-file.dto.ts
+        │   │   └── entities/
+        │   │       └── file.entity.ts
+        │   ├── jobs/
+        │   │   ├── jobs.module.ts
+        │   │   └── jobs.service.ts
+        │   ├── student-management/
+        │   │   ├── consents/
+        │   │   │   ├── consents.controller.ts
+        │   │   │   ├── consents.module.ts
+        │   │   │   ├── consents.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-consent.dto.ts
+        │   │   │   │   └── update-consent.dto.ts
+        │   │   │   └── entities/
+        │   │   │       ├── student-share-consent-type.entity.ts
+        │   │   │       └── student-share-consent.entity.ts
+        │   │   ├── student-assignments/
+        │   │   │   ├── student-assignments.controller.ts
+        │   │   │   ├── student-assignments.module.ts
+        │   │   │   ├── student-assignments.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-student-assignment.dto.ts
+        │   │   │   │   └── update-student-assignment.dto.ts
+        │   │   │   └── entities/
+        │   │   │       ├── student-assignment-history.entity.ts
+        │   │   │       └── student-assignment.entity.ts
+        │   │   ├── student-records/
+        │   │   │   ├── student-records.controller.ts
+        │   │   │   ├── student-records.module.ts
+        │   │   │   ├── student-records.service.ts
+        │   │   │   ├── dto/
+        │   │   │   │   ├── create-student-record.dto.ts
+        │   │   │   │   └── update-student-record.dto.ts
+        │   │   │   └── entities/
+        │   │   │       ├── student-record-reply.entity.ts
+        │   │   │       └── student-record.entity.ts
+        │   │   └── students/
+        │   │       ├── students.controller.ts
+        │   │       ├── students.module.ts
+        │   │       ├── students.service.ts
+        │   │       ├── dto/
+        │   │       │   ├── create-student.dto.ts
+        │   │       │   └── update-student.dto.ts
+        │   │       └── entities/
+        │   │           └── student.entity.ts
+        │   └── users/
+        │       ├── users.controller.ts
+        │       ├── users.module.ts
+        │       ├── users.service.ts
+        │       ├── dto/
+        │       │   ├── create-user.dto.ts
+        │       │   └── update-user.dto.ts
+        │       └── entities/
+        │           └── user.entity.ts
+        └── test/
+            ├── app.e2e-spec.ts
+            └── jest-e2e.json
+
+================================================
+FILE: README.md
+================================================
+# App ORM School
+
+Sistema de gestión escolar construido con NestJS, TypeORM y MariaDB.
+
+## Tecnologías
+
+- **Backend**: NestJS 10.x
+- **ORM**: TypeORM
+- **Base de datos**: MariaDB/MySQL
+- **Autenticación**: JWT (Access + Refresh Tokens)
+
+## Características
+
+- ✅ Gestión de usuarios y autenticación
+- ✅ Contextos académicos multinivel
+- ✅ Períodos académicos con validación
+- ✅ Gestión de grupos y materias
+- ✅ Estudiantes persistentes
+- ✅ Asignaciones y seguimiento
+- ✅ Asistencia y evaluaciones
+- ✅ Registros estudiantiles con réplica
+- ✅ Sistema de archivos
+- ✅ Consentimientos de compartición
+
+## Instalación
+
+```bash
+cd backend
+npm install
+```
+
+## Configuración
+
+Crear archivo `.env`:
+```env
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_DATABASE=school_db
+
+JWT_SECRET=your-secret-key
+JWT_REFRESH_SECRET=your-refresh-secret
+```
+
+## Ejecución
+
+```bash
+# Desarrollo
+npm run start:dev
+
+# Producción
+npm run build
+npm run start:prod
+```
+
+## Base de Datos
+
+Iniciar MariaDB con Docker:
+```bash
+docker-compose up -d
+```
+
+## Documentación
+
+- [Documentación Técnica V1](DOCUMENTACIÓN%20TÉCNICA%20V1%20(CONGELADA).md)
+- [Código de Entities](CÓDIGO%20DE%20ENTITIES%20–%20TYPEORM%20(V1).md)
+- [Requerimientos de Base de Datos](Documento%20de%20requerimientos%20base%20de%20datos.md)
+
+
+
+================================================
+FILE: CÓDIGO DE ENTITIES – TYPEORM (V1).md
+================================================
+🧱 CÓDIGO DE ENTITIES – TYPEORM (V1)
+
+Este documento contiene EL CÓDIGO REAL de las entities definido en el modelo v1.3. Todo el contenido está en formato Markdown (.md) y listo para copiar/pegar.
+
+\---
+
+1\. UserEntity
+
+// src/users/user.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  OneToMany,  
+  CreateDateColumn,  
+  UpdateDateColumn,  
+} from 'typeorm';  
+import { RefreshToken } from '../auth/refresh-token.entity';  
+import { Context } from '../academic/contexts/context.entity';
+
+@Entity('users')  
+export class User {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column({ unique: true })  
+  email: string;
+
+  @Column()  
+  password: string;
+
+  @Column()  
+  name: string;
+
+  @Column({  
+    type: 'enum',  
+    enum: \['active', 'inactive'\],  
+    default: 'active',  
+  })  
+  status: 'active' | 'inactive';
+
+  @OneToMany(() \=\> RefreshToken, token \=\> token.user)  
+  refreshTokens: RefreshToken\[\];
+
+  @OneToMany(() \=\> Context, context \=\> context.user)  
+  contexts: Context\[\];
+
+  @CreateDateColumn()  
+  created\_at: Date;
+
+  @UpdateDateColumn()  
+  updated\_at: Date;  
+}
+
+\---
+
+2\. RefreshTokenEntity
+
+// src/auth/refresh-token.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  ManyToOne,  
+  CreateDateColumn,  
+} from 'typeorm';  
+import { User } from '../users/user.entity';
+
+@Entity('refresh\_tokens')  
+export class RefreshToken {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column()  
+  token\_hash: string;
+
+  @Column()  
+  expires\_at: Date;
+
+  @ManyToOne(() \=\> User, user \=\> user.refreshTokens, {  
+    onDelete: 'CASCADE',  
+  })  
+  user: User;
+
+  @CreateDateColumn()  
+  created\_at: Date;  
+}
+
+\---
+
+3\. ContextEntity
+
+// src/academic/contexts/context.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  ManyToOne,  
+  CreateDateColumn,  
+  UpdateDateColumn,  
+} from 'typeorm';  
+import { User } from '../../users/user.entity';
+
+@Entity('contexts')  
+export class Context {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column()  
+  name: string;
+
+  @Column()  
+  level: string;
+
+  @Column({ nullable: true })  
+  institution?: string;
+
+  @Column({  
+    type: 'enum',  
+    enum: \['active', 'archived', 'inactive'\],  
+    default: 'active',  
+  })  
+  status: 'active' | 'archived' | 'inactive';
+
+  @ManyToOne(() \=\> User, user \=\> user.contexts, {  
+    onDelete: 'RESTRICT',  
+  })  
+  user: User;
+
+  @CreateDateColumn()  
+  created\_at: Date;
+
+  @UpdateDateColumn()  
+  updated\_at: Date;  
+}
+
+\---
+
+4\. AcademicPeriodEntity
+
+// src/academic/academic-periods/academic-period.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  ManyToOne,  
+  OneToMany,  
+  CreateDateColumn,  
+  UpdateDateColumn,  
+} from 'typeorm';  
+import { Context } from '../contexts/context.entity';  
+import { Group } from '../groups/group.entity';
+
+@Entity('academic\_periods')  
+export class AcademicPeriod {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column()  
+  type: string;
+
+  @Column({ type: 'date' })  
+  start\_date: Date;
+
+  @Column({ type: 'date' })  
+  end\_date: Date;
+
+  @Column({ default: 0 })  
+  grace\_period\_days: number;
+
+  @Column({  
+    type: 'enum',  
+    enum: \['active', 'archived'\],  
+    default: 'active',  
+  })  
+  status: 'active' | 'archived';
+
+  @ManyToOne(() \=\> Context, context \=\> context.id, { onDelete: 'RESTRICT' })  
+  context: Context;
+
+  @OneToMany(() \=\> Group, group \=\> group.academicPeriod)  
+  groups: Group\[\];
+
+  @CreateDateColumn()  
+  created\_at: Date;
+
+  @UpdateDateColumn()  
+  updated\_at: Date;  
+}
+
+\---
+
+5\. GroupEntity
+
+// src/academic/groups/group.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  ManyToOne,  
+  OneToMany,  
+  CreateDateColumn,  
+  UpdateDateColumn,  
+} from 'typeorm';  
+import { AcademicPeriod } from '../academic-periods/academic-period.entity';  
+import { Subject } from '../subjects/subject.entity';
+
+@Entity('groups')  
+export class Group {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column()  
+  name: string;
+
+  @Column({  
+    type: 'enum',  
+    enum: \['active', 'archived'\],  
+    default: 'active',  
+  })  
+  status: 'active' | 'archived';
+
+  @ManyToOne(() \=\> AcademicPeriod, period \=\> period.groups, {  
+    onDelete: 'RESTRICT',  
+  })  
+  academicPeriod: AcademicPeriod;
+
+  @OneToMany(() \=\> Subject, subject \=\> subject.group)  
+  subjects: Subject\[\];
+
+  @CreateDateColumn()  
+  created\_at: Date;
+
+  @UpdateDateColumn()  
+  updated\_at: Date;  
+}
+
+\---
+
+6\. SubjectEntity
+
+// src/academic/subjects/subject.entity.ts  
+import {  
+  Entity,  
+  PrimaryGeneratedColumn,  
+  Column,  
+  ManyToOne,  
+  CreateDateColumn,  
+  UpdateDateColumn,  
+} from 'typeorm';  
+import { Group } from '../groups/group.entity';
+
+@Entity('subjects')  
+export class Subject {  
+  @PrimaryGeneratedColumn()  
+  id: number;
+
+  @Column()  
+  name: string;
+
+  @Column({ default: true })  
+  is\_general: boolean;
+
+  @ManyToOne(() \=\> Group, group \=\> group.subjects, {  
+    onDelete: 'CASCADE',  
+  })  
+  group: Group;
+
+  @CreateDateColumn()  
+  created\_at: Date;
+
+  @UpdateDateColumn()  
+  updated\_at: Date;  
+}
+
+\---
+
+✅ ESTADO
+
+Entities CORE y académicas completas
+
+Listas para generar migración inicial
+
+Compatibles con BD v1.3
+
+\---
+
+⏭️ SIGUIENTE BLOQUE
+
+Students \+ Assignments
+
+Evaluations \+ Grades
+
+Files \+ Consents
+
+
+
+
+================================================
+FILE: docker-compose.yml
+================================================
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: school_db_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: school_db
+      MYSQL_USER: school_user
+      MYSQL_PASSWORD: school_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - school_db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: school_db_adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USERNAME: school_user
+      DB_PASSWORD: school_password
+      DB_DATABASE: school_db
+    depends_on:
+      - mariadb
+
+volumes:
+  school_db_data:
+
+
+
+================================================
+FILE: DOCUMENTACIÓN TÉCNICA V1 (CONGELADA).md
+================================================
+📚 DOCUMENTACIÓN TÉCNICA V1 (CONGELADA)  
+Este documento contiene TODO el diseño técnico del proyecto en formato Markdown. Incluye Base de Datos v1.3 FINAL y Backend v1 FINAL, listos para desarrollo.  
+🧭 Índice  
+• Estado del documento  
+• Base de Datos – v1.3 FINAL  
+• Backend – v1 FINAL  
+• Decisiones técnicas cerradas  
+• Alcance V1 / V2  
+1\. ESTADO DEL DOCUMENTO  
+✅ CONGELADO DEFINITIVO PARA DESARROLLO  
+Este documento no admite cambios estructurales en V1.  
+2\. BASE DE DATOS – v1.3 FINAL  
+MariaDB \+ TypeORM  
+2.1 Principios  
+• Nada se elimina físicamente  
+• Alumno persistente  
+• Separación por contexto  
+• Historial solo relevante  
+• Privacidad primero  
+2.2 Entidades  
+users  
+• id (PK)  
+• email (UNIQUE)  
+• password  
+• name  
+• status  
+• created\_at  
+• updated\_at  
+contexts  
+• id (PK)  
+• user\_id (FK)  
+• name  
+• level  
+• institution (nullable)  
+• status  
+• created\_at  
+• updated\_at  
+academic\_periods  
+• id (PK)  
+• context\_id (FK)  
+• type  
+• start\_date  
+• end\_date  
+• grace\_period\_days  
+• status  
+• created\_at  
+• updated\_at  
+Reglas  
+• Un solo periodo activo por contexto  
+• No solapamiento de fechas  
+• Validación en backend  
+groups  
+• id (PK)  
+• academic\_period\_id (FK)  
+• name  
+• status  
+• created\_at  
+• updated\_at  
+UNIQUE(academic\_period\_id, name)  
+subjects  
+• id (PK)  
+• group\_id (FK)  
+• name  
+• is\_general (boolean)  
+• created\_at  
+• updated\_at  
+Regla:  
+• Se crea automáticamente la materia "General" al crear un grupo  
+students  
+• id (PK)  
+• full\_name  
+• birth\_date (nullable)  
+• parent\_phone (nullable)  
+• notes (nullable)  
+• status  
+• created\_at  
+• updated\_at  
+Duplicados prevenidos en UI (fuzzy matching)  
+student\_assignments  
+• id (PK)  
+• student\_id (FK)  
+• group\_id (FK)  
+• status  
+• assigned\_at  
+• created\_at  
+• updated\_at  
+Regla:  
+• Alumno activo solo una vez por grupo (validación backend)  
+student\_assignment\_history  
+• id (PK)  
+• student\_assignment\_id (FK)  
+• action  
+• performed\_by (FK)  
+• performed\_at  
+attendance  
+• id (PK)  
+• student\_assignment\_id (FK)  
+• subject\_id (FK)  
+• date  
+• status  
+• created\_at  
+• updated\_at  
+INDEX(student\_assignment\_id, date)  
+evaluation\_items  
+• id (PK)  
+• subject\_id (FK)  
+• academic\_period\_id (FK)  
+• name  
+• weight  
+• created\_at  
+• updated\_at  
+CHECK(weight BETWEEN 0 AND 100\)  
+grades  
+• id (PK)  
+• evaluation\_item\_id (FK)  
+• student\_assignment\_id (FK)  
+• score  
+• created\_at  
+• updated\_at  
+UNIQUE(evaluation\_item\_id, student\_assignment\_id)  
+student\_records  
+• id (PK)  
+• student\_id (FK)  
+• context\_id (FK)  
+• academic\_period\_id (nullable)  
+• type  
+• description  
+• status  
+• created\_at  
+• updated\_at  
+student\_record\_replies  
+• id (PK)  
+• student\_record\_id (FK)  
+• reply\_text  
+• created\_at  
+• updated\_at  
+files  
+• id (PK)  
+• user\_id (FK)  
+• student\_id (nullable)  
+• academic\_period\_id (nullable)  
+• file\_name  
+• storage\_key  
+• file\_type  
+• file\_category  
+• note  
+• created\_at  
+• updated\_at  
+student\_share\_consents  
+• id (PK)  
+• student\_id (FK)  
+• from\_user\_id (FK)  
+• to\_user\_id (FK)  
+• is\_active  
+• created\_at  
+• expires\_at  
+• revoked\_at  
+student\_share\_consent\_types  
+• id (PK)  
+• consent\_id (FK)  
+• record\_type  
+3\. BACKEND – v1 FINAL  
+NestJS \+ TypeORM  
+3.1 Stack  
+• NestJS  
+• TypeORM  
+• MariaDB  
+• JWT (access \+ refresh)  
+• Multer (storage local)  
+• @nestjs/schedule  
+3.2 Arquitectura  
+src/ ├── auth/ ├── users/ ├── academic/ │ ├── contexts/ │ ├── academic-periods/ │ ├── groups/ │ └── subjects/ ├── student-management/ │ ├── students/ │ ├── student-assignments/ │ ├── student-records/ │ └── consents/ ├── assessments/ │ ├── attendance/ │ ├── evaluations/ │ └── grades/ ├── files/ ├── dashboard/ ├── jobs/ ├── common/ └── main.ts   
+3.3 Autenticación  
+• Access token: 15 min  
+• Refresh token: 7 días (en BD)  
+Endpoints:  
+• POST /auth/register  
+• POST /auth/login  
+• POST /auth/refresh  
+• POST /auth/logout  
+• POST /auth/forgot-password  
+• POST /auth/reset-password  
+3.4 Guards e Interceptors  
+Guard Global  
+• Usuario activo  
+• Periodo NO archivado  
+Interceptor  
+• Respuesta estándar  
+3.5 Módulos y Endpoints (resumen)  
+Academic  
+• contexts  
+• academic-periods  
+• groups (crea subject General)  
+• subjects  
+Student Management  
+• students  
+• student-assignments  
+• student-records  
+• consents  
+Assessments  
+• attendance  
+• evaluations  
+• grades  
+Files  
+• upload  
+• export  
+Dashboard  
+• summary  
+• recent-activity  
+• alerts  
+3.6 Jobs  
+• Archivado automático (cron diario)  
+• Limpieza de refresh tokens (cron semanal)  
+4\. DECISIONES TÉCNICAS CERRADAS  
+• Arquitectura modular agrupada  
+• Backend dicta reglas  
+• Storage local preparado para S3  
+• Auth con refresh tokens  
+• Recuperación de contraseña incluida  
+5\. ALCANCE  
+V1  
+• CRUD completo  
+• Auth segura  
+• Dashboard básico  
+• Archivos locales  
+V2  
+• Suscripciones  
+• S3  
+• Auditoría avanzada  
+• Notificaciones  
+✅ DOCUMENTO FINAL  
+TODO EL SISTEMA ESTÁ LISTO PARA CODIFICARSE
+
+* 
+
+
+================================================
+FILE: Documento de requerimientos base de datos.md
+================================================
+\# 📄 DOCUMENTO DE REQUERIMIENTOS    
+\#\# BASE DE DATOS – v1.3 FINAL    
+\*\*(MariaDB \+ TypeORM)\*\*
+
+\---
+
+\#\# 0\. Estado del documento  
+\*\*CONGELADO DEFINITIVO PARA DESARROLLO\*\*
+
+Este documento integra todas las decisiones de producto y técnicas  
+validadas.    
+No se realizarán cambios estructurales adicionales en V1.
+
+\---
+
+\#\# 1\. Objetivo  
+Definir la estructura final de la \*\*base de datos\*\* para una aplicación  
+de gestión docente personal que permita:
+
+\- Organización académica multi-nivel (primaria → universidad)  
+\- Persistencia de alumnos  
+\- Historial relevante y auditable  
+\- Privacidad y consentimiento explícito  
+\- Desarrollo estable con Angular \+ NestJS \+ TypeORM
+
+\---
+
+\#\# 2\. Principios de diseño
+
+1\. Nada se elimina físicamente    
+2\. El alumno es persistente    
+3\. Separación estricta por contexto    
+4\. Historial solo de información relevante    
+5\. Privacidad primero    
+6\. UX docente por encima de rigidez institucional    
+7\. Validaciones críticas en backend    
+8\. V1 sin monetización activa  
+
+\---
+
+\#\# 3\. Convenciones generales
+
+\#\#\# 3.1 Estados  
+Campo estándar \`status\`:  
+\- \`active\`  
+\- \`archived\`  
+\- \`inactive\`
+
+\#\#\# 3.2 Timestamps  
+Todas las tablas incluyen:  
+\- \`created\_at\`  
+\- \`updated\_at\`
+
+\---
+
+\#\# 4\. Entidades del sistema
+
+\---
+
+\#\#\# 4.1 \`users\`  
+\*\*Docentes\*\*
+
+Campos:  
+\- id (PK)  
+\- email (UNIQUE)  
+\- password  
+\- name  
+\- status  
+\- created\_at  
+\- updated\_at
+
+\---
+
+\#\#\# 4.2 \`contexts\`  
+Entornos independientes de trabajo.
+
+Campos:  
+\- id (PK)  
+\- user\_id (FK → users)  
+\- name  
+\- level  
+\- institution (nullable)  
+\- status  
+\- created\_at  
+\- updated\_at
+
+\---
+
+\#\#\# 4.3 \`academic\_periods\`  
+Ciclos académicos.
+
+Campos:  
+\- id (PK)  
+\- context\_id (FK → contexts)  
+\- type (trimestre | cuatrimestre | semestre | anual)  
+\- start\_date  
+\- end\_date  
+\- grace\_period\_days  
+\- status  
+\- created\_at  
+\- updated\_at
+
+Reglas:  
+\- Solo un periodo activo por contexto  
+\- No se permiten fechas solapadas  
+\- Periodos archivados son solo lectura
+
+\*\*Validación:\*\* Backend (NestJS)
+
+\---
+
+\#\#\# 4.4 \`groups\`  
+Grupos o salones.
+
+Campos:  
+\- id (PK)  
+\- academic\_period\_id (FK → academic\_periods)  
+\- name  
+\- status  
+\- created\_at  
+\- updated\_at
+
+Restricción:  
+\- UNIQUE(academic\_period\_id, name)
+
+\---
+
+\#\#\# 4.5 \`subjects\`  
+Materias / asignaturas.
+
+Campos:  
+\- id (PK)  
+\- group\_id (FK → groups)  
+\- name  
+\- is\_general (BOOLEAN, default TRUE)  
+\- created\_at  
+\- updated\_at
+
+Creación automática:  
+\- Al crear un grupo, el backend crea:  
+  \- name \= 'General'  
+  \- is\_general \= TRUE
+
+No se usan triggers de BD.
+
+\---
+
+\#\#\# 4.6 \`students\`  
+Alumno único y persistente.
+
+Campos:  
+\- id (PK)  
+\- full\_name  
+\- birth\_date (nullable)  
+\- parent\_phone (nullable)  
+\- notes (nullable)  
+\- status  
+\- created\_at  
+\- updated\_at
+
+Duplicados:  
+\- Prevenidos mediante fuzzy matching en UI  
+\- No existe identificador institucional obligatorio
+
+\---
+
+\#\#\# 4.7 \`student\_assignments\`  
+Relación alumno ↔ grupo.
+
+Campos:  
+\- id (PK)  
+\- student\_id (FK → students)  
+\- group\_id (FK → groups)  
+\- status  
+\- assigned\_at  
+\- created\_at  
+\- updated\_at
+
+Regla:  
+\- Un alumno solo puede estar \*\*activo una vez\*\* en el mismo grupo
+
+\*\*Validación:\*\* Backend (NestJS)
+
+\---
+
+\#\#\# 4.8 \`student\_assignment\_history\`  
+Historial de asignaciones.
+
+Campos:  
+\- id (PK)  
+\- student\_assignment\_id (FK)  
+\- action (assigned | unassigned | reactivated)  
+\- performed\_by (FK → users)  
+\- performed\_at
+
+\---
+
+\#\#\# 4.9 \`attendance\`  
+Asistencia.
+
+Campos:  
+\- id (PK)  
+\- student\_assignment\_id (FK)  
+\- subject\_id (FK → subjects)  
+\- date  
+\- status (present | absent | late)  
+\- created\_at  
+\- updated\_at
+
+Índice:  
+\- (student\_assignment\_id, date)
+
+\---
+
+\#\#\# 4.10 \`evaluation\_items\`  
+Actividades evaluables.
+
+Campos:  
+\- id (PK)  
+\- subject\_id (FK → subjects)  
+\- academic\_period\_id (FK)  
+\- name  
+\- weight  
+\- created\_at  
+\- updated\_at
+
+Reglas:  
+\- weight entre 0 y 100  
+\- Suma de pesos validada en UI (warning si ≠ 100\)
+
+\---
+
+\#\#\# 4.11 \`grades\`  
+Calificaciones.
+
+Campos:  
+\- id (PK)  
+\- evaluation\_item\_id (FK → evaluation\_items)  
+\- student\_assignment\_id (FK)  
+\- score  
+\- created\_at  
+\- updated\_at
+
+Regla:  
+\- Una calificación por alumno por actividad
+
+Restricción:  
+\- UNIQUE(evaluation\_item\_id, student\_assignment\_id)
+
+\---
+
+\#\#\# 4.12 \`student\_records\`  
+Bitácora relevante del alumno.
+
+Tipos:  
+\- conducta  
+\- tutoría  
+\- médico  
+\- cognitivo
+
+Campos:  
+\- id (PK)  
+\- student\_id (FK)  
+\- context\_id (FK)  
+\- academic\_period\_id (FK, nullable)  
+\- type  
+\- description  
+\- status  
+\- created\_at  
+\- updated\_at
+
+\---
+
+\#\#\# 4.13 \`student\_record\_replies\`  
+Derecho de réplica.
+
+Campos:  
+\- id (PK)  
+\- student\_record\_id (FK)  
+\- reply\_text  
+\- created\_at  
+\- updated\_at
+
+Alcance:  
+\- Solo aplica a \`student\_records\`  
+\- No aplica a calificaciones ni asistencia
+
+\---
+
+\#\#\# 4.14 \`files\`  
+Archivos.
+
+Campos:  
+\- id (PK)  
+\- user\_id (FK)  
+\- student\_id (FK, nullable)  
+\- academic\_period\_id (FK, nullable)  
+\- file\_name  
+\- storage\_key  
+\- file\_type  
+\- file\_category (evidence | material | planning)  
+\- note (nullable)  
+\- created\_at  
+\- updated\_at
+
+Reglas:  
+\- Evidencias: student\_id NOT NULL  
+\- Exportación por alumno y periodo
+
+\---
+
+\#\#\# 4.15 \`student\_share\_consents\`  
+Consentimiento de compartición.
+
+Campos:  
+\- id (PK)  
+\- student\_id (FK)  
+\- from\_user\_id (FK)  
+\- to\_user\_id (FK)  
+\- is\_active  
+\- created\_at  
+\- expires\_at (nullable)  
+\- revoked\_at (nullable)
+
+\---
+
+\#\#\# 4.16 \`student\_share\_consent\_types\`  
+Tipos compartidos.
+
+Campos:  
+\- id (PK)  
+\- consent\_id (FK)  
+\- record\_type (conducta | tutoría | médico | cognitivo)
+
+Regla:  
+\- Nunca se comparten calificaciones ni asistencia
+
+\---
+
+\#\# 5\. Procesos automáticos (Backend)
+
+\#\#\# 5.1 Archivado de periodos  
+\- Frecuencia: diaria (02:00 AM)  
+\- Implementación: NestJS Scheduler  
+\- Acción:  
+  \- Archivar periodos vencidos  
+  \- Archivar grupos asociados  
+  \- Bloquear edición
+
+\---
+
+\#\# 6\. Índices obligatorios
+
+\- Todos los FKs  
+\- students(full\_name)  
+\- attendance(student\_assignment\_id, date)  
+\- student\_records(student\_id, context\_id, type, status)  
+\- files(user\_id, academic\_period\_id)  
+\- student\_assignment\_history(student\_assignment\_id, performed\_at)
+
+\---
+
+\#\# 7\. Validaciones y constraints
+
+\#\#\# Nivel Base de Datos  
+\- UNIQUE:  
+  \- users(email)  
+  \- groups(academic\_period\_id, name)  
+  \- grades(evaluation\_item\_id, student\_assignment\_id)  
+\- CHECK:  
+  \- evaluation\_items.weight BETWEEN 0 AND 100
+
+\#\#\# Nivel Backend (NestJS)  
+\- Un solo periodo activo por contexto  
+\- No solapamiento de fechas  
+\- Un alumno activo por grupo  
+\- Control de compartición de historial  
+\- Fuzzy matching de alumnos
+
+\---
+
+\#\# 8\. Vistas del sistema
+
+\#\#\# 8.1 \`dashboard\_summary\`  
+Vista simple (no materializada).
+
+Propósito:  
+\- Home del docente
+
+Incluye:  
+\- Contextos activos  
+\- Periodos activos y archivados  
+\- Grupos activos  
+\- Alumnos activos
+
+\---
+
+\#\# 9\. Alcance V1
+
+Incluido:  
+\- Uso completo FREE  
+\- Sin límites artificiales  
+\- Sin monetización
+
+Excluido (V2):  
+\- Suscripciones  
+\- Import templates configurables  
+\- Auditoría avanzada  
+\- Vistas materializadas  
+\- Triggers complejos
+
+\---
+
+\#\# ✅ ESTADO FINAL  
+\*\*VERSIÓN 1.3 – CONGELADA DEFINITIVA PARA DESARROLLO\*\*
+
+
+================================================
+FILE: logs.txt
+================================================
+[Binary file]
+
+
+================================================
+FILE: logs_error.txt
+================================================
+﻿
+> backend@0.0.1 start:prod
+> node dist/main
+
+docker : /app/node_mod
+ules/@nestjs/typeorm/d
+ist/common/typeorm.uti
+ls.js:123
+En línea: 1 Carácter: 
+1
++ docker logs 
+school_backend 2>&1 | 
+Out-File -Encoding 
+UTF8 logs_error. ...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (/app/node_   
+ modul...rm.utils.    
+js:123:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+
+Node.js v18.20.8
+> backend@0.0.1 start:prod
+> node dist/main
+
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+
+> backend@0.0.1 start:prod
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+> node dist/main
+
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+> backend@0.0.1 start:prod
+> node dist/main
+
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+Node.js v18.20.8
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+> backend@0.0.1 start:prod
+> node dist/main
+
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+/app/node_modules/@nes
+tjs/typeorm/dist/commo
+n/typeorm.utils.js:123
+const generateString 
+= () => 
+crypto.randomUUID();
+                      
+              ^
+
+ReferenceError: 
+crypto is not defined
+    at generateString 
+(/app/node_modules/@ne
+stjs/typeorm/dist/comm
+on/typeorm.utils.js:12
+3:37)
+    at TypeOrmCoreModu
+le.forRootAsync (/app/
+node_modules/@nestjs/t
+ypeorm/dist/typeorm-co
+re.module.js:86:62)
+    at TypeOrmModule.f
+orRootAsync (/app/node
+_modules/@nestjs/typeo
+rm/dist/typeorm.module
+.js:35:63)
+    at 
+Object.<anonymous> (/a
+pp/dist/app.module.js:
+43:37)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1364:14)
+    at Module._extensi
+ons..js (node:internal
+/modules/cjs/loader:14
+22:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1203:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1019:12)
+    at Module.require 
+(node:internal/modules
+/cjs/loader:1231:19)
+    at require (node:i
+nternal/modules/helper
+s:177:18)
+
+Node.js v18.20.8
+
+
+
+================================================
+FILE: logs_utf8.txt
+================================================
+﻿
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+
+
+================================================
+FILE: backend/README.md
+================================================
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Project setup
+
+```bash
+$ npm install
+```
+
+## Compile and run the project
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Run tests
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Deployment
+
+When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+
+If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+
+```bash
+$ npm install -g @nestjs/mau
+$ mau deploy
+```
+
+With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+
+## Resources
+
+Check out a few resources that may come in handy when working with NestJS:
+
+- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
+- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
+- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
+- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
+- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
+- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+
+================================================
+FILE: backend/check-grade.js
+================================================
+
+async function check() {
+    let token;
+    console.log('Authenticating...');
+    try {
+        let resAuth = await fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@school.com',
+                password: 'adminpassword'
+            })
+        });
+
+        const authData = await resAuth.json();
+        token = authData.access_token;
+    } catch (error) {
+        console.error('Auth Error:', error);
+        return;
+    }
+
+    console.log('\nChecking Grade...');
+    try {
+        // Since I don't have a direct endpoint to get a single grade by evaluationItemId and studentAssignmentId easily exposed,
+        // I will use GET /grades which returns all grades.
+        const res = await fetch('http://localhost:3000/grades', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const grades = await res.json();
+        console.log('Grades:', JSON.stringify(grades, null, 2));
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+check();
+
+
+
+================================================
+FILE: backend/Dockerfile
+================================================
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start:prod"]
+
+
+
+================================================
+FILE: backend/eslint.config.mjs
+================================================
+// @ts-check
+import eslint from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  {
+    ignores: ['eslint.config.mjs'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  eslintPluginPrettierRecommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
+      sourceType: 'commonjs',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      "prettier/prettier": ["error", { endOfLine: "auto" }],
+    },
+  },
+);
+
+
+
+================================================
+FILE: backend/nest-cli.json
+================================================
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true
+  }
+}
+
+
+
+================================================
+FILE: backend/package.json
+================================================
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/mapped-types": "^2.1.0",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/schedule": "^6.1.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
+    "mysql2": "^3.16.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.28"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.10.7",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "jest": "^30.0.0",
+    "prettier": "^3.4.2",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+
+
+
+================================================
+FILE: backend/test-attendance.js
+================================================
+
+async function test() {
+    let token;
+    console.log('Authenticating...');
+    try {
+        // Try to login first
+        let resAuth = await fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@school.com',
+                password: 'adminpassword'
+            })
+        });
+
+        if (resAuth.status !== 200 && resAuth.status !== 201) {
+            console.log('Login failed, trying to register...');
+            const resReg = await fetch('http://localhost:3000/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: 'admin@school.com',
+                    password: 'adminpassword',
+                    name: 'Admin User'
+                })
+            });
+            console.log('Registration status:', resReg.status);
+
+            // Login again
+            console.log('Logging in after registration...');
+            resAuth = await fetch('http://localhost:3000/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: 'admin@school.com',
+                    password: 'adminpassword'
+                })
+            });
+        }
+
+        const authData = await resAuth.json();
+        if (authData.access_token) {
+            token = authData.access_token;
+            console.log('Authenticated! Token obtained.');
+        } else {
+            console.error('Authentication failed:', authData);
+            return;
+        }
+    } catch (error) {
+        console.error('Auth Error:', error);
+        return;
+    }
+
+    console.log('\nTesting with single object...');
+    try {
+        const resSingle = await fetch('http://localhost:3000/attendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                studentId: 2,
+                groupId: 1,
+                date: new Date().toISOString(),
+                status: 'present'
+            })
+        });
+        const text = await resSingle.text();
+        console.log('Single Object Result:', resSingle.status, text);
+    } catch (error) {
+        console.error('Single Object Error:', error);
+    }
+
+    console.log('\nTesting with array...');
+    try {
+        const resArray = await fetch('http://localhost:3000/attendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify([
+                {
+                    studentId: 2,
+                    groupId: 1,
+                    date: new Date().toISOString(),
+                    status: 'present'
+                }
+            ])
+        });
+        const textArray = await resArray.text();
+        console.log('Array Result:', resArray.status, textArray);
+    } catch (error) {
+        console.error('Array Error:', error);
+    }
+}
+
+test();
+
+
+
+================================================
+FILE: backend/test-db.js
+================================================
+
+const mysql = require('mysql2/promise');
+
+async function testConnection() {
+    console.log('Testing connection to database...');
+    try {
+        const connection = await mysql.createConnection({
+            host: '127.0.0.1',
+            port: 3306,
+            user: 'school_user',
+            password: 'school_password',
+            database: 'school_db'
+        });
+        console.log('Successfully connected to the database!');
+        await connection.end();
+    } catch (error) {
+        console.error('Failed to connect:', error);
+    }
+}
+
+testConnection();
+
+
+
+================================================
+FILE: backend/test-evaluation.js
+================================================
+
+async function test() {
+    let token;
+    console.log('Authenticating...');
+    try {
+        let resAuth = await fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@school.com',
+                password: 'adminpassword'
+            })
+        });
+
+        if (resAuth.status !== 200 && resAuth.status !== 201) {
+            console.log('Login failed, registering...');
+            await fetch('http://localhost:3000/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: 'admin@school.com',
+                    password: 'adminpassword',
+                    name: 'Admin User'
+                })
+            });
+
+            resAuth = await fetch('http://localhost:3000/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: 'admin@school.com',
+                    password: 'adminpassword'
+                })
+            });
+        }
+
+        const authData = await resAuth.json();
+        if (authData.access_token) {
+            token = authData.access_token;
+            console.log('Authenticated!');
+        } else {
+            console.error('Authentication failed:', authData);
+            return;
+        }
+    } catch (error) {
+        console.error('Auth Error:', error);
+        return;
+    }
+
+    console.log('\nTesting Create Evaluation...');
+    try {
+        const payload = {
+            name: "tarea",
+            subjectId: 4,
+            type: "exam",
+            maxScore: 100,
+            weight: 100,
+            dueDate: "2026-02-16T23:25:28.835Z",
+            description: ""
+        };
+
+        const res = await fetch('http://localhost:3000/evaluations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+        console.log('Result:', res.status, text);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+test();
+
+
+
+================================================
+FILE: backend/test-grades-batch.js
+================================================
+
+async function test() {
+    let token;
+    console.log('Authenticating...');
+    try {
+        let resAuth = await fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@school.com',
+                password: 'adminpassword'
+            })
+        });
+
+        if (!resAuth.ok) {
+            console.error('Auth failed:', resAuth.status);
+            return;
+        }
+
+        const authData = await resAuth.json();
+        token = authData.access_token;
+        console.log('Authenticated!');
+    } catch (error) {
+        console.error('Auth Error:', error);
+        return;
+    }
+
+    console.log('\nTesting Batch Grades...');
+    try {
+        const payload = [
+            {
+                evaluationItemId: 1,
+                studentAssignmentId: 2,
+                score: 8.5
+            },
+            {
+                evaluationItemId: 1,
+                studentAssignmentId: 2, // Testing multiple grades for same student same item? Usually should be one per item.
+                // But let's assume we are sending for different students.
+                // Since I only have 1 student assignment (ID 2), I'll just send 1 item in array or duplicate it to test array handling.
+                score: 9.0
+            }
+        ];
+
+        const res = await fetch('http://localhost:3000/grades/batch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+        console.log('Result:', res.status, text);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+test();
+
+
+
+================================================
+FILE: backend/test-output-eval.txt
+================================================
+Authenticating...
+Authenticated!
+
+Testing Create Evaluation...
+Result: 201 {"id":1,"subjectId":4,"academicPeriodId":2,"name":"tarea","weight":100,"createdAt":"2026-02-17T05:33:55.865Z","updatedAt":"2026-02-17T05:33:55.865Z","type":"exam","maxScore":100,"dueDate":"2026-02-16T23:25:28.835Z","description":""}
+
+
+
+================================================
+FILE: backend/test-output-grade-check.txt
+================================================
+Authenticating...
+
+Checking Grade...
+Grades: [
+  {
+    "id": 3,
+    "evaluationItemId": 1,
+    "studentAssignmentId": 2,
+    "score": "9.00",
+    "createdAt": "2026-02-17T05:43:34.563Z",
+    "updatedAt": "2026-02-17T05:43:34.563Z"
+  }
+]
+
+
+
+================================================
+FILE: backend/test-output-grades-2.txt
+================================================
+Authenticating...
+Authenticated!
+
+Testing Batch Grades...
+Result: 201 {"identifiers":[{"id":3},{"id":4}],"generatedMaps":[{"id":3,"createdAt":"2026-02-17T05:43:34.563Z","updatedAt":"2026-02-17T05:43:34.563Z"},{"id":4}],"raw":{"fieldCount":0,"affectedRows":3,"insertId":3,"info":"Records: 2  Duplicates: 1  Warnings: 0","serverStatus":2,"warningStatus":0,"changedRows":0}}
+
+
+
+================================================
+FILE: backend/test-output-grades.txt
+================================================
+Authenticating...
+Authenticated!
+
+Testing Batch Grades...
+Result: 500 {"statusCode":500,"message":"Internal server error"}
+
+
+
+================================================
+FILE: backend/test-output.txt
+================================================
+Authenticating...
+Authenticated! Token obtained.
+
+Testing with single object...
+Single Object Result: 400 {"message":"Student 2 is not assigned to group 1","error":"Bad Request","statusCode":400}
+
+Testing with array...
+Array Result: 400 {"message":"Student 2 is not assigned to group 1","error":"Bad Request","statusCode":400}
+
+
+
+================================================
+FILE: backend/tsconfig.build.json
+================================================
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
+
+
+
+================================================
+FILE: backend/tsconfig.json
+================================================
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
+
+
+
+================================================
+FILE: backend/.prettierrc
+================================================
+{
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+
+
+
+================================================
+FILE: backend/src/app.controller.spec.ts
+================================================
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+describe('AppController', () => {
+  let appController: AppController;
+
+  beforeEach(async () => {
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [AppController],
+      providers: [AppService],
+    }).compile();
+
+    appController = app.get<AppController>(AppController);
+  });
+
+  describe('root', () => {
+    it('should return "Hello World!"', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
+  });
+});
+
+
+
+================================================
+FILE: backend/src/app.controller.ts
+================================================
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+
+
+
+================================================
+FILE: backend/src/app.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { AtGuard } from './common/guards/at.guard';
+import { ActivityTrackerInterceptor } from './common/interceptors/activity-tracker.interceptor';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { CommonModule } from './common/common.module';
+import { JobsModule } from './jobs/jobs.module';
+import { UsersModule } from './users/users.module';
+import { FilesModule } from './files/files.module';
+import { ContextsModule } from './academic/contexts/contexts.module';
+import { AcademicPeriodsModule } from './academic/academic-periods/academic-periods.module';
+import { GroupsModule } from './academic/groups/groups.module';
+import { SubjectsModule } from './academic/subjects/subjects.module';
+import { StudentsModule } from './student-management/students/students.module';
+import { StudentAssignmentsModule } from './student-management/student-assignments/student-assignments.module';
+import { StudentRecordsModule } from './student-management/student-records/student-records.module';
+import { ConsentsModule } from './student-management/consents/consents.module';
+import { AttendanceModule } from './assessments/attendance/attendance.module';
+import { EvaluationsModule } from './assessments/evaluations/evaluations.module';
+import { GradesModule } from './assessments/grades/grades.module';
+import { AuthModule } from './auth/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('DB_HOST', 'localhost'),
+        port: configService.get<number>('DB_PORT', 3306),
+        username: configService.get<string>('DB_USERNAME', 'root'),
+        password: configService.get<string>('DB_PASSWORD', ''),
+        database: configService.get<string>('DB_DATABASE', 'school_db'),
+        autoLoadEntities: true,
+        synchronize: true, // Set to false in production
+      }),
+      inject: [ConfigService],
+    }),
+    CommonModule,
+    JobsModule,
+    UsersModule,
+    FilesModule,
+    ContextsModule,
+    AcademicPeriodsModule,
+    GroupsModule,
+    SubjectsModule,
+    StudentsModule,
+    StudentAssignmentsModule,
+    StudentRecordsModule,
+    ConsentsModule,
+    AttendanceModule,
+    EvaluationsModule,
+    GradesModule,
+    AuthModule,
+    DashboardModule,
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ActivityTrackerInterceptor,
+    },
+  ],
+})
+export class AppModule { }
+
+
+
+================================================
+FILE: backend/src/app.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+
+
+================================================
+FILE: backend/src/main.ts
+================================================
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
+
+async function bootstrap() {
+  try {
+    const app = await NestFactory.create(AppModule);
+
+    // Enable CORS
+    app.enableCors({
+      origin: 'http://localhost:4200',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+    });
+
+    // Enable global validation
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      exceptionFactory: (errors) => {
+        console.log('VALIDATION ERRORS:', JSON.stringify(errors, null, 2));
+        return new BadRequestException(errors);
+      }
+    }));
+
+    await app.listen(process.env.PORT ?? 3000);
+  } catch (error) {
+    console.error('BOOTSTRAP ERROR:', error);
+    process.exit(1);
+  }
+}
+bootstrap();
+
+
+
+================================================
+FILE: backend/src/academic/academic-periods/academic-periods.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { AcademicPeriodsService } from './academic-periods.service';
+import { CreateAcademicPeriodDto } from './dto/create-academic-period.dto';
+import { UpdateAcademicPeriodDto } from './dto/update-academic-period.dto';
+
+@Controller('academic-periods')
+export class AcademicPeriodsController {
+    constructor(private readonly academicPeriodsService: AcademicPeriodsService) { }
+
+    @Post()
+    create(@Body() createAcademicPeriodDto: CreateAcademicPeriodDto) {
+        return this.academicPeriodsService.create(createAcademicPeriodDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.academicPeriodsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.academicPeriodsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateAcademicPeriodDto: UpdateAcademicPeriodDto) {
+        return this.academicPeriodsService.update(+id, updateAcademicPeriodDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.academicPeriodsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/academic-periods/academic-periods.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AcademicPeriodsService } from './academic-periods.service';
+import { AcademicPeriodsController } from './academic-periods.controller';
+import { AcademicPeriod } from './entities/academic-period.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([AcademicPeriod])],
+  controllers: [AcademicPeriodsController],
+  providers: [AcademicPeriodsService],
+})
+export class AcademicPeriodsModule { }
+
+
+
+================================================
+FILE: backend/src/academic/academic-periods/academic-periods.service.ts
+================================================
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateAcademicPeriodDto } from './dto/create-academic-period.dto';
+import { UpdateAcademicPeriodDto } from './dto/update-academic-period.dto';
+import { AcademicPeriod } from './entities/academic-period.entity';
+
+@Injectable()
+export class AcademicPeriodsService {
+    constructor(
+        @InjectRepository(AcademicPeriod)
+        private periodsRepository: Repository<AcademicPeriod>,
+    ) { }
+
+    async create(createAcademicPeriodDto: CreateAcademicPeriodDto) {
+        // Regla: Un solo periodo activo por contexto
+        const status = createAcademicPeriodDto.status || 'active';
+        if (status === 'active') {
+            const activePeriod = await this.periodsRepository.findOne({
+                where: {
+                    contextId: createAcademicPeriodDto.contextId, // Asegurarnos de usar contextId
+                    status: 'active',
+                },
+            });
+            if (activePeriod) {
+                // throw new BadRequestException('Ya existe un periodo activo para este contexto');
+                // Opcional: Desactivar el anterior automáticamente
+                // await this.periodsRepository.update(activePeriod.id, { status: 'archived' });
+            }
+        }
+
+        const newPeriod = this.periodsRepository.create({
+            ...createAcademicPeriodDto,
+            startDate: new Date(createAcademicPeriodDto.startDate),
+            endDate: new Date(createAcademicPeriodDto.endDate),
+        });
+
+        return this.periodsRepository.save(newPeriod);
+    }
+
+    findAll() {
+        return this.periodsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.periodsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateAcademicPeriodDto: UpdateAcademicPeriodDto) {
+        return this.periodsRepository.update(id, updateAcademicPeriodDto);
+    }
+
+    remove(id: number) {
+        return this.periodsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/academic-periods/dto/create-academic-period.dto.ts
+================================================
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class CreateAcademicPeriodDto {
+    @IsNotEmpty()
+    @IsNumber()
+    contextId: number;
+
+    // ✅ AGREGAR ESTE CAMPO
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
+    type: string;
+
+    @IsNotEmpty()
+    @IsDateString()
+    startDate: string;
+
+    @IsNotEmpty()
+    @IsDateString()
+    endDate: string;
+
+    @IsOptional()
+    @IsNumber()
+    gracePeriodDays?: number;
+
+    @IsOptional()
+    @IsString()
+    status?: 'active' | 'archived';
+}
+
+
+================================================
+FILE: backend/src/academic/academic-periods/dto/update-academic-period.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateAcademicPeriodDto } from './create-academic-period.dto';
+
+export class UpdateAcademicPeriodDto extends PartialType(CreateAcademicPeriodDto) { }
+
+
+
+================================================
+FILE: backend/src/academic/academic-periods/entities/academic-period.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Context } from '../../contexts/entities/context.entity';
+import { Group } from '../../groups/entities/group.entity';
+import { EvaluationItem } from '../../../assessments/evaluations/entities/evaluation-item.entity';
+import { FileEntity } from '../../../files/entities/file.entity';
+import { StudentRecord } from '../../../student-management/student-records/entities/student-record.entity';
+
+@Entity('academic_periods')
+export class AcademicPeriod {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'context_id' })
+    contextId: number;
+
+    @ManyToOne(() => Context, (context) => context.academicPeriods, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'context_id' })
+    context: Context;
+
+    // ✅ AGREGAR ESTE CAMPO
+    @Column()
+    name: string;
+
+    @Column()
+    type: string;
+
+    @Column({ name: 'start_date', type: 'date' })
+    startDate: Date;
+
+    @Column({ name: 'end_date', type: 'date' })
+    endDate: Date;
+
+    @Column({ name: 'grace_period_days', default: 0 })
+    gracePeriodDays: number;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'archived'],
+        default: 'active',
+    })
+    status: 'active' | 'archived';
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => Group, (group) => group.academicPeriod)
+    groups: Group[];
+
+    @OneToMany(() => EvaluationItem, (item) => item.academicPeriod)
+    evaluationItems: EvaluationItem[];
+}
+
+
+================================================
+FILE: backend/src/academic/contexts/contexts.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ContextsService } from './contexts.service';
+import { CreateContextDto } from './dto/create-context.dto';
+import { UpdateContextDto } from './dto/update-context.dto';
+
+@Controller('contexts')
+export class ContextsController {
+    constructor(private readonly contextsService: ContextsService) { }
+
+    @Post()
+    create(@Body() createContextDto: CreateContextDto) {
+        return this.contextsService.create(createContextDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.contextsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.contextsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateContextDto: UpdateContextDto) {
+        return this.contextsService.update(+id, updateContextDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.contextsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/contexts/contexts.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContextsService } from './contexts.service';
+import { ContextsController } from './contexts.controller';
+import { Context } from './entities/context.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Context])],
+  controllers: [ContextsController],
+  providers: [ContextsService],
+})
+export class ContextsModule { }
+
+
+
+================================================
+FILE: backend/src/academic/contexts/contexts.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateContextDto } from './dto/create-context.dto';
+import { UpdateContextDto } from './dto/update-context.dto';
+import { Context } from './entities/context.entity';
+
+@Injectable()
+export class ContextsService {
+    constructor(
+        @InjectRepository(Context)
+        private contextsRepository: Repository<Context>,
+    ) { }
+
+    create(createContextDto: CreateContextDto) {
+        return this.contextsRepository.save(createContextDto);
+    }
+
+    findAll() {
+        return this.contextsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.contextsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateContextDto: UpdateContextDto) {
+        return this.contextsRepository.update(id, updateContextDto);
+    }
+
+    remove(id: number) {
+        return this.contextsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/contexts/dto/create-context.dto.ts
+================================================
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+
+export class CreateContextDto {
+    @IsNotEmpty()
+    @IsNumber()
+    userId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
+    level: string;
+}
+
+export class UpdateContextDto extends PartialType(CreateContextDto) { }
+
+
+
+================================================
+FILE: backend/src/academic/contexts/dto/update-context.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateContextDto } from './create-context.dto';
+
+export class UpdateContextDto extends PartialType(CreateContextDto) { }
+
+
+
+================================================
+FILE: backend/src/academic/contexts/entities/context.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { User } from '../../../users/entities/user.entity';
+import { AcademicPeriod } from '../../academic-periods/entities/academic-period.entity';
+import { StudentRecord } from '../../../student-management/student-records/entities/student-record.entity';
+
+@Entity('contexts')
+export class Context {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'user_id' })
+    userId: number;
+
+    @ManyToOne(() => User, (user) => user.contexts)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
+
+    @Column()
+    name: string;
+
+    @Column()
+    level: string;
+
+    @Column({ nullable: true })
+    institution: string;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'archived', 'inactive'],
+        default: 'active',
+    })
+    status: 'active' | 'archived' | 'inactive';
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => AcademicPeriod, (period) => period.context)
+    academicPeriods: AcademicPeriod[];
+
+    @OneToMany(() => StudentRecord, (record) => record.context)
+    studentRecords: StudentRecord[];
+}
+
+
+
+================================================
+FILE: backend/src/academic/groups/groups.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { GroupsService } from './groups.service';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
+
+@Controller('groups')
+export class GroupsController {
+    constructor(private readonly groupsService: GroupsService) { }
+
+    @Post()
+    create(@Body() createGroupDto: CreateGroupDto) {
+        return this.groupsService.create(createGroupDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.groupsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.groupsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
+        return this.groupsService.update(+id, updateGroupDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.groupsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/groups/groups.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GroupsService } from './groups.service';
+import { GroupsController } from './groups.controller';
+import { Group } from './entities/group.entity';
+import { SubjectsModule } from '../subjects/subjects.module'; // To create subjects
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Group]), SubjectsModule],
+  controllers: [GroupsController],
+  providers: [GroupsService],
+})
+export class GroupsModule { }
+
+
+
+================================================
+FILE: backend/src/academic/groups/groups.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
+import { Group } from './entities/group.entity';
+import { SubjectsService } from '../subjects/subjects.service';
+
+@Injectable()
+export class GroupsService {
+    constructor(
+        @InjectRepository(Group)
+        private groupsRepository: Repository<Group>,
+        private subjectsService: SubjectsService,
+    ) { }
+
+    async create(createGroupDto: CreateGroupDto) {
+        const group = await this.groupsRepository.save(createGroupDto);
+        // Regla: Se crea automáticamente la materia "General" al crear un grupo
+        await this.subjectsService.create({
+            groupId: group.id,
+            name: 'General',
+            isGeneral: true,
+        });
+        return group;
+    }
+
+    findAll() {
+        return this.groupsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.groupsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateGroupDto: UpdateGroupDto) {
+        return this.groupsRepository.update(id, updateGroupDto);
+    }
+
+    remove(id: number) {
+        return this.groupsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/groups/dto/create-group.dto.ts
+================================================
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
+
+export class CreateGroupDto {
+    @IsNotEmpty()
+    @IsNumber()
+    academicPeriodId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsOptional()
+    @IsString()
+    status?: 'active' | 'archived';
+}
+
+
+
+================================================
+FILE: backend/src/academic/groups/dto/update-group.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateGroupDto } from './create-group.dto';
+
+export class UpdateGroupDto extends PartialType(CreateGroupDto) { }
+
+
+
+================================================
+FILE: backend/src/academic/groups/entities/group.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, Unique } from 'typeorm';
+import { AcademicPeriod } from '../../academic-periods/entities/academic-period.entity';
+import { Subject } from '../../subjects/entities/subject.entity';
+import { StudentAssignment } from '../../../student-management/student-assignments/entities/student-assignment.entity';
+
+@Entity('groups')
+@Unique(['academicPeriodId', 'name'])
+export class Group {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'academic_period_id' })
+    academicPeriodId: number;
+
+    @ManyToOne(() => AcademicPeriod, (period) => period.groups)
+    @JoinColumn({ name: 'academic_period_id' })
+    academicPeriod: AcademicPeriod;
+
+    @Column()
+    name: string;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'archived'],
+        default: 'active',
+    })
+    status: 'active' | 'archived';
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => Subject, (subject) => subject.group)
+    subjects: Subject[];
+
+    @OneToMany(() => StudentAssignment, (assignment) => assignment.group)
+    studentAssignments: StudentAssignment[];
+}
+
+
+
+================================================
+FILE: backend/src/academic/subjects/subjects.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { SubjectsService } from './subjects.service';
+import { CreateSubjectDto } from './dto/create-subject.dto';
+import { UpdateSubjectDto } from './dto/update-subject.dto';
+
+@Controller('subjects')
+export class SubjectsController {
+    constructor(private readonly subjectsService: SubjectsService) { }
+
+    @Post()
+    create(@Body() createSubjectDto: CreateSubjectDto) {
+        return this.subjectsService.create(createSubjectDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.subjectsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.subjectsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
+        return this.subjectsService.update(+id, updateSubjectDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.subjectsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/subjects/subjects.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SubjectsService } from './subjects.service';
+import { SubjectsController } from './subjects.controller';
+import { Subject } from './entities/subject.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Subject])],
+  controllers: [SubjectsController],
+  providers: [SubjectsService],
+  exports: [SubjectsService], // Export for GroupsModule
+})
+export class SubjectsModule { }
+
+
+
+================================================
+FILE: backend/src/academic/subjects/subjects.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateSubjectDto } from './dto/create-subject.dto';
+import { UpdateSubjectDto } from './dto/update-subject.dto';
+import { Subject } from './entities/subject.entity';
+
+@Injectable()
+export class SubjectsService {
+    constructor(
+        @InjectRepository(Subject)
+        private subjectsRepository: Repository<Subject>,
+    ) { }
+
+    create(createSubjectDto: CreateSubjectDto) {
+        return this.subjectsRepository.save(createSubjectDto);
+    }
+
+    findAll() {
+        return this.subjectsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.subjectsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateSubjectDto: UpdateSubjectDto) {
+        return this.subjectsRepository.update(id, updateSubjectDto);
+    }
+
+    remove(id: number) {
+        return this.subjectsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/academic/subjects/dto/create-subject.dto.ts
+================================================
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class CreateSubjectDto {
+    @IsNotEmpty()
+    @IsNumber()
+    groupId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isGeneral?: boolean;
+
+    @IsOptional()
+    @IsString()
+    status?: string;
+}
+
+
+
+================================================
+FILE: backend/src/academic/subjects/dto/update-subject.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateSubjectDto } from './create-subject.dto';
+
+export class UpdateSubjectDto extends PartialType(CreateSubjectDto) { }
+
+
+
+================================================
+FILE: backend/src/academic/subjects/entities/subject.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Group } from '../../groups/entities/group.entity';
+import { EvaluationItem } from '../../../assessments/evaluations/entities/evaluation-item.entity';
+import { Attendance } from '../../../assessments/attendance/entities/attendance.entity';
+
+@Entity('subjects')
+export class Subject {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'group_id' })
+    groupId: number;
+
+    @ManyToOne(() => Group, (group) => group.subjects)
+    @JoinColumn({ name: 'group_id' })
+    group: Group;
+
+    @Column()
+    name: string;
+
+    @Column({ name: 'is_general', default: true })
+    isGeneral: boolean;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => EvaluationItem, (item) => item.subject)
+    evaluationItems: EvaluationItem[];
+
+    @OneToMany(() => Attendance, (attendance) => attendance.subject)
+    attendances: Attendance[];
+}
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/attendance.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseArrayPipe } from '@nestjs/common';
+import { AttendanceService } from './attendance.service';
+import { CreateAttendanceDto } from './dto/create-attendance.dto';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
+
+@Controller('attendance')
+export class AttendanceController {
+    constructor(private readonly attendanceService: AttendanceService) { }
+
+    @Post('batch')
+    createBatch(@Body(new ParseArrayPipe({ items: CreateAttendanceDto })) createDtos: CreateAttendanceDto[]) {
+        return this.attendanceService.createBatch(createDtos);
+    }
+
+    @Post()
+    create(@Body() createDto: CreateAttendanceDto | CreateAttendanceDto[]) {
+        if (Array.isArray(createDto)) {
+            return this.attendanceService.createBatch(createDto);
+        }
+        return this.attendanceService.create(createDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.attendanceService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.attendanceService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateDto: UpdateAttendanceDto) {
+        return this.attendanceService.update(+id, updateDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.attendanceService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/attendance.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AttendanceService } from './attendance.service';
+import { AttendanceController } from './attendance.controller';
+import { Attendance } from './entities/attendance.entity';
+import { StudentAssignment } from '../../student-management/student-assignments/entities/student-assignment.entity';
+import { Subject } from '../../academic/subjects/entities/subject.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Attendance, StudentAssignment, Subject])],
+  controllers: [AttendanceController],
+  providers: [AttendanceService],
+})
+export class AttendanceModule { }
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/attendance.service.ts
+================================================
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import { CreateAttendanceDto } from './dto/create-attendance.dto';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
+import { Attendance } from './entities/attendance.entity';
+import { StudentAssignment } from '../../student-management/student-assignments/entities/student-assignment.entity';
+import { Subject } from '../../academic/subjects/entities/subject.entity';
+
+@Injectable()
+export class AttendanceService {
+    constructor(
+        @InjectRepository(Attendance)
+        private attendanceRepository: Repository<Attendance>,
+        @InjectRepository(StudentAssignment)
+        private studentAssignmentRepository: Repository<StudentAssignment>,
+        @InjectRepository(Subject)
+        private subjectRepository: Repository<Subject>,
+    ) { }
+
+    async create(createDto: CreateAttendanceDto) {
+        await this.resolveStudentAssignment(createDto);
+        return this.attendanceRepository.save(createDto);
+    }
+
+    async createBatch(createDtos: CreateAttendanceDto[]) {
+        // Resolver assignment IDs for all items
+        for (const dto of createDtos) {
+            await this.resolveStudentAssignment(dto);
+        }
+        return this.attendanceRepository.save(createDtos);
+    }
+
+    private async resolveStudentAssignment(dto: CreateAttendanceDto) {
+        if (!dto.studentAssignmentId) {
+            let groupId = dto.groupId;
+
+            // If subjectId is provided, get groupId from subject
+            if (dto.subjectId) {
+                const subject = await this.subjectRepository.findOne({ where: { id: dto.subjectId } });
+                if (!subject) throw new NotFoundException(`Subject with ID ${dto.subjectId} not found`);
+                groupId = subject.groupId;
+            }
+
+            if (!groupId) {
+                throw new BadRequestException('Either subjectId or groupId must be provided to record attendance');
+            }
+
+            // Find assignment by studentId and groupId
+            const assignment = await this.studentAssignmentRepository.findOne({
+                where: {
+                    studentId: dto.studentId,
+                    groupId: groupId,
+                    status: 'active',
+                },
+            });
+
+            if (!assignment) {
+                throw new BadRequestException(`Student ${dto.studentId} is not assigned to group ${groupId}`);
+            }
+
+            dto.studentAssignmentId = assignment.id;
+        }
+    }
+
+    findAll() {
+        return this.attendanceRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.attendanceRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateDto: UpdateAttendanceDto) {
+        return this.attendanceRepository.update(id, updateDto);
+    }
+
+    remove(id: number) {
+        return this.attendanceRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/dto/create-attendance.dto.ts
+================================================
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class CreateAttendanceDto {
+    @IsOptional()
+    @IsNumber()
+    studentAssignmentId?: number;
+
+    @IsOptional()
+    @IsNumber()
+    studentId?: number;
+
+    @IsOptional()
+    @IsNumber()
+    groupId?: number;
+
+    @IsOptional()
+    @IsNumber()
+    subjectId?: number;
+
+    @IsNotEmpty()
+    @IsDateString()
+    date: string;
+
+    @IsNotEmpty()
+    @IsString()
+    status: 'present' | 'absent' | 'late';
+
+    @IsOptional()
+    @IsString()
+    notes?: string;
+}
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/dto/update-attendance.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateAttendanceDto } from './create-attendance.dto';
+
+export class UpdateAttendanceDto extends PartialType(CreateAttendanceDto) { }
+
+
+
+================================================
+FILE: backend/src/assessments/attendance/entities/attendance.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { StudentAssignment } from '../../../student-management/student-assignments/entities/student-assignment.entity';
+import { Subject } from '../../../academic/subjects/entities/subject.entity';
+
+@Entity('attendance')
+@Index(['studentAssignmentId', 'date'])
+export class Attendance {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_assignment_id' })
+    studentAssignmentId: number;
+
+    @ManyToOne(() => StudentAssignment, (assignment) => assignment.attendances)
+    @JoinColumn({ name: 'student_assignment_id' })
+    studentAssignment: StudentAssignment;
+
+    @Column({ name: 'subject_id', nullable: true })
+    subjectId: number;
+
+    @ManyToOne(() => Subject, (subject) => subject.attendances, { nullable: true })
+    @JoinColumn({ name: 'subject_id' })
+    subject: Subject;
+
+    @Column({ type: 'date' })
+    date: Date;
+
+    @Column({
+        type: 'enum',
+        enum: ['present', 'absent', 'late'],
+    })
+    status: 'present' | 'absent' | 'late'; // 'present', 'absent', etc.
+
+    @Column({ type: 'text', nullable: true })
+    notes: string;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/evaluations.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { EvaluationsService } from './evaluations.service';
+import { CreateEvaluationDto } from './dto/create-evaluation.dto';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+
+@Controller('evaluations')
+export class EvaluationsController {
+    constructor(private readonly evaluationsService: EvaluationsService) { }
+
+    @Post()
+    create(@Body() createDto: CreateEvaluationDto) {
+        return this.evaluationsService.create(createDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.evaluationsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.evaluationsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateDto: UpdateEvaluationDto) {
+        return this.evaluationsService.update(+id, updateDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.evaluationsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/evaluations.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EvaluationsService } from './evaluations.service';
+import { EvaluationsController } from './evaluations.controller';
+import { EvaluationItem } from './entities/evaluation-item.entity';
+import { Subject } from '../../academic/subjects/entities/subject.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([EvaluationItem, Subject])],
+  controllers: [EvaluationsController],
+  providers: [EvaluationsService],
+})
+export class EvaluationsModule { }
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/evaluations.service.ts
+================================================
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateEvaluationDto } from './dto/create-evaluation.dto';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+import { EvaluationItem } from './entities/evaluation-item.entity';
+import { Subject } from '../../academic/subjects/entities/subject.entity';
+
+@Injectable()
+export class EvaluationsService {
+    constructor(
+        @InjectRepository(EvaluationItem)
+        private itemsRepository: Repository<EvaluationItem>,
+        @InjectRepository(Subject)
+        private subjectRepository: Repository<Subject>,
+    ) { }
+
+    async create(createDto: CreateEvaluationDto) {
+        if (!createDto.academicPeriodId) {
+            const subject = await this.subjectRepository.findOne({
+                where: { id: createDto.subjectId },
+                relations: ['group']
+            });
+
+            if (!subject) {
+                throw new NotFoundException(`Subject with ID ${createDto.subjectId} not found`);
+            }
+
+            if (!subject.group) {
+                throw new BadRequestException(`Subject ${createDto.subjectId} does not belong to a group`);
+            }
+
+            createDto.academicPeriodId = subject.group.academicPeriodId;
+        }
+
+        const evaluation = this.itemsRepository.create({
+            ...createDto,
+            dueDate: createDto.dueDate ? new Date(createDto.dueDate) : undefined
+        });
+
+        return this.itemsRepository.save(evaluation);
+    }
+
+    findAll() {
+        return this.itemsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.itemsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateDto: UpdateEvaluationDto) {
+        return this.itemsRepository.update(id, updateDto);
+    }
+
+    remove(id: number) {
+        return this.itemsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/dto/create-evaluation.dto.ts
+================================================
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
+
+export class CreateEvaluationDto { // Matching 'evaluations' module
+    @IsNotEmpty()
+    @IsNumber()
+    subjectId: number;
+
+    @IsOptional()
+    @IsNumber()
+    academicPeriodId?: number;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    weight: number;
+
+    @IsOptional()
+    @IsString()
+    type?: string;
+
+    @IsOptional()
+    @IsNumber()
+    maxScore?: number;
+
+    @IsOptional()
+    @IsString()
+    dueDate?: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
+}
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/dto/update-evaluation.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateEvaluationDto } from './create-evaluation.dto';
+
+export class UpdateEvaluationDto extends PartialType(CreateEvaluationDto) { }
+
+
+
+================================================
+FILE: backend/src/assessments/evaluations/entities/evaluation-item.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Check, OneToMany } from 'typeorm';
+import { Subject } from '../../../academic/subjects/entities/subject.entity';
+import { AcademicPeriod } from '../../../academic/academic-periods/entities/academic-period.entity';
+import { Grade } from '../../grades/entities/grade.entity';
+
+@Entity('evaluation_items')
+@Check(`"weight" >= 0 AND "weight" <= 100`)
+// @Check is not directly a decorator provided by typeorm in all versions but Check constraint can be passed in Entity options if needed, or raw SQL. 
+// TypeORM supports check constraint via decorator since recent versions or via extra options. 
+// For now, adhering to schema.
+export class EvaluationItem {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'subject_id' })
+    subjectId: number;
+
+    @ManyToOne(() => Subject, (subject) => subject.evaluationItems)
+    @JoinColumn({ name: 'subject_id' })
+    subject: Subject;
+
+    @Column({ name: 'academic_period_id' })
+    academicPeriodId: number;
+
+    @ManyToOne(() => AcademicPeriod, (period) => period.evaluationItems)
+    @JoinColumn({ name: 'academic_period_id' })
+    academicPeriod: AcademicPeriod;
+
+    @Column()
+    name: string;
+
+    @Column({ type: 'decimal', precision: 5, scale: 2 })
+    weight: number;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @Column({ nullable: true })
+    type: string;
+
+    @Column({ name: 'max_score', type: 'decimal', precision: 5, scale: 2, nullable: true })
+    maxScore: number;
+
+    @Column({ name: 'due_date', type: 'datetime', nullable: true })
+    dueDate: Date;
+
+    @Column({ type: 'text', nullable: true })
+    description: string;
+
+    @OneToMany(() => Grade, (grade) => grade.evaluationItem)
+    grades: Grade[];
+}
+
+
+
+================================================
+FILE: backend/src/assessments/grades/grades.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { GradesService } from './grades.service';
+import { CreateGradeDto } from './dto/create-grade.dto';
+import { UpdateGradeDto } from './dto/update-grade.dto';
+
+@Controller('grades')
+export class GradesController {
+    constructor(private readonly gradesService: GradesService) { }
+
+    @Post()
+    create(@Body() createDto: CreateGradeDto) {
+        return this.gradesService.create(createDto);
+    }
+
+    @Post('batch')
+    createBatch(@Body() createDto: CreateGradeDto[]) {
+        return this.gradesService.createBatch(createDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.gradesService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.gradesService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateDto: UpdateGradeDto) {
+        return this.gradesService.update(+id, updateDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.gradesService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/grades/grades.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GradesService } from './grades.service';
+import { GradesController } from './grades.controller';
+import { Grade } from './entities/grade.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Grade])],
+  controllers: [GradesController],
+  providers: [GradesService],
+})
+export class GradesModule { }
+
+
+
+================================================
+FILE: backend/src/assessments/grades/grades.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateGradeDto } from './dto/create-grade.dto';
+import { UpdateGradeDto } from './dto/update-grade.dto';
+import { Grade } from './entities/grade.entity';
+
+@Injectable()
+export class GradesService {
+    constructor(
+        @InjectRepository(Grade)
+        private gradesRepository: Repository<Grade>,
+    ) { }
+
+    create(createDto: CreateGradeDto) {
+        return this.gradesRepository.save(createDto);
+    }
+
+    async createBatch(createDto: CreateGradeDto[] | any) {
+        // Handle both array directly and wrapped in object
+        let dtoArray: CreateGradeDto[];
+
+        if (Array.isArray(createDto)) {
+            dtoArray = createDto;
+        } else if (createDto && Array.isArray(createDto.grades)) {
+            dtoArray = createDto.grades;
+        } else {
+            // If it's a single object, wrap it in an array
+            dtoArray = [createDto];
+        }
+
+        const results: Grade[] = [];
+
+        for (const dto of dtoArray) {
+            // Try to find existing grade
+            const existing = await this.gradesRepository.findOne({
+                where: {
+                    evaluationItemId: dto.evaluationItemId,
+                    studentAssignmentId: dto.studentAssignmentId
+                }
+            });
+
+            if (existing) {
+                // Update existing grade
+                existing.score = dto.score;
+                results.push(await this.gradesRepository.save(existing));
+            } else {
+                // Create new grade
+                const grade = this.gradesRepository.create(dto);
+                results.push(await this.gradesRepository.save(grade));
+            }
+        }
+
+        return results;
+    }
+
+    findAll() {
+        return this.gradesRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.gradesRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateDto: UpdateGradeDto) {
+        return this.gradesRepository.update(id, updateDto);
+    }
+
+    remove(id: number) {
+        return this.gradesRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/assessments/grades/dto/create-grade.dto.ts
+================================================
+import { IsNotEmpty, IsNumber } from 'class-validator';
+
+export class CreateGradeDto {
+    @IsNotEmpty()
+    @IsNumber()
+    evaluationItemId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    studentAssignmentId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    score: number;
+}
+
+
+
+================================================
+FILE: backend/src/assessments/grades/dto/update-grade.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateGradeDto } from './create-grade.dto';
+
+export class UpdateGradeDto extends PartialType(CreateGradeDto) { }
+
+
+
+================================================
+FILE: backend/src/assessments/grades/entities/grade.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
+import { EvaluationItem } from '../../evaluations/entities/evaluation-item.entity';
+import { StudentAssignment } from '../../../student-management/student-assignments/entities/student-assignment.entity';
+
+@Entity('grades')
+@Unique(['evaluationItemId', 'studentAssignmentId'])
+export class Grade {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'evaluation_item_id' })
+    evaluationItemId: number;
+
+    @ManyToOne(() => EvaluationItem, (item) => item.grades)
+    @JoinColumn({ name: 'evaluation_item_id' })
+    evaluationItem: EvaluationItem;
+
+    @Column({ name: 'student_assignment_id' })
+    studentAssignmentId: number;
+
+    @ManyToOne(() => StudentAssignment, (assignment) => assignment.grades)
+    @JoinColumn({ name: 'student_assignment_id' })
+    studentAssignment: StudentAssignment;
+
+    @Column({ type: 'decimal', precision: 5, scale: 2 })
+    score: number;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/auth/auth.controller.ts
+================================================
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Req } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { LoginDto } from './dto/login.dto';
+import { Public } from '../common/decorators/public.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import type { Request } from 'express';
+
+// If used as type in Decorated Parameter, use 'import type' or just ignore if valid.
+// The error says "must be imported with 'import type'".
+
+@Controller('auth')
+export class AuthController {
+    constructor(private readonly authService: AuthService) { }
+
+    @Public()
+    @Post('register')
+    @HttpCode(HttpStatus.CREATED)
+    register(@Body() createUserDto: CreateUserDto) {
+        return this.authService.register(createUserDto);
+    }
+
+    @Public()
+    @Post('login')
+    @HttpCode(HttpStatus.OK)
+    login(@Body() loginDto: LoginDto) {
+        return this.authService.login(loginDto);
+    }
+
+    @Public()
+    @UseGuards(AuthGuard('jwt-refresh'))
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    refresh(@Req() req: Request) {
+        const user = req.user as any;
+        return this.authService.refreshTokens(user.sub, user.refreshToken);
+    }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.OK)
+    logout(@Req() req: Request) {
+        const user = req.user as any;
+        return this.authService.logout(user.sub);
+    }
+
+    @Public()
+    @Post('forgot-password')
+    forgotPassword() {
+        // Mock implementation
+        return { message: 'Password recovery email sent (mock)' };
+    }
+
+    @Public()
+    @Post('reset-password')
+    resetPassword() {
+        // Mock implementation
+        return { message: 'Password reset successful (mock)' };
+    }
+}
+
+
+
+================================================
+FILE: backend/src/auth/auth.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { UsersModule } from '../users/users.module';
+import { JwtModule } from '@nestjs/jwt';
+import { AtStrategy } from './strategies/at.strategy';
+import { RtStrategy } from './strategies/rt.strategy';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshToken } from './refresh-token.entity';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([RefreshToken]),
+    UsersModule,
+    JwtModule.register({})
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, AtStrategy, RtStrategy],
+  exports: [AuthService],
+})
+export class AuthModule { }
+
+
+
+================================================
+FILE: backend/src/auth/auth.service.ts
+================================================
+// backend/src/auth/auth.service.ts
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { ConfigService } from '@nestjs/config';
+import { LoginDto } from './dto/login.dto';
+
+@Injectable()
+export class AuthService {
+    constructor(
+        private usersService: UsersService,
+        private jwtService: JwtService,
+        private configService: ConfigService,
+    ) { }
+
+    async validateUser(email: string, pass: string): Promise<any> {
+        const user = await this.usersService.findByEmail(email);
+        if (user && (await bcrypt.compare(pass, user.password))) {
+            const { password, hashedRefreshToken, ...result } = user;
+            return result;
+        }
+        return null;
+    }
+
+    // ✅ MÉTODO CORREGIDO
+    async login(loginDto: LoginDto) {
+        const { email, password } = loginDto;
+
+        // 1. Buscar usuario por email
+        const user = await this.usersService.findByEmail(email);
+
+        if (!user) {
+            throw new UnauthorizedException('Credenciales inválidas');
+        }
+
+        // 2. Verificar password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('Credenciales inválidas');
+        }
+
+        // 3. Generar tokens
+        const tokens = await this.getTokens(user.id, user.email);
+
+        // 4. Actualizar refresh token en BD
+        await this.updateRefreshToken(user.id, tokens.refresh_token);
+
+        // 5. Actualizar última actividad
+        await this.usersService.updateLastActivity(user.id);
+
+        // 6. Retornar tokens + datos del usuario
+        return {
+            ...tokens,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                status: user.status,
+            },
+        };
+    }
+
+    async register(createUserDto: CreateUserDto) {
+        // Verificar si el email ya existe
+        const existingUser = await this.usersService.findByEmail(createUserDto.email);
+
+        if (existingUser) {
+            throw new UnauthorizedException('El email ya está registrado');
+        }
+
+        const newUser = await this.usersService.create(createUserDto);
+        const tokens = await this.getTokens(newUser.id, newUser.email);
+        await this.updateRefreshToken(newUser.id, tokens.refresh_token);
+        await this.usersService.updateLastActivity(newUser.id);
+
+        return {
+            ...tokens,
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+                name: newUser.name,
+                status: newUser.status,
+            },
+        };
+    }
+
+    async logout(userId: number) {
+        await this.usersService.updateRefreshToken(userId, null);
+        await this.usersService.updateLastActivity(userId); // Clear activity on logout
+    }
+
+    async refreshTokens(userId: number, rt: string) {
+        const user = await this.usersService.findOne(userId);
+        if (!user || !user.hashedRefreshToken) throw new ForbiddenException('Access Denied');
+
+        const rtMatches = await bcrypt.compare(rt, user.hashedRefreshToken);
+        if (!rtMatches) throw new ForbiddenException('Access Denied');
+
+        const tokens = await this.getTokens(user.id, user.email);
+        await this.updateRefreshToken(user.id, tokens.refresh_token);
+        return tokens;
+    }
+
+    async updateRefreshToken(userId: number, rt: string | null) {
+        const hash = rt ? await bcrypt.hash(rt, 10) : null;
+        await this.usersService.updateRefreshToken(userId, hash);
+    }
+
+    async getTokens(userId: number, email: string) {
+        const [at, rt] = await Promise.all([
+            this.jwtService.signAsync(
+                { sub: userId, email },
+                {
+                    secret: this.configService.get<string>('JWT_SECRET'),
+                    expiresIn: '15m',
+                },
+            ),
+            this.jwtService.signAsync(
+                { sub: userId, email },
+                {
+                    secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+                    expiresIn: '7d',
+                },
+            ),
+        ]);
+
+        return {
+            access_token: at,
+            refresh_token: rt,
+        };
+    }
+}
+
+
+================================================
+FILE: backend/src/auth/refresh-token.entity.ts
+================================================
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    CreateDateColumn,
+    JoinColumn,
+} from 'typeorm';
+import { User } from '../users/entities/user.entity';
+
+@Entity('refresh_tokens')
+export class RefreshToken {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'token_hash' })
+    tokenHash: string;
+
+    @Column({ name: 'expires_at' })
+    expiresAt: Date;
+
+    @ManyToOne(() => User, (user) => user.refreshTokens, {
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn({ name: 'user_id' })
+    user: User;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/auth/dto/login.dto.ts
+================================================
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+
+export class LoginDto {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @IsNotEmpty()
+    password: string;
+}
+
+
+
+================================================
+FILE: backend/src/auth/strategies/at.strategy.ts
+================================================
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+import { UsersService } from '../../users/users.service';
+
+type JwtPayload = {
+    sub: number;
+    email: string;
+};
+
+@Injectable()
+export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
+    constructor(
+        config: ConfigService,
+        private usersService: UsersService,
+    ) {
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: config.get<string>('JWT_SECRET') || 'secret',
+        });
+    }
+
+    async validate(payload: JwtPayload) {
+        // Obtener el usuario para verificar su última actividad
+        const user = await this.usersService.findOne(payload.sub);
+
+        if (!user) {
+            throw new UnauthorizedException('Usuario no encontrado');
+        }
+
+        // Verificar inactividad
+        if (user.lastActivityAt) {
+            const inactivityTimeoutMinutes = parseInt(
+                process.env.INACTIVITY_TIMEOUT_MINUTES || '30',
+                10,
+            );
+            const now = new Date();
+            const lastActivity = new Date(user.lastActivityAt);
+            const minutesSinceLastActivity =
+                (now.getTime() - lastActivity.getTime()) / (1000 * 60);
+
+            if (minutesSinceLastActivity > inactivityTimeoutMinutes) {
+                // Limpiar el refresh token para forzar re-login
+                await this.usersService.updateRefreshToken(user.id, null);
+                throw new UnauthorizedException(
+                    'Sesión expirada por inactividad. Por favor, inicia sesión nuevamente.',
+                );
+            }
+        }
+
+        return payload;
+    }
+}
+
+
+
+================================================
+FILE: backend/src/auth/strategies/rt.strategy.ts
+================================================
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request } from 'express';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+    constructor(config: ConfigService) {
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: config.get<string>('JWT_REFRESH_SECRET') || 'refresh-secret',
+            passReqToCallback: true,
+        });
+    }
+
+    validate(req: Request, payload: any) {
+        const authorization = req.get('authorization');
+        if (!authorization) return null;
+        const refreshToken = authorization.replace('Bearer', '').trim();
+        return {
+            ...payload,
+            refreshToken,
+        };
+    }
+}
+
+
+
+================================================
+FILE: backend/src/common/common.module.ts
+================================================
+import { Module } from '@nestjs/common';
+
+@Module({})
+export class CommonModule {}
+
+
+
+================================================
+FILE: backend/src/common/decorators/public.decorator.ts
+================================================
+import { SetMetadata } from '@nestjs/common';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+
+
+
+================================================
+FILE: backend/src/common/guards/at.guard.ts
+================================================
+import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+
+@Injectable()
+export class AtGuard extends AuthGuard('jwt') {
+    constructor(private reflector: Reflector) {
+        super();
+    }
+
+    canActivate(context: ExecutionContext) {
+        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (isPublic) {
+            return true;
+        }
+
+        return super.canActivate(context);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/common/interceptors/activity-tracker.interceptor.ts
+================================================
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { UsersService } from '../../users/users.service';
+
+@Injectable()
+export class ActivityTrackerInterceptor implements NestInterceptor {
+    constructor(private usersService: UsersService) { }
+
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        const request = context.switchToHttp().getRequest();
+        const user = request.user;
+
+        // Solo actualizar si hay un usuario autenticado
+        if (user && user.sub) {
+            // Actualizar actividad de forma asíncrona sin bloquear la respuesta
+            this.usersService.updateLastActivity(user.sub).catch(err => {
+                console.error('Error updating user activity:', err);
+            });
+        }
+
+        return next.handle();
+    }
+}
+
+
+
+================================================
+FILE: backend/src/dashboard/dashboard.controller.ts
+================================================
+import { Controller, Get } from '@nestjs/common';
+import { DashboardService } from './dashboard.service';
+
+@Controller('dashboard')
+export class DashboardController {
+    constructor(private readonly dashboardService: DashboardService) { }
+
+    @Get('summary')
+    getSummary() {
+        return this.dashboardService.getSummary();
+    }
+
+    @Get('recent-activity')
+    getRecentActivity() {
+        return this.dashboardService.getRecentActivity();
+    }
+
+    @Get('alerts')
+    getAlerts() {
+        return this.dashboardService.getAlerts();
+    }
+
+    // Aliases for frontend compatibility
+    @Get('stats')
+    getStats() {
+        return this.dashboardService.getSummary();
+    }
+
+    @Get('activity')
+    getActivity() {
+        return this.dashboardService.getRecentActivity();
+    }
+}
+
+
+
+================================================
+FILE: backend/src/dashboard/dashboard.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DashboardController } from './dashboard.controller';
+import { DashboardService } from './dashboard.service';
+import { Student } from '../student-management/students/entities/student.entity';
+import { Group } from '../academic/groups/entities/group.entity';
+import { Attendance } from '../assessments/attendance/entities/attendance.entity';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([Student, Group, Attendance])
+  ],
+  controllers: [DashboardController],
+  providers: [DashboardService]
+})
+export class DashboardModule { }
+
+
+
+================================================
+FILE: backend/src/dashboard/dashboard.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Student } from '../student-management/students/entities/student.entity';
+import { Group } from '../academic/groups/entities/group.entity';
+import { Attendance } from '../assessments/attendance/entities/attendance.entity';
+
+@Injectable()
+export class DashboardService {
+    constructor(
+        @InjectRepository(Student)
+        private studentRepository: Repository<Student>,
+        @InjectRepository(Group)
+        private groupRepository: Repository<Group>,
+        @InjectRepository(Attendance)
+        private attendanceRepository: Repository<Attendance>,
+    ) { }
+
+    async getSummary() {
+        const studentsCount = await this.studentRepository.count({ where: { status: 'active' } });
+        const groupsCount = await this.groupRepository.count({ where: { status: 'active' } });
+
+        const totalAttendance = await this.attendanceRepository.count();
+        const presentAttendance = await this.attendanceRepository.count({ where: { status: 'present' } });
+
+        const attendanceRate = totalAttendance > 0
+            ? Math.round((presentAttendance / totalAttendance) * 100)
+            : 0;
+
+        return {
+            studentsCount,
+            groupsCount,
+            attendanceRate,
+        };
+    }
+
+    async getRecentActivity() {
+        // Combinar creación de estudiantes y grupos recientes
+        const recentStudents = await this.studentRepository.find({
+            order: { createdAt: 'DESC' },
+            take: 5,
+        });
+
+        const recentGroups = await this.groupRepository.find({
+            order: { createdAt: 'DESC' },
+            take: 5,
+        });
+
+        const activities = [
+            ...recentStudents.map(s => ({
+                action: `Student Registered: ${s.fullName}`,
+                date: s.createdAt
+            })),
+            ...recentGroups.map(g => ({
+                action: `Group Created: ${g.name}`,
+                date: g.createdAt
+            }))
+        ];
+
+        // Ordenar por fecha descendente y tomar los últimos 5-10
+        return activities.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 10);
+    }
+
+    getAlerts() {
+        return [
+            { type: 'info', message: 'System running normally' },
+        ];
+    }
+}
+
+
+
+================================================
+FILE: backend/src/files/files.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FilesService } from './files.service';
+import { CreateFileDto } from './dto/create-file.dto';
+import { UpdateFileDto } from './dto/update-file.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+@Controller('files')
+export class FilesController {
+    constructor(private readonly filesService: FilesService) { }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
+        // Here we would handle file storage (local/S3) and then save metadata
+        // For now, mapping Multer file to DTO
+        // const createDto = ...
+        // return this.filesService.create(createDto);
+        return { message: 'File uploaded (mock)', file };
+    }
+
+    @Post()
+    create(@Body() createFileDto: CreateFileDto) {
+        return this.filesService.create(createFileDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.filesService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.filesService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
+        return this.filesService.update(+id, updateFileDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.filesService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/files/files.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { FilesService } from './files.service';
+import { FilesController } from './files.controller';
+import { FileEntity } from './entities/file.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([FileEntity])],
+  controllers: [FilesController],
+  providers: [FilesService],
+})
+export class FilesModule { }
+
+
+
+================================================
+FILE: backend/src/files/files.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateFileDto } from './dto/create-file.dto';
+import { UpdateFileDto } from './dto/update-file.dto';
+import { FileEntity } from './entities/file.entity';
+
+@Injectable()
+export class FilesService {
+    constructor(
+        @InjectRepository(FileEntity)
+        private filesRepository: Repository<FileEntity>,
+    ) { }
+
+    create(createFileDto: CreateFileDto) {
+        return this.filesRepository.save(createFileDto);
+    }
+
+    findAll() {
+        return this.filesRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.filesRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateFileDto: UpdateFileDto) {
+        return this.filesRepository.update(id, updateFileDto);
+    }
+
+    remove(id: number) {
+        return this.filesRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/files/dto/create-file.dto.ts
+================================================
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class CreateFileDto {
+    @IsNotEmpty()
+    @IsString()
+    fileName: string;
+
+    @IsNotEmpty()
+    @IsString()
+    storageKey: string;
+
+    @IsNotEmpty()
+    @IsString()
+    fileType: string;
+
+    @IsNotEmpty()
+    @IsString()
+    fileCategory: 'evidence' | 'material' | 'planning';
+}
+
+
+
+================================================
+FILE: backend/src/files/dto/update-file.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateFileDto } from './create-file.dto';
+
+export class UpdateFileDto extends PartialType(CreateFileDto) { }
+
+
+
+================================================
+FILE: backend/src/files/entities/file.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+
+@Entity('files')
+export class FileEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'user_id' })
+    userId: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
+
+    @Column({ name: 'student_id', nullable: true })
+    studentId: number;
+
+    @Column({ name: 'academic_period_id', nullable: true })
+    academicPeriodId: number;
+
+    @Column({ name: 'file_name' })
+    fileName: string;
+
+    @Column({ name: 'storage_key' })
+    storageKey: string;
+
+    @Column({ name: 'file_type' })
+    fileType: string;
+
+    @Column({
+        name: 'file_category',
+        type: 'enum',
+        enum: ['evidence', 'material', 'planning'],
+    })
+    fileCategory: 'evidence' | 'material' | 'planning';
+
+    @Column({ nullable: true })
+    note: string;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/jobs/jobs.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JobsService } from './jobs.service';
+import { AcademicPeriod } from '../academic/academic-periods/entities/academic-period.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([AcademicPeriod])],
+  providers: [JobsService],
+})
+export class JobsModule { }
+
+
+
+================================================
+FILE: backend/src/jobs/jobs.service.ts
+================================================
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AcademicPeriod } from '../academic/academic-periods/entities/academic-period.entity';
+import { Repository, LessThan } from 'typeorm';
+
+@Injectable()
+export class JobsService {
+    private readonly logger = new Logger(JobsService.name);
+
+    constructor(
+        @InjectRepository(AcademicPeriod)
+        private periodsRepository: Repository<AcademicPeriod>,
+    ) { }
+
+    // Archivado automático (cron diario)
+    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+    async handleAutomaticArchiving() {
+        this.logger.debug('Running automatic archiving of academic periods...');
+        const today = new Date();
+
+        // Find active periods that ended
+        const expiredPeriods = await this.periodsRepository.find({
+            where: {
+                status: 'active',
+                endDate: LessThan(today),
+            },
+        });
+
+        for (const period of expiredPeriods) {
+            period.status = 'archived';
+            await this.periodsRepository.save(period);
+            this.logger.log(`Archived period ${period.id} - ${period.type}`);
+        }
+    }
+
+    // Limpieza de refresh tokens (cron semanal)
+    @Cron(CronExpression.EVERY_WEEK)
+    async handleTokenCleanup() {
+        this.logger.debug('Running cleanup of refresh tokens...');
+        // Implementation would depend on storage strategy. 
+        // Since we store in User column, we might just log or check last login if tracked.
+        // Placeholder as per current User entity structure.
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/consents/consents.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, BadRequestException } from '@nestjs/common';
+import { ConsentsService } from './consents.service';
+import { CreateConsentDto } from './dto/create-consent.dto';
+import { UpdateConsentDto } from './dto/update-consent.dto';
+
+@Controller('consents')
+export class ConsentsController {
+    constructor(private readonly consentsService: ConsentsService) { }
+
+    @Post()
+    create(@Body() createDto: CreateConsentDto) {
+        return this.consentsService.create(createDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.consentsService.findAll();
+    }
+
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.consentsService.findOne(id);
+    }
+
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
+    @Patch(':id')
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateConsentDto) {
+        return this.consentsService.update(id, updateDto);
+    }
+
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
+    @Delete(':id')
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.consentsService.remove(id);
+    }
+}
+
+
+================================================
+FILE: backend/src/student-management/consents/consents.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConsentsService } from './consents.service';
+import { ConsentsController } from './consents.controller';
+import { StudentShareConsent } from './entities/student-share-consent.entity';
+import { StudentShareConsentType } from './entities/student-share-consent-type.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([StudentShareConsent, StudentShareConsentType])],
+  controllers: [ConsentsController],
+  providers: [ConsentsService],
+})
+export class ConsentsModule { }
+
+
+
+================================================
+FILE: backend/src/student-management/consents/consents.service.ts
+================================================
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateConsentDto } from './dto/create-consent.dto';
+import { UpdateConsentDto } from './dto/update-consent.dto';
+import { StudentShareConsent } from './entities/student-share-consent.entity';
+
+@Injectable()
+export class ConsentsService {
+    constructor(
+        @InjectRepository(StudentShareConsent)
+        private consentsRepository: Repository<StudentShareConsent>,
+    ) { }
+
+    async create(createDto: CreateConsentDto) {
+        const consent = this.consentsRepository.create(createDto);
+        return this.consentsRepository.save(consent);
+    }
+
+    async findAll() {
+        return this.consentsRepository.find({
+            relations: ['student'], // Si quieres cargar relaciones
+        });
+    }
+
+    async findOne(id: number) {
+        const consent = await this.consentsRepository.findOne({
+            where: { id },
+            relations: ['student'] // Opcional: cargar relaciones
+        });
+
+        if (!consent) {
+            throw new NotFoundException(`Consent with ID ${id} not found`);
+        }
+
+        return consent;
+    }
+
+    async update(id: number, updateDto: UpdateConsentDto) {
+        // Verificar que existe antes de actualizar
+        await this.findOne(id);
+
+        await this.consentsRepository.update(id, updateDto);
+        return this.findOne(id);
+    }
+
+    async remove(id: number) {
+        // Verificar que existe antes de eliminar
+        const consent = await this.findOne(id);
+
+        await this.consentsRepository.delete(id);
+        return { deleted: true, consent };
+    }
+}
+
+
+================================================
+FILE: backend/src/student-management/consents/dto/create-consent.dto.ts
+================================================
+import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
+
+export class CreateConsentDto {
+    @IsNotEmpty()
+    @IsNumber()
+    studentId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    fromUserId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    toUserId: number;
+
+    @IsNotEmpty()
+    @IsDateString()
+    expiresAt: string;
+}
+
+
+
+================================================
+FILE: backend/src/student-management/consents/dto/update-consent.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateConsentDto } from './create-consent.dto';
+
+export class UpdateConsentDto extends PartialType(CreateConsentDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/consents/entities/student-share-consent-type.entity.ts
+================================================
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+import { StudentShareConsent } from './student-share-consent.entity';
+
+@Entity('student_share_consent_types')
+export class StudentShareConsentType {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'consent_id' })
+    consentId: number;
+
+    @ManyToOne(() => StudentShareConsent)
+    @JoinColumn({ name: 'consent_id' })
+    consent: StudentShareConsent;
+
+    @Column({
+        name: 'record_type',
+        type: 'enum',
+        enum: ['conducta', 'tutoría', 'médico', 'cognitivo'],
+    })
+    recordType: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+}
+
+
+
+================================================
+FILE: backend/src/student-management/consents/entities/student-share-consent.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Student } from '../../students/entities/student.entity';
+import { User } from '../../../users/entities/user.entity';
+import { StudentShareConsentType } from './student-share-consent-type.entity';
+
+@Entity('student_share_consents')
+export class StudentShareConsent {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_id' })
+    studentId: number;
+
+    @ManyToOne(() => Student, (student) => student.consents)
+    @JoinColumn({ name: 'student_id' })
+    student: Student;
+
+    @Column({ name: 'from_user_id' })
+    fromUserId: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'from_user_id' })
+    fromUser: User;
+
+    @Column({ name: 'to_user_id' })
+    toUserId: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'to_user_id' })
+    toUser: User;
+
+    @Column({ name: 'is_active', default: true })
+    isActive: boolean;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @Column({ name: 'expires_at', type: 'datetime' })
+    expiresAt: Date;
+
+    @Column({ name: 'revoked_at', type: 'datetime', nullable: true })
+    revokedAt: Date;
+
+    @OneToMany(() => StudentShareConsentType, (type) => type.consent)
+    types: StudentShareConsentType[];
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/student-assignments.controller.ts
+================================================
+import { Controller } from '@nestjs/common';
+
+@Controller('student-assignments')
+export class StudentAssignmentsController {}
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/student-assignments.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { StudentAssignmentsService } from './student-assignments.service';
+import { StudentAssignmentsController } from './student-assignments.controller';
+import { StudentAssignment } from './entities/student-assignment.entity';
+import { StudentAssignmentHistory } from './entities/student-assignment-history.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([StudentAssignment, StudentAssignmentHistory])],
+  controllers: [StudentAssignmentsController],
+  providers: [StudentAssignmentsService],
+})
+export class StudentAssignmentsModule { }
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/student-assignments.service.ts
+================================================
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateStudentAssignmentDto } from './dto/create-student-assignment.dto';
+import { UpdateStudentAssignmentDto } from './dto/update-student-assignment.dto';
+import { StudentAssignment } from './entities/student-assignment.entity';
+import { StudentAssignmentHistory } from './entities/student-assignment-history.entity';
+
+@Injectable()
+export class StudentAssignmentsService {
+    constructor(
+        @InjectRepository(StudentAssignment)
+        private assignmentsRepository: Repository<StudentAssignment>,
+        @InjectRepository(StudentAssignmentHistory)
+        private historyRepository: Repository<StudentAssignmentHistory>,
+    ) { }
+
+    async create(createDto: CreateStudentAssignmentDto) {
+        // Regla: Alumno activo solo una vez por grupo (validación backend)
+        const activeAssignment = await this.assignmentsRepository.findOne({
+            where: {
+                studentId: createDto.studentId,
+                groupId: createDto.groupId,
+                status: 'active', // Assuming 'active' is the status for active assignment
+            },
+        });
+
+        if (activeAssignment) {
+            throw new BadRequestException('El estudiante ya tiene una asignación activa en este grupo');
+        }
+
+        const assignment = await this.assignmentsRepository.save(createDto);
+
+        // Record history (initial assignment)
+        // Need logged in user ID for 'performedBy' - usually passed from controller or context.
+        // For now skipping or using system default if not passed.
+        // Ideally create method should accept userId.
+
+        return assignment;
+    }
+
+    findAll() {
+        return this.assignmentsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.assignmentsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateDto: UpdateStudentAssignmentDto) {
+        return this.assignmentsRepository.update(id, updateDto);
+    }
+
+    remove(id: number) {
+        return this.assignmentsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/dto/create-student-assignment.dto.ts
+================================================
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class CreateStudentAssignmentDto {
+    @IsNotEmpty()
+    @IsNumber()
+    studentId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    groupId: number;
+
+    @IsOptional()
+    @IsString()
+    status?: 'active' | 'inactive';
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/dto/update-student-assignment.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateStudentAssignmentDto } from './create-student-assignment.dto';
+
+export class UpdateStudentAssignmentDto extends PartialType(CreateStudentAssignmentDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/entities/student-assignment-history.entity.ts
+================================================
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+} from 'typeorm';
+import { StudentAssignment } from './student-assignment.entity';
+import { User } from '../../../users/entities/user.entity';
+
+@Entity('student_assignment_history')
+export class StudentAssignmentHistory {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_assignment_id' })
+    studentAssignmentId: number;
+
+    @ManyToOne(() => StudentAssignment)
+    @JoinColumn({ name: 'student_assignment_id' })
+    studentAssignment: StudentAssignment;
+
+    @Column({
+        type: 'enum',
+        enum: ['assigned', 'unassigned', 'reactivated'],
+    })
+    action: 'assigned' | 'unassigned' | 'reactivated';
+
+    @Column({ name: 'performed_by' })
+    performedById: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'performed_by' })
+    performedBy: User;
+
+    @CreateDateColumn({ name: 'performed_at' })
+    performedAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-assignments/entities/student-assignment.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Student } from '../../students/entities/student.entity';
+import { Group } from '../../../academic/groups/entities/group.entity';
+import { StudentAssignmentHistory } from './student-assignment-history.entity';
+import { Attendance } from '../../../assessments/attendance/entities/attendance.entity';
+import { Grade } from '../../../assessments/grades/entities/grade.entity';
+
+@Entity('student_assignments')
+export class StudentAssignment {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_id' })
+    studentId: number;
+
+    @ManyToOne(() => Student, (student) => student.assignments)
+    @JoinColumn({ name: 'student_id' })
+    student: Student;
+
+    @Column({ name: 'group_id' })
+    groupId: number;
+
+    @ManyToOne(() => Group, (group) => group.studentAssignments)
+    @JoinColumn({ name: 'group_id' })
+    group: Group;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'inactive'],
+        default: 'active',
+    })
+    status: 'active' | 'inactive';
+
+    @Column({ name: 'assigned_at', default: () => 'CURRENT_TIMESTAMP' })
+    assignedAt: Date;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => StudentAssignmentHistory, (history) => history.studentAssignment)
+    history: StudentAssignmentHistory[];
+
+    @OneToMany(() => Attendance, (attendance) => attendance.studentAssignment)
+    attendances: Attendance[];
+
+    @OneToMany(() => Grade, (grade) => grade.studentAssignment)
+    grades: Grade[];
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/student-records.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { StudentRecordsService } from './student-records.service';
+import { CreateStudentRecordDto } from './dto/create-student-record.dto';
+import { UpdateStudentRecordDto } from './dto/update-student-record.dto';
+
+@Controller('student-records')
+export class StudentRecordsController {
+    constructor(private readonly recordsService: StudentRecordsService) { }
+
+    @Post()
+    create(@Body() createDto: CreateStudentRecordDto) {
+        return this.recordsService.create(createDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.recordsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.recordsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateDto: UpdateStudentRecordDto) {
+        return this.recordsService.update(+id, updateDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.recordsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/student-records.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { StudentRecordsService } from './student-records.service';
+import { StudentRecordsController } from './student-records.controller';
+import { StudentRecord } from './entities/student-record.entity';
+import { StudentRecordReply } from './entities/student-record-reply.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([StudentRecord, StudentRecordReply])],
+  controllers: [StudentRecordsController],
+  providers: [StudentRecordsService],
+})
+export class StudentRecordsModule { }
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/student-records.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateStudentRecordDto } from './dto/create-student-record.dto';
+import { UpdateStudentRecordDto } from './dto/update-student-record.dto';
+import { StudentRecord } from './entities/student-record.entity';
+
+@Injectable()
+export class StudentRecordsService {
+    constructor(
+        @InjectRepository(StudentRecord)
+        private recordsRepository: Repository<StudentRecord>,
+    ) { }
+
+    create(createDto: CreateStudentRecordDto) {
+        return this.recordsRepository.save(createDto);
+    }
+
+    findAll() {
+        return this.recordsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.recordsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateDto: UpdateStudentRecordDto) {
+        return this.recordsRepository.update(id, updateDto);
+    }
+
+    remove(id: number) {
+        return this.recordsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/dto/create-student-record.dto.ts
+================================================
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+
+export class CreateStudentRecordDto {
+    @IsNotEmpty()
+    @IsNumber()
+    studentId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    contextId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+
+    @IsNotEmpty()
+    @IsString()
+    description: string;
+}
+
+export class UpdateStudentRecordDto extends PartialType(CreateStudentRecordDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/dto/update-student-record.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateStudentRecordDto } from './create-student-record.dto';
+
+export class UpdateStudentRecordDto extends PartialType(CreateStudentRecordDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/entities/student-record-reply.entity.ts
+================================================
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+import { StudentRecord } from './student-record.entity';
+
+@Entity('student_record_replies')
+export class StudentRecordReply {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_record_id' })
+    studentRecordId: number;
+
+    @ManyToOne(() => StudentRecord)
+    @JoinColumn({ name: 'student_record_id' })
+    studentRecord: StudentRecord;
+
+    @Column({ name: 'reply_text', type: 'text' })
+    replyText: string;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+}
+
+
+
+================================================
+FILE: backend/src/student-management/student-records/entities/student-record.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Student } from '../../students/entities/student.entity';
+import { Context } from '../../../academic/contexts/entities/context.entity';
+import { AcademicPeriod } from '../../../academic/academic-periods/entities/academic-period.entity';
+import { StudentRecordReply } from './student-record-reply.entity';
+
+@Entity('student_records')
+export class StudentRecord {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'student_id' })
+    studentId: number;
+
+    @ManyToOne(() => Student, (student) => student.records)
+    @JoinColumn({ name: 'student_id' })
+    student: Student;
+
+    @Column({ name: 'context_id' })
+    contextId: number;
+
+    @ManyToOne(() => Context, (context) => context.studentRecords, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'context_id' })
+    context: Context;
+
+    @Column({ name: 'academic_period_id', nullable: true })
+    academicPeriodId: number;
+
+    @ManyToOne(() => AcademicPeriod)
+    @JoinColumn({ name: 'academic_period_id' })
+    academicPeriod: AcademicPeriod;
+
+    @Column({
+        type: 'enum',
+        enum: ['conducta', 'tutoría', 'médico', 'cognitivo'],
+    })
+    type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+
+    @Column({ type: 'text' })
+    description: string;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'archived', 'inactive'],
+        default: 'active',
+    })
+    status: 'active' | 'archived' | 'inactive';
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => StudentRecordReply, (reply) => reply.studentRecord)
+    replies: StudentRecordReply[];
+}
+
+
+
+================================================
+FILE: backend/src/student-management/students/students.controller.ts
+================================================
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { StudentsService } from './students.service';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { UpdateStudentDto } from './dto/update-student.dto';
+
+@Controller('students')
+export class StudentsController {
+    constructor(private readonly studentsService: StudentsService) { }
+
+    @Post()
+    create(@Body() createStudentDto: CreateStudentDto) {
+        return this.studentsService.create(createStudentDto);
+    }
+
+    @Get()
+    findAll() {
+        return this.studentsService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.studentsService.findOne(+id);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
+        return this.studentsService.update(+id, updateStudentDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.studentsService.remove(+id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/students/students.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { StudentsService } from './students.service';
+import { StudentsController } from './students.controller';
+import { Student } from './entities/student.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Student])],
+  controllers: [StudentsController],
+  providers: [StudentsService],
+})
+export class StudentsModule { }
+
+
+
+================================================
+FILE: backend/src/student-management/students/students.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { UpdateStudentDto } from './dto/update-student.dto';
+import { Student } from './entities/student.entity';
+
+@Injectable()
+export class StudentsService {
+    constructor(
+        @InjectRepository(Student)
+        private studentsRepository: Repository<Student>,
+    ) { }
+
+    create(createStudentDto: CreateStudentDto) {
+        const student = this.studentsRepository.create({
+            fullName: `${createStudentDto.firstName} ${createStudentDto.lastName}`,
+            email: createStudentDto.email,
+            address: createStudentDto.address,
+            enrollmentId: createStudentDto.studentId,
+            parentPhone: createStudentDto.phone,
+            birthDate: createStudentDto.dateOfBirth ? new Date(createStudentDto.dateOfBirth) : undefined,
+            notes: createStudentDto.notes,
+            status: createStudentDto.status || 'active',
+        });
+        return this.studentsRepository.save(student);
+    }
+
+    findAll() {
+        return this.studentsRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.studentsRepository.findOne({ where: { id } });
+    }
+
+    update(id: number, updateStudentDto: UpdateStudentDto) {
+        const dataToUpdate: any = {};
+
+        if (updateStudentDto.firstName && updateStudentDto.lastName) {
+            dataToUpdate.fullName = `${updateStudentDto.firstName} ${updateStudentDto.lastName}`;
+        }
+
+        if (updateStudentDto.email) dataToUpdate.email = updateStudentDto.email;
+        if (updateStudentDto.address) dataToUpdate.address = updateStudentDto.address;
+        if (updateStudentDto.studentId) dataToUpdate.enrollmentId = updateStudentDto.studentId;
+        if (updateStudentDto.phone) dataToUpdate.parentPhone = updateStudentDto.phone;
+        if (updateStudentDto.dateOfBirth) dataToUpdate.birthDate = new Date(updateStudentDto.dateOfBirth);
+        if (updateStudentDto.notes) dataToUpdate.notes = updateStudentDto.notes;
+        if (updateStudentDto.status) dataToUpdate.status = updateStudentDto.status;
+
+        return this.studentsRepository.update(id, dataToUpdate);
+    }
+
+    remove(id: number) {
+        return this.studentsRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/student-management/students/dto/create-student.dto.ts
+================================================
+import { IsNotEmpty, IsString, IsOptional, IsDateString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { Transform, Type } from 'class-transformer';
+
+export class CreateStudentDto {
+    @IsNotEmpty()
+    @IsString()
+    firstName: string;
+
+    @IsNotEmpty()
+    @IsString()
+    lastName: string;
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsString()
+    email?: string;
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsString()
+    studentId?: string; // Frontend sends 'studentId' (enrollment code)
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsString()
+    phone?: string;
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsString()
+    address?: string;
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsDateString()
+    dateOfBirth?: string;
+
+    @IsOptional()
+    @IsString()
+    status?: 'active' | 'archived' | 'inactive';
+
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
+    @IsString()
+    notes?: string;
+}
+
+export class UpdateStudentDto extends PartialType(CreateStudentDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/students/dto/update-student.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateStudentDto } from './create-student.dto';
+
+export class UpdateStudentDto extends PartialType(CreateStudentDto) { }
+
+
+
+================================================
+FILE: backend/src/student-management/students/entities/student.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { StudentAssignment } from '../../student-assignments/entities/student-assignment.entity';
+import { StudentRecord } from '../../student-records/entities/student-record.entity';
+import { StudentShareConsent } from '../../consents/entities/student-share-consent.entity';
+import { FileEntity } from '../../../files/entities/file.entity';
+
+@Entity('students')
+export class Student {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ name: 'full_name' })
+    fullName: string;
+
+    @Column({ nullable: true })
+    email: string;
+
+    @Column({ nullable: true })
+    address: string;
+
+    @Column({ name: 'enrollment_id', nullable: true })
+    enrollmentId: string;
+
+    @Column({ name: 'birth_date', type: 'date', nullable: true })
+    birthDate: Date;
+
+    @Column({ name: 'parent_phone', nullable: true })
+    parentPhone: string;
+
+    @Column({ type: 'text', nullable: true })
+    notes: string;
+
+    @Column({
+        type: 'enum',
+        enum: ['active', 'archived', 'inactive'],
+        default: 'active',
+    })
+    status: 'active' | 'archived' | 'inactive';
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
+
+    @OneToMany(() => StudentAssignment, (assignment) => assignment.student)
+    assignments: StudentAssignment[];
+
+    @OneToMany(() => StudentRecord, (record) => record.student)
+    records: StudentRecord[];
+
+    @OneToMany(() => StudentShareConsent, (consent) => consent.student)
+    consents: StudentShareConsent[];
+}
+
+
+
+================================================
+FILE: backend/src/users/users.controller.ts
+================================================
+import { Controller } from '@nestjs/common';
+
+@Controller('users')
+export class UsersController {}
+
+
+
+================================================
+FILE: backend/src/users/users.module.ts
+================================================
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { User } from './entities/user.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UsersController],
+  providers: [UsersService],
+  exports: [UsersService], // Export for AuthModule
+})
+export class UsersModule { }
+
+
+
+================================================
+FILE: backend/src/users/users.service.ts
+================================================
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+
+@Injectable()
+export class UsersService {
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) { }
+
+    async create(createUserDto: CreateUserDto): Promise<User> {
+        const user = this.usersRepository.create(createUserDto);
+        // Password hashing should be done here or in subscriber. 
+        // Doing it here for simplicity.
+        if (user.password) {
+            user.password = await bcrypt.hash(user.password, 10);
+        }
+        return this.usersRepository.save(user);
+    }
+
+    findAll() {
+        return this.usersRepository.find();
+    }
+
+    findOne(id: number) {
+        return this.usersRepository.findOne({ where: { id } });
+    }
+
+    findByEmail(email: string) {
+        return this.usersRepository.findOne({ where: { email } });
+    }
+
+    async update(id: number, updateUserDto: UpdateUserDto) {
+        if (updateUserDto.password) {
+            updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+        }
+        await this.usersRepository.update(id, updateUserDto);
+        return this.findOne(id);
+    }
+
+    async updateRefreshToken(id: number, hashedRefreshToken: string | null) {
+        await this.usersRepository.update(id, { hashedRefreshToken });
+    }
+
+    async updateLastActivity(id: number) {
+        await this.usersRepository.update(id, { lastActivityAt: new Date() });
+    }
+
+    remove(id: number) {
+        return this.usersRepository.delete(id);
+    }
+}
+
+
+
+================================================
+FILE: backend/src/users/dto/create-user.dto.ts
+================================================
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+
+export class CreateUserDto {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @IsNotEmpty()
+    @MinLength(6)
+    password: string;
+
+    @IsNotEmpty()
+    name: string;
+}
+
+
+
+================================================
+FILE: backend/src/users/dto/update-user.dto.ts
+================================================
+import { PartialType } from '@nestjs/mapped-types'; // Note: nestjs/mapped-types might need to be installed or use generic
+import { CreateUserDto } from './create-user.dto';
+
+export class UpdateUserDto extends PartialType(CreateUserDto) { }
+
+
+
+================================================
+FILE: backend/src/users/entities/user.entity.ts
+================================================
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { RefreshToken } from '../../auth/refresh-token.entity';
+import { Context } from '../../academic/contexts/entities/context.entity';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ name: 'hashed_refresh_token', type: 'varchar', nullable: true })
+  hashedRefreshToken: string | null;
+
+  @Column({ name: 'last_activity_at', type: 'timestamp', nullable: true })
+  lastActivityAt: Date | null;
+
+  @Column()
+  name: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['active', 'inactive'],
+    default: 'active',
+  })
+  status: 'active' | 'inactive';
+
+  @OneToMany(() => RefreshToken, (token) => token.user)
+  refreshTokens: RefreshToken[];
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @OneToMany(() => Context, (context) => context.user)
+  contexts: Context[];
+}
+
+
+
+================================================
+FILE: backend/test/app.e2e-spec.ts
+================================================
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { App } from 'supertest/types';
+import { AppModule } from './../src/app.module';
+
+describe('AppController (e2e)', () => {
+  let app: INestApplication<App>;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
+  });
+});
+
+
+
+================================================
+FILE: backend/test/jest-e2e.json
+================================================
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}
+
+
