@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
@@ -8,9 +9,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EvaluationsService } from '../../../core/services/evaluations.service';
 import { SubjectsService } from '../../../core/services/subjects.service';
 import { StudentsService } from '../../../core/services/students.service';
+import { GradesService } from '../../../core/services/grades.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Subject } from '../../../core/models/subject.model';
 import { Evaluation } from '../../../core/models/evaluation.model';
@@ -29,7 +32,8 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
         MatSelectModule,
         MatButtonModule,
         MatTableModule,
-        MatInputModule
+        MatInputModule,
+        MatSnackBarModule
     ],
     templateUrl: './grading.component.html',
     styleUrls: ['./grading.component.scss']
@@ -40,25 +44,50 @@ export class GradingComponent implements OnInit {
     evaluations: Evaluation[] = [];
     gradingData: any[] = [];
     displayedColumns: string[] = ['name', 'score', 'feedback'];
+    students: any[] = [];
+    selectedEvaluationItem: any;
+    selectedGroupId: number | null = null;
 
     constructor(
         private fb: FormBuilder,
         private evaluationsService: EvaluationsService,
         private subjectsService: SubjectsService,
         private studentsService: StudentsService,
-        private notificationService: NotificationService
+        private gradesService: GradesService,
+        private notificationService: NotificationService,
+        private snackBar: MatSnackBar
     ) {
         this.filterForm = this.fb.group({
             subjectId: ['', Validators.required],
-            evaluationId: ['', Validators.required]
+            evaluationId: ['', Validators.required],
+            groupId: ['']
         });
     }
+
 
     ngOnInit() {
         this.loadSubjects();
 
         this.filterForm.get('subjectId')?.valueChanges.subscribe(subjectId => {
             this.loadEvaluations(subjectId);
+
+            // Auto-select group based on subject
+            const selectedSubject = this.subjects.find(s => s.id === Number(subjectId));
+            if (selectedSubject && selectedSubject.groupId) {
+                this.selectedGroupId = selectedSubject.groupId;
+                // Update form control if it exists, though we might not need it visible
+                this.filterForm.patchValue({ groupId: selectedSubject.groupId }, { emitEvent: false });
+                this.loadStudents();
+            } else if (selectedSubject) {
+                console.warn('Subject has no groupId:', selectedSubject);
+            }
+        });
+
+        this.filterForm.get('groupId')?.valueChanges.subscribe(groupId => {
+             if (groupId) {
+                 this.selectedGroupId = groupId;
+                 this.loadStudents();
+             }
         });
     }
 
@@ -84,67 +113,122 @@ export class GradingComponent implements OnInit {
             .subscribe(data => this.evaluations = data);
     }
 
-    onLoadGrades() {
-        if (this.filterForm.valid) {
-            const evaluationId = this.filterForm.get('evaluationId')?.value;
-            // TODO: Add loading indicator
-            this.gradingData = []; // Reset data
+    /* Existing onLoadGrades logic preserved but maybe not used by new features */
 
-            this.studentsService.getAll()
-                .pipe(
-                    catchError(error => {
-                        console.error('Error loading students:', error);
-                        this.notificationService.error('No se pudieron cargar los estudiantes. Verifique la conexión.');
-                        return of([]);
-                    })
-                )
-                .subscribe(students => {
-                    if (students.length === 0) {
-                        this.notificationService.warning('No se encontraron estudiantes registrados.');
-                        return;
-                    }
 
-                    // Here we would merge with existing grades if any
-                    this.gradingData = students.map(student => ({
-                        studentId: student.id,
-                        studentName: student.fullName,
-                        score: 0,
-                        feedback: ''
-                    }));
-
-                    this.notificationService.success(`${students.length} estudiantes cargados.`);
-                });
+    loadStudents() {
+        let request$;
+        
+        if (this.selectedGroupId) {
+             console.log('🔄 Fetching students for group:', this.selectedGroupId);
+             request$ = this.studentsService.getStudentsByGroup(this.selectedGroupId);
         } else {
-            this.notificationService.warning('Por favor seleccione una materia y una evaluación.');
+             // Fallback: try to find groupId from subjectId selector
+             const subjectId = this.filterForm.get('subjectId')?.value;
+             // Loose comparison because form value might be string
+             const subject = this.subjects.find(s => s.id == subjectId);
+             
+             if (subject && subject.groupId) {
+                 this.selectedGroupId = subject.groupId;
+                 console.log('🔄 Inferring group from subject:', subject.groupId);
+                 request$ = this.studentsService.getStudentsByGroup(subject.groupId);
+             } else {
+                 console.warn('⚠️ No group context found. Fetching all students (might lack assignmentId).');
+                 request$ = this.studentsService.getAll();
+             }
         }
+
+        request$.subscribe({
+          next: (students: any[]) => {
+            if (!students) students = [];
+            
+            // If we got 0 students via assignments, try fallback to ALL students for debugging
+            // This helps confirm if students exist but just aren't assigned
+            if (students.length === 0 && this.selectedGroupId) {
+                console.warn('⚠️ No active assignments found. Checking if ANY students exist...');
+                this.studentsService.getAll().subscribe(all => {
+                    if (all.length > 0) {
+                        this.snackBar.open(`⚠️ Alerta: Hay ${all.length} estudiantes en sistema pero 0 en este grupo. Asigne estudiantes primero.`, 'Cerrar', { duration: 8000 });
+                    }
+                });
+            }
+
+            this.students = students.map(s => ({
+              ...s,
+              grade: null,      // Campo para capturar calificación
+              score: null,      // Alias para la vista
+              feedback: '',     // Campo para capturar retroalimentación
+              assignmentId: s.studentAssignmentId || s.assignmentId || s.id,
+              studentName: s.fullName || (s.firstName ? `${s.firstName} ${s.lastName}` : 'Estudiante sin nombre') // Mapeo robusto
+            }));
+             this.gradingData = this.students;
+             
+             if (this.students.length === 0) {
+                 // Message already handled above or by snackbar
+             } else {
+                 console.log(`✅ ${this.students.length} Estudiantes cargados`);
+             }
+          },
+          error: (err: any) => {
+            console.error('❌ Error cargando estudiantes:', err);
+            this.snackBar.open('Error al cargar estudiantes', 'OK', { duration: 3000 });
+          }
+        });
     }
 
-    saveGrades() {
-        const evaluationId = this.filterForm.get('evaluationId')?.value;
-        const grades = this.gradingData.map(item => ({
-            evaluationItemId: Number(evaluationId),
-            studentAssignmentId: item.studentId, // WARNING: Backend requires assignmentId, but endpoint to get it is missing. Using studentId as placeholder.
-            score: Number(item.score)
-        }));
-
-        console.log('📤 Guardando calificaciones:', { grades });
-
-        this.evaluationsService.saveGrades(grades).subscribe({
-            next: () => {
-                this.notificationService.success('Calificaciones guardadas exitosamente');
-            },
-            error: (err) => {
-                console.error('❌ Error guardando calificaciones:', err);
-                console.error('❌ Detalles del error:', err.error);
-
-                let errorMsg = 'Error al guardar calificaciones';
-                if (err.error?.message) {
-                    errorMsg = `Error: ${err.error.message}`;
-                    console.error('❌ Mensaje del backend:', err.error.message);
-                }
-
-                this.notificationService.error(errorMsg);
-            }
+    
+      saveGrades() {
+        // Filtrar solo estudiantes con calificación ingresada (usando 'score' que es lo que enlaza la vista)
+        const gradesToSave = this.students
+          .filter(s => s.score !== null && s.score !== undefined && s.score !== '')
+          .map(student => ({
+            studentAssignmentId: student.assignmentId,  // ✅ Incluir ID de asignación
+            evaluationItemId: this.selectedEvaluationItem ? this.selectedEvaluationItem.id : this.filterForm.get('evaluationId')?.value,
+            score: parseFloat(student.score),
+            feedback: student.feedback || ''
+          }));
+    
+        if (gradesToSave.length === 0) {
+          this.snackBar.open('No hay calificaciones para guardar', 'OK', { duration: 3000 });
+          return;
+        }
+    
+        // Validar antes de enviar
+        const invalid = gradesToSave.filter(g => !g.studentAssignmentId);
+        if (invalid.length > 0) {
+          console.error('❌ Calificaciones sin assignmentId:', invalid);
+          this.snackBar.open('Error: Faltan datos de asignación', 'OK', { duration: 3000 });
+          return;
+        }
+    
+        console.log('📤 Guardando calificaciones:', gradesToSave);
+    
+        this.gradesService.saveBatch(gradesToSave).subscribe({
+          next: (response) => {
+            console.log('✅ Respuesta del servidor:', response);
+            this.snackBar.open(
+              `${response.length} calificaciones guardadas exitosamente`, 
+              'OK', 
+              { duration: 3000 }
+            );
+            
+            // Recargar calificaciones para reflejar cambios
+            this.loadStudents();
+          },
+          error: (err) => {
+            console.error('❌ Error guardando calificaciones:', err);
+            this.snackBar.open(
+              'Error al guardar calificaciones', 
+              'OK', 
+              { duration: 3000 }
+            );
+          }
         });
+      }
+
+
+
+    onLoadGrades() {
+       this.loadStudents();
     }
 }
