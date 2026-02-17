@@ -136,7 +136,7 @@ export class GradingComponent implements OnInit {
                             const assignments = allAssignments[index];
                             // Get the first active assignment (unassignedAt is null), or any assignment if none are active
                             const activeAssignment = assignments?.find(a => !a.unassignedAt) || assignments?.[0];
-                            const studentAssignmentId = activeAssignment?.id || student.id;
+                            const studentAssignmentId = activeAssignment?.id ?? student.id;
                             
                             // Try to find existing grade using the studentAssignmentId
                             const existingGrade = gradesMap.get(studentAssignmentId);
@@ -145,8 +145,8 @@ export class GradingComponent implements OnInit {
                                 studentId: student.id,
                                 studentAssignmentId: studentAssignmentId,
                                 studentName: student.fullName,
-                                score: existingGrade?.score || 0,
-                                feedback: existingGrade?.feedback || '',
+                                score: existingGrade?.score ?? 0,
+                                feedback: existingGrade?.feedback ?? '',
                                 hasExistingGrade: !!existingGrade
                             };
                         });
@@ -189,7 +189,7 @@ export class GradingComponent implements OnInit {
             evaluationItemId,
             studentAssignmentId: item.studentAssignmentId,
             score: item.score,
-            feedback: item.feedback || ''
+            feedback: item.feedback ?? ''
         }));
 
         console.log('📤 Guardando calificaciones:', { grades });
