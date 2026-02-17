@@ -111,10 +111,9 @@ export class GradingComponent implements OnInit {
                     })
                 )
             }).subscribe({
-                next: ({ students, grades }) => {
-                    this.isLoading = false;
-
+                next: async ({ students, grades }) => {
                     if (students.length === 0) {
+                        this.isLoading = false;
                         this.notificationService.warning('No se encontraron estudiantes registrados.');
                         return;
                     }
@@ -122,26 +121,46 @@ export class GradingComponent implements OnInit {
                     // Create a map of existing grades by studentAssignmentId for quick lookup
                     const gradesMap = new Map(grades.map(grade => [grade.studentAssignmentId, grade]));
 
-                    // Map students with their grades
-                    // Note: In the current implementation, we don't have the group context,
-                    // so we're mapping by studentId. In a complete implementation, we would
-                    // fetch student assignments for the relevant group.
-                    this.gradingData = students.map(student => {
-                        // Try to find existing grade by matching studentAssignmentId with studentId
-                        // This is a temporary workaround until proper group context is added
-                        const existingGrade = Array.from(gradesMap.values()).find(
-                            grade => grade.studentAssignmentId === student.id
-                        );
-                        
-                        return {
-                            studentId: student.id,
-                            studentAssignmentId: existingGrade?.studentAssignmentId || student.id,
-                            studentName: student.fullName,
-                            score: existingGrade?.score || 0,
-                            feedback: existingGrade?.feedback || '',
-                            hasExistingGrade: !!existingGrade
-                        };
+                    // Fetch student assignments for each student to get their studentAssignmentId
+                    const studentDataPromises = students.map(async (student) => {
+                        try {
+                            const assignments = await this.studentAssignmentsService
+                                .getAssignmentsByStudent(student.id)
+                                .pipe(catchError(() => of([])))
+                                .toPromise();
+                            
+                            // Get the first active assignment (unassignedAt is null), or any assignment if none are active
+                            const activeAssignment = assignments?.find(a => !a.unassignedAt) || assignments?.[0];
+                            const studentAssignmentId = activeAssignment?.id || student.id;
+                            
+                            // Try to find existing grade using the studentAssignmentId
+                            const existingGrade = gradesMap.get(studentAssignmentId);
+                            
+                            return {
+                                studentId: student.id,
+                                studentAssignmentId: studentAssignmentId,
+                                studentName: student.fullName,
+                                score: existingGrade?.score || 0,
+                                feedback: existingGrade?.feedback || '',
+                                hasExistingGrade: !!existingGrade
+                            };
+                        } catch (error) {
+                            console.warn(`Could not fetch assignments for student ${student.id}:`, error);
+                            // Fallback to using studentId
+                            return {
+                                studentId: student.id,
+                                studentAssignmentId: student.id,
+                                studentName: student.fullName,
+                                score: 0,
+                                feedback: '',
+                                hasExistingGrade: false
+                            };
+                        }
                     });
+
+                    // Wait for all student data to be loaded
+                    this.gradingData = await Promise.all(studentDataPromises);
+                    this.isLoading = false;
 
                     this.notificationService.success(
                         `${students.length} estudiantes cargados. ${grades.length} calificaciones existentes.`
