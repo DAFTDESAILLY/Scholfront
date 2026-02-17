@@ -43,4 +43,8 @@ export class EvaluationsService {
     getGradesByAssessment(assessmentId: number): Observable<Grade[]> {
         return this.http.get<Grade[]>(`${this.gradesUrl}?assessmentId=${assessmentId}`);
     }
+
+    getGradesByEvaluation(evaluationItemId: number): Observable<Grade[]> {
+        return this.http.get<Grade[]>(`${this.gradesUrl}/by-evaluation/${evaluationItemId}`);
+    }
 }
