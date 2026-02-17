@@ -3,11 +3,6 @@
     align-items: center;
 }
 
-.title-row {
-    display: flex;
-    align-items: center;
-}
-
 .grading-container {
     padding: 20px;
 }
@@ -21,7 +16,44 @@
 
     button {
         height: 56px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 20px;
+
+    mat-spinner {
+        margin: 0 auto;
+    }
+
+    p {
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0;
+    }
+}
+
+.no-data {
+    padding: 40px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+
+    p {
+        margin: 0;
+        font-size: 16px;
+    }
+}
+
+.button-spinner {
+    display: inline-block;
+    margin-right: 8px;
 }
 
 .grading-table {
@@ -40,8 +72,25 @@
     width: 100%;
 }
 
+.status-icon {
+    &.saved {
+        color: #4caf50;
+    }
+}
+
+.status-text {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 14px;
+}
+
 .actions {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 }
