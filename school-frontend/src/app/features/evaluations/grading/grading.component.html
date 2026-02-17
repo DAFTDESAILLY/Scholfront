@@ -27,8 +27,12 @@
                     </mat-select>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" (click)="onLoadGrades()" [disabled]="filterForm.invalid">
-                    Cargar Calificaciones
+                <button mat-raised-button color="primary" (click)="onLoadGrades()" [disabled]="filterForm.invalid || isLoading">
+                    <span *ngIf="!isLoading">Cargar Calificaciones</span>
+                    <span *ngIf="isLoading" class="loading-container">
+                        <mat-spinner diameter="20"></mat-spinner>
+                        Cargando...
+                    </span>
                 </button>
             </form>
 
@@ -58,12 +62,25 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Estado </th>
+                        <td mat-cell *matCellDef="let row">
+                            <span *ngIf="row.hasExistingGrade" class="grade-status">✓</span>
+                        </td>
+                    </ng-container>
+
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
 
                 <div class="actions">
-                    <button mat-raised-button color="accent" (click)="saveGrades()">Guardar Calificaciones</button>
+                    <button mat-raised-button color="accent" (click)="saveGrades()" [disabled]="isSaving">
+                        <span *ngIf="!isSaving">Guardar Calificaciones</span>
+                        <span *ngIf="isSaving" class="loading-container">
+                            <mat-spinner diameter="20"></mat-spinner>
+                            Guardando...
+                        </span>
+                    </button>
                 </div>
             </div>
         </mat-card-content>
