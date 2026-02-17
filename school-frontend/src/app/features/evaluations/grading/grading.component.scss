@@ -3,11 +3,6 @@
     align-items: center;
 }
 
-.title-row {
-    display: flex;
-    align-items: center;
-}
-
 .grading-container {
     padding: 20px;
 }
@@ -22,6 +17,25 @@
     button {
         height: 56px;
     }
+
+    mat-spinner {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 20px;
+
+    p {
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+    }
 }
 
 .grading-table {
@@ -29,6 +43,12 @@
 
     table {
         width: 100%;
+    }
+
+    .grade-status {
+        color: green;
+        margin-left: 8px;
+        font-weight: bold;
     }
 }
 
@@ -44,4 +64,11 @@
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: rgba(0, 0, 0, 0.6);
 }
