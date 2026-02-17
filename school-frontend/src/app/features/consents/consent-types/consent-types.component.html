@@ -30,8 +30,8 @@
                 <ng-container matColumnDef="isActive">
                     <th mat-header-cell *matHeaderCellDef>Activo</th>
                     <td mat-cell *matCellDef="let type">
-                        <mat-icon [color]="type.isActive ? 'primary' : 'warn'">
-                            {{ type.isActive ? 'check_circle' : 'cancel' }}
+                        <mat-icon [color]="(type.isActive || false) ? 'primary' : 'warn'">
+                            {{ (type.isActive || false) ? 'check_circle' : 'cancel' }}
                         </mat-icon>
                     </td>
                 </ng-container>
@@ -42,9 +42,6 @@
                     <td mat-cell *matCellDef="let type">
                         <button mat-icon-button (click)="openEditDialog(type)">
                             <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" (click)="deleteConsentType(type.id)">
-                            <mat-icon>delete</mat-icon>
                         </button>
                     </td>
                 </ng-container>

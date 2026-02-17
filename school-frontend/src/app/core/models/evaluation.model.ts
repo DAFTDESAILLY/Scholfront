@@ -1,14 +1,14 @@
 export interface Evaluation {
     id: number;
     subjectId: number;
-    periodId: number;
+    academicPeriodId: number;
     name: string;
-    type: 'exam' | 'homework' | 'project' | 'participation';
-    maxScore: number;
-    weight: number; // Percentage
-    dueDate: Date;
+    weight: number;
+    type?: string;
+    maxScore?: number;
+    dueDate?: string;
     description?: string;
-    status: 'active' | 'archived';
-    createdAt: Date;
-    updatedAt: Date;
+    status?: 'active' | 'archived';
+    createdAt?: Date;
+    updatedAt?: Date;
 }

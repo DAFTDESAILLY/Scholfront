@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
 import { ConsentsService } from '../../../core/services/consents.service';
-import { StudentConsent } from '../../../core/models/consent.model';
+import { StudentShareConsent } from '../../../core/models/consent.model';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -29,7 +29,7 @@ export class StudentConsentsComponent implements OnInit {
     private route = inject(ActivatedRoute);
 
     studentId!: number;
-    consents: StudentConsent[] = [];
+    consents: StudentShareConsent[] = [];
     displayedColumns: string[] = ['consentType', 'grantedBy', 'grantedAt', 'expiresAt', 'status', 'actions'];
     isLoading = false;
 
@@ -52,15 +52,16 @@ export class StudentConsentsComponent implements OnInit {
                     this.consents = consents;
                     this.isLoading = false;
                 },
-                error: (err) => {
+                error: (err: any) => {
                     console.error('Error loading consents:', err);
                     this.isLoading = false;
                 }
             });
     }
 
-    getConsentStatus(consent: StudentConsent): string {
-        if (consent.isRevoked) return 'revoked';
+    getConsentStatus(consent: StudentShareConsent): string {
+        if (!consent.isActive) return 'revoked'; // Simplified
+        if (consent.revokedAt) return 'revoked';
         if (consent.expiresAt && new Date(consent.expiresAt) < new Date()) return 'expired';
         return 'active';
     }
@@ -74,11 +75,11 @@ export class StudentConsentsComponent implements OnInit {
         }
     }
 
-    revokeConsent(consent: StudentConsent): void {
+    revokeConsent(consent: StudentShareConsent): void {
         if (confirm('¿Estás seguro de revocar este consentimiento?')) {
             this.consentsService.revokeConsent(consent.id, 'Admin', 'Revocado desde interfaz').subscribe({
                 next: () => this.loadConsents(),
-                error: (err) => console.error('Error revoking consent:', err)
+                error: (err: any) => console.error('Error revoking consent:', err)
             });
         }
     }
@@ -87,7 +88,7 @@ export class StudentConsentsComponent implements OnInit {
         if (confirm('¿Estás seguro de eliminar este consentimiento?')) {
             this.consentsService.deleteConsent(id).subscribe({
                 next: () => this.loadConsents(),
-                error: (err) => console.error('Error deleting consent:', err)
+                error: (err: any) => console.error('Error deleting consent:', err)
             });
         }
     }

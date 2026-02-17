@@ -58,7 +58,7 @@ export class GradingComponent implements OnInit {
         this.loadSubjects();
 
         this.filterForm.get('subjectId')?.valueChanges.subscribe(subjectId => {
-            this.loadAssessments(subjectId);
+            this.loadEvaluations(subjectId);
         });
     }
 
@@ -73,7 +73,7 @@ export class GradingComponent implements OnInit {
             .subscribe(data => this.subjects = data);
     }
 
-    loadAssessments(subjectId: number) {
+    loadEvaluations(subjectId: number) {
         this.evaluationsService.getBySubject(subjectId)
             .pipe(
                 catchError(error => {
@@ -122,10 +122,9 @@ export class GradingComponent implements OnInit {
     saveGrades() {
         const evaluationId = this.filterForm.get('evaluationId')?.value;
         const grades = this.gradingData.map(item => ({
-            evaluationId,
-            studentId: item.studentId,
-            score: item.score,
-            feedback: item.feedback
+            evaluationItemId: Number(evaluationId),
+            studentAssignmentId: item.studentId, // WARNING: Backend requires assignmentId, but endpoint to get it is missing. Using studentId as placeholder.
+            score: Number(item.score)
         }));
 
         console.log('📤 Guardando calificaciones:', { grades });

@@ -47,11 +47,11 @@ export class ConsentTypesComponent implements OnInit {
                 })
             )
             .subscribe({
-                next: (types) => {
+                next: (types: any[]) => { // Fixed implicit any
                     this.consentTypes = types;
                     this.isLoading = false;
                 },
-                error: (err) => {
+                error: (err: any) => { // Fixed implicit any
                     console.error('Error loading consent types:', err);
                     this.isLoading = false;
                 }
@@ -68,12 +68,5 @@ export class ConsentTypesComponent implements OnInit {
         console.log('Edit dialog not yet implemented for type:', consentType);
     }
 
-    deleteConsentType(id: number): void {
-        if (confirm('¿Estás seguro de eliminar este tipo de consentimiento?')) {
-            this.consentsService.deleteConsentType(id).subscribe({
-                next: () => this.loadConsentTypes(),
-                error: (err) => console.error('Error deleting consent type:', err)
-            });
-        }
-    }
+    // deleteConsentType removed as types are static
 }

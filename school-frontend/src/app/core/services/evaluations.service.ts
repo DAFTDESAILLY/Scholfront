@@ -40,7 +40,7 @@ export class EvaluationsService {
         return this.http.post<any>(`${this.gradesUrl}/batch`, { grades });
     }
 
-    getGradesByAssessment(assessmentId: number): Observable<Grade[]> {
-        return this.http.get<Grade[]>(`${this.gradesUrl}?assessmentId=${assessmentId}`);
+    getGradesByEvaluation(evaluationId: number): Observable<Grade[]> {
+        return this.http.get<Grade[]>(`${this.gradesUrl}?evaluationId=${evaluationId}`);
     }
 }

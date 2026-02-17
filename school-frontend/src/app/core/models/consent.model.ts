@@ -1,27 +1,25 @@
 export interface ConsentType {
     id: number;
-    name: string;
-    description: string;
-    isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    name?: string; // Display name
+    description?: string;
+    isActive?: boolean;
+    consentId?: number;
+    recordType: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
 }
 
-export interface StudentConsent {
+export interface StudentShareConsent {
     id: number;
     studentId: number;
-    consentTypeId: number;
-    grantedBy: string;
-    grantedAt: Date;
-    expiresAt?: Date;
-    isRevoked: boolean;
+    fromUserId: number;
+    toUserId: number;
+    isActive: boolean;
+    expiresAt: string | Date; // DTO uses string (DateString), Entity uses Date
     revokedAt?: Date;
-    revokedBy?: string;
-    notes?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
 
     // Relaciones
     student?: any; // Student model
-    consentType?: ConsentType;
+    fromUser?: any; // User model
+    toUser?: any; // User model
+    types?: ConsentType[];
 }

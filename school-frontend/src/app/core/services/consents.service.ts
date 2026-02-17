@@ -1,50 +1,53 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { StudentConsent, ConsentType } from '../models/consent.model';
+import { StudentShareConsent } from '../models/consent.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConsentsService {
-    private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/consents`;
 
-    // Consent Types
-    getConsentTypes(): Observable<ConsentType[]> {
-        return this.http.get<ConsentType[]>(`${this.apiUrl}/types`);
+    constructor(private http: HttpClient) { }
+
+    findAll(): Observable<StudentShareConsent[]> {
+        return this.http.get<StudentShareConsent[]>(this.apiUrl);
     }
 
-    createConsentType(data: Partial<ConsentType>): Observable<ConsentType> {
-        return this.http.post<ConsentType>(`${this.apiUrl}/types`, data);
+    findOne(id: number): Observable<StudentShareConsent> {
+        return this.http.get<StudentShareConsent>(`${this.apiUrl}/${id}`);
     }
 
-    updateConsentType(id: number, data: Partial<ConsentType>): Observable<ConsentType> {
-        return this.http.patch<ConsentType>(`${this.apiUrl}/types/${id}`, data);
+    create(consent: any): Observable<StudentShareConsent> {
+        return this.http.post<StudentShareConsent>(this.apiUrl, consent);
     }
 
-    deleteConsentType(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/types/${id}`);
-    }
-
-    // Student Consents
-    getStudentConsents(studentId: number): Observable<StudentConsent[]> {
-        return this.http.get<StudentConsent[]>(`${this.apiUrl}/student/${studentId}`);
-    }
-
-    createConsent(data: Partial<StudentConsent>): Observable<StudentConsent> {
-        return this.http.post<StudentConsent>(this.apiUrl, data);
-    }
-
-    revokeConsent(id: number, revokedBy: string, notes?: string): Observable<StudentConsent> {
-        return this.http.patch<StudentConsent>(`${this.apiUrl}/${id}/revoke`, {
-            revokedBy,
-            notes
-        });
+    update(id: number, consent: any): Observable<StudentShareConsent> {
+        return this.http.patch<StudentShareConsent>(`${this.apiUrl}/${id}`, consent);
     }
 
     deleteConsent(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+
+    getStudentConsents(studentId: number): Observable<StudentShareConsent[]> {
+        return this.http.get<StudentShareConsent[]>(this.apiUrl).pipe(
+            map(consents => consents.filter(c => c.studentId === studentId))
+        );
+    }
+
+    getConsentTypes(): Observable<any[]> {
+        return of([
+            { id: 1, name: 'Conducta', description: 'Registro de conducta', isActive: true },
+            { id: 2, name: 'Tutoría', description: 'Sesiones de tutoría', isActive: true },
+            { id: 3, name: 'Médico', description: 'Historial médico', isActive: true },
+            { id: 4, name: 'Cognitivo', description: 'Evaluaciones cognitivas', isActive: true }
+        ]);
+    }
+
+    revokeConsent(id: number, revokedBy: string, reason: string): Observable<StudentShareConsent> {
+        return this.update(id, { isActive: false, revokedAt: new Date(), notes: reason });
     }
 }

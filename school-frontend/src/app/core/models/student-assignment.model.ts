@@ -2,12 +2,13 @@ export interface StudentAssignment {
     id: number;
     studentId: number;
     groupId: number;
-    assignedAt: Date;
+    status?: 'active' | 'inactive';
+    assignedAt?: Date;
     unassignedAt?: Date;
     reason?: string;
     notes?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 
     // Relaciones
     student?: any; // Student model
