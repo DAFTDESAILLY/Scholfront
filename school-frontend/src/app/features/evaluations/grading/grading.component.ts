@@ -96,7 +96,7 @@ export class GradingComponent implements OnInit {
             this.isLoading = true;
             this.gradingData = []; // Reset data
 
-            // Load students, assignments, and existing grades in parallel
+            // Load students and existing grades in parallel
             forkJoin({
                 students: this.studentsService.getAll().pipe(
                     catchError(error => {
@@ -119,17 +119,23 @@ export class GradingComponent implements OnInit {
                         return;
                     }
 
-                    // Create a map of existing grades by studentId for quick lookup
-                    const gradesMap = new Map(grades.map(grade => [grade.studentId, grade]));
+                    // Create a map of existing grades by studentAssignmentId for quick lookup
+                    const gradesMap = new Map(grades.map(grade => [grade.studentAssignmentId, grade]));
 
-                    // For each student, we need to get their assignment to get the studentAssignmentId
-                    // In a real scenario, we'd need to know which group this evaluation belongs to
-                    // For now, we'll map students and merge with existing grades
+                    // Map students with their grades
+                    // Note: In the current implementation, we don't have the group context,
+                    // so we're mapping by studentId. In a complete implementation, we would
+                    // fetch student assignments for the relevant group.
                     this.gradingData = students.map(student => {
-                        const existingGrade = gradesMap.get(student.id);
+                        // Try to find existing grade by matching studentAssignmentId with studentId
+                        // This is a temporary workaround until proper group context is added
+                        const existingGrade = Array.from(gradesMap.values()).find(
+                            grade => grade.studentAssignmentId === student.id
+                        );
+                        
                         return {
                             studentId: student.id,
-                            studentAssignmentId: null, // Will be populated when we save
+                            studentAssignmentId: existingGrade?.studentAssignmentId || student.id,
                             studentName: student.fullName,
                             score: existingGrade?.score || 0,
                             feedback: existingGrade?.feedback || '',
@@ -164,14 +170,13 @@ export class GradingComponent implements OnInit {
         const evaluationItemId = this.filterForm.get('evaluationId')?.value;
         
         // Map to the correct field names expected by backend
-        const grades = this.gradingData
-            .filter(item => item.score > 0 || item.feedback) // Only send grades with data
-            .map(item => ({
-                evaluationItemId,
-                studentAssignmentId: item.studentAssignmentId || item.studentId, // Use studentId as fallback
-                score: item.score,
-                feedback: item.feedback
-            }));
+        // Only send grades with score > 0 to match validation
+        const grades = gradesWithScores.map(item => ({
+            evaluationItemId,
+            studentAssignmentId: item.studentAssignmentId,
+            score: item.score,
+            feedback: item.feedback || ''
+        }));
 
         console.log('📤 Guardando calificaciones:', { grades });
 
@@ -180,7 +185,7 @@ export class GradingComponent implements OnInit {
                 this.isSaving = false;
                 // Mark all saved grades
                 this.gradingData.forEach(item => {
-                    if (item.score > 0 || item.feedback) {
+                    if (item.score > 0) {
                         item.hasExistingGrade = true;
                     }
                 });
