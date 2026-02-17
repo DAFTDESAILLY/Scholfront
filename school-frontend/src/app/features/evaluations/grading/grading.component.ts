@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EvaluationsService } from '../../../core/services/evaluations.service';
 import { SubjectsService } from '../../../core/services/subjects.service';
 import { StudentsService } from '../../../core/services/students.service';
+import { StudentAssignmentsService } from '../../../core/services/student-assignments.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Subject } from '../../../core/models/subject.model';
 import { Evaluation } from '../../../core/models/evaluation.model';
@@ -46,6 +47,7 @@ export class GradingComponent implements OnInit {
         private evaluationsService: EvaluationsService,
         private subjectsService: SubjectsService,
         private studentsService: StudentsService,
+        private studentAssignmentsService: StudentAssignmentsService,
         private notificationService: NotificationService
     ) {
         this.filterForm = this.fb.group({
@@ -87,32 +89,46 @@ export class GradingComponent implements OnInit {
     onLoadGrades() {
         if (this.filterForm.valid) {
             const evaluationId = this.filterForm.get('evaluationId')?.value;
+            const subjectId = this.filterForm.get('subjectId')?.value;
             // TODO: Add loading indicator
             this.gradingData = []; // Reset data
 
-            this.studentsService.getAll()
+            // Get the selected subject to find the groupId
+            const selectedSubject = this.subjects.find(s => s.id === subjectId);
+            if (!selectedSubject) {
+                this.notificationService.error('No se pudo encontrar la materia seleccionada.');
+                return;
+            }
+
+            const groupId = selectedSubject.groupId;
+
+            // Get student assignments for the group
+            this.studentAssignmentsService.getAssignmentsByGroup(groupId)
                 .pipe(
                     catchError(error => {
-                        console.error('Error loading students:', error);
-                        this.notificationService.error('No se pudieron cargar los estudiantes. Verifique la conexión.');
+                        console.error('Error loading student assignments:', error);
+                        this.notificationService.error('No se pudieron cargar las asignaciones de estudiantes.');
                         return of([]);
                     })
                 )
-                .subscribe(students => {
-                    if (students.length === 0) {
-                        this.notificationService.warning('No se encontraron estudiantes registrados.');
+                .subscribe(assignments => {
+                    if (assignments.length === 0) {
+                        this.notificationService.warning('No hay estudiantes asignados a este grupo.');
                         return;
                     }
 
-                    // Here we would merge with existing grades if any
-                    this.gradingData = students.map(student => ({
-                        studentId: student.id,
-                        studentName: student.fullName,
-                        score: 0,
-                        feedback: ''
-                    }));
+                    // Map assignments to grading data
+                    this.gradingData = assignments
+                        .filter(assignment => !assignment.unassignedAt) // Only active assignments
+                        .map(assignment => ({
+                            studentAssignmentId: assignment.id,
+                            studentId: assignment.studentId, // Keep for reference/debugging
+                            studentName: assignment.student?.fullName || 'Nombre no disponible',
+                            score: 0,
+                            feedback: ''
+                        }));
 
-                    this.notificationService.success(`${students.length} estudiantes cargados.`);
+                    this.notificationService.success(`${this.gradingData.length} estudiantes cargados.`);
                 });
         } else {
             this.notificationService.warning('Por favor seleccione una materia y una evaluación.');
@@ -122,10 +138,10 @@ export class GradingComponent implements OnInit {
     saveGrades() {
         const evaluationId = this.filterForm.get('evaluationId')?.value;
         const grades = this.gradingData.map(item => ({
-            evaluationId,
-            studentId: item.studentId,
+            evaluationItemId: evaluationId,
+            studentAssignmentId: item.studentAssignmentId,
             score: item.score,
-            feedback: item.feedback
+            feedback: item.feedback || ''
         }));
 
         console.log('📤 Guardando calificaciones:', { grades });
