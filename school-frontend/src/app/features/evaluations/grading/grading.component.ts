@@ -122,8 +122,8 @@ export class GradingComponent implements OnInit {
                         .filter(assignment => !assignment.unassignedAt) // Only active assignments
                         .map(assignment => ({
                             studentAssignmentId: assignment.id,
-                            studentId: assignment.studentId,
-                            studentName: assignment.student?.fullName || `Estudiante ${assignment.studentId}`,
+                            studentId: assignment.studentId, // Keep for reference/debugging
+                            studentName: assignment.student?.fullName || 'Nombre no disponible',
                             score: 0,
                             feedback: ''
                         }));
