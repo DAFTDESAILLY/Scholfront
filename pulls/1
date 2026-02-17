@@ -1,0 +1,39 @@
+## Problema Resuelto
+
+El módulo de calificaciones no funcionaba porque el frontend enviaba campos incorrectos al backend:
+- ❌ `evaluationId` → ✅ `evaluationItemId`
+- ❌ `studentId` → ✅ `studentAssignmentId`
+
+## Cambios Realizados
+
+### 1. **evaluations.service.ts**
+- Agregado método `getGradesByEvaluation(evaluationItemId)` para cargar calificaciones existentes
+- Endpoint: `GET /grades/by-evaluation/${evaluationItemId}`
+
+### 2. **grade.model.ts**
+- Actualizado modelo con campos correctos del backend
+- Agregadas relaciones opcionales para `studentAssignment`
+
+### 3. **grading.component.ts**
+- Corregido mapeo en `saveGrades()`:
+```typescript
+// ANTES
+{ evaluationId, studentId, score, feedback }
+
+// DESPUÉS
+{ evaluationItemId, studentAssignmentId, score, feedback }
+```
+
+## Archivos Modificados
+- `school-frontend/src/app/core/services/evaluations.service.ts`
+- `school-frontend/src/app/core/models/grade.model.ts`
+- `school-frontend/src/app/features/evaluations/grading/grading.component.ts`
+
+## Testing
+1. Seleccionar materia y evaluación
+2. Cargar estudiantes
+3. Ingresar calificaciones
+4. Guardar → Debe funcionar correctamente
+
+## Notas
+Este PR corrige el problema principal del mapeo de campos. Para funcionalidad completa (carga de calificaciones existentes, validaciones, spinners), revisar los PRs automáticos de Copilot.
