@@ -30,8 +30,7 @@
                 <button mat-raised-button color="primary" (click)="onLoadGrades()" 
                         [disabled]="filterForm.invalid || isLoading">
                     <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
-                    <span *ngIf="!isLoading">Cargar Calificaciones</span>
-                    <span *ngIf="isLoading">Cargando...</span>
+                    {{ isLoading ? 'Cargando...' : 'Cargar Calificaciones' }}
                 </button>
             </form>
 
@@ -87,8 +86,7 @@
                 <div class="actions">
                     <button mat-raised-button color="accent" (click)="saveGrades()" [disabled]="isSaving || isLoading">
                         <mat-spinner *ngIf="isSaving" diameter="20" class="button-spinner"></mat-spinner>
-                        <span *ngIf="!isSaving">Guardar Calificaciones</span>
-                        <span *ngIf="isSaving">Guardando...</span>
+                        {{ isSaving ? 'Guardando...' : 'Guardar Calificaciones' }}
                     </button>
                 </div>
             </div>

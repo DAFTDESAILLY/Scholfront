@@ -19,6 +19,15 @@ import { Subject } from '../../../core/models/subject.model';
 import { Evaluation } from '../../../core/models/evaluation.model';
 import { HelpIconComponent } from '../../../shared/components/help-icon/help-icon.component';
 
+interface GradingDataRow {
+    studentId: number;
+    studentAssignmentId: number;
+    studentName: string;
+    score: number;
+    feedback: string;
+    hasGrade: boolean;
+}
+
 @Component({
     selector: 'app-grading',
     standalone: true,
@@ -43,7 +52,7 @@ export class GradingComponent implements OnInit {
     filterForm: FormGroup;
     subjects: Subject[] = [];
     evaluations: Evaluation[] = [];
-    gradingData: any[] = [];
+    gradingData: GradingDataRow[] = [];
     displayedColumns: string[] = ['name', 'score', 'feedback', 'status'];
     isLoading = false;
     isSaving = false;
@@ -159,7 +168,7 @@ export class GradingComponent implements OnInit {
                         console.log('📋 Asignaciones cargadas para todos los estudiantes');
 
                         // Create a map of studentId -> active assignment
-                        const studentAssignmentMap = new Map<number, any>();
+                        const studentAssignmentMap = new Map<number, { id: number; studentId: number }>();
                         
                         students.forEach((student, index) => {
                             const assignments = assignmentsArrays[index];
@@ -176,11 +185,14 @@ export class GradingComponent implements OnInit {
                         this.gradingData = students
                             .filter(student => studentAssignmentMap.has(student.id))
                             .map(student => {
-                                const assignment = studentAssignmentMap.get(student.id);
-                                const existingGrade = grades.find(g => 
-                                    g.studentId === student.id || 
-                                    (g as any).studentAssignmentId === assignment.id
-                                );
+                                const assignment = studentAssignmentMap.get(student.id)!;
+                                // Check if grade exists by studentId or by potential studentAssignmentId field
+                                const existingGrade = grades.find(g => {
+                                    // Backend might return grades with studentId or with studentAssignmentId
+                                    const gradeData = g as any;
+                                    return g.studentId === student.id || 
+                                           (gradeData.studentAssignmentId && gradeData.studentAssignmentId === assignment.id);
+                                });
 
                                 return {
                                     studentId: student.id,
