@@ -39,9 +39,11 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
 })
 export class EvaluationListComponent implements OnInit {
     evaluations: Evaluation[] = [];
+    filteredEvaluations: Evaluation[] = [];
     subjects: Subject[] = [];
     filterForm: FormGroup;
-    displayedColumns: string[] = ['name', 'type', 'subject', 'maxScore', 'weight', 'dueDate', 'actions'];
+    displayedColumns: string[] = ['evaluation', 'type', 'subject', 'scoring', 'dueDate', 'actions'];
+    textFilter: string = '';
 
     constructor(
         private evaluationsService: EvaluationsService,
@@ -50,7 +52,8 @@ export class EvaluationListComponent implements OnInit {
         private fb: FormBuilder
     ) {
         this.filterForm = this.fb.group({
-            subjectId: ['']
+            subjectId: [''],
+            type: ['']
         });
     }
 
@@ -58,40 +61,97 @@ export class EvaluationListComponent implements OnInit {
         this.loadSubjects();
         this.loadEvaluations();
 
-        this.filterForm.get('subjectId')?.valueChanges.subscribe(subjectId => {
-            if (subjectId) {
-                this.loadEvaluationsBySubject(subjectId);
-            } else {
-                this.loadEvaluations();
-            }
+        this.filterForm.valueChanges.subscribe(() => {
+            this.applyFilters();
         });
     }
 
     loadSubjects() {
         this.subjectsService.getAll().subscribe({
             next: (data) => this.subjects = data,
-            error: (err) => console.error('Error loading subjects', err)
+            error: (err) => {
+                console.error('❌ Error loading subjects', err);
+                this.notificationService.error('Error al cargar materias');
+            }
         });
     }
 
     loadEvaluations() {
         this.evaluationsService.getAll().subscribe({
-            next: (data) => this.evaluations = data,
+            next: (data) => {
+                console.log('📝 Evaluaciones cargadas:', data);
+                this.evaluations = data;
+                this.applyFilters();
+            },
             error: (err) => {
-                console.error('Error loading evaluations', err);
+                console.error('❌ Error loading evaluations', err);
                 this.notificationService.error('Error al cargar evaluaciones');
             }
         });
     }
 
-    loadEvaluationsBySubject(subjectId: number) {
-        this.evaluationsService.getBySubject(subjectId).subscribe({
-            next: (data) => this.evaluations = data,
-            error: (err) => {
-                console.error('Error loading evaluations by subject', err);
-                this.notificationService.error('Error al cargar evaluaciones de la materia');
-            }
-        });
+    applyFilters() {
+        let filtered = [...this.evaluations];
+
+        // Filtro por materia
+        const subjectId = this.filterForm.get('subjectId')?.value;
+        if (subjectId) {
+            filtered = filtered.filter(e => e.subjectId === Number(subjectId));
+        }
+
+        // Filtro por tipo
+        const type = this.filterForm.get('type')?.value;
+        if (type) {
+            filtered = filtered.filter(e => e.type === type);
+        }
+
+        // Filtro por texto
+        if (this.textFilter) {
+            const searchTerm = this.textFilter.toLowerCase();
+            filtered = filtered.filter(e => 
+                e.name.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        this.filteredEvaluations = filtered;
+    }
+
+    applyTextFilter(event: Event) {
+        this.textFilter = (event.target as HTMLInputElement).value.trim();
+        this.applyFilters();
+    }
+
+    clearTextFilter(input: HTMLInputElement) {
+        input.value = '';
+        this.textFilter = '';
+        this.applyFilters();
+    }
+
+    refreshData() {
+        this.notificationService.success('Actualizando datos...');
+        this.loadEvaluations();
+    }
+
+    getTotalEvaluations(): number {
+        return this.evaluations.length;
+    }
+
+    getEvaluationsByType(type: string): number {
+        return this.evaluations.filter(e => e.type === type).length;
+    }
+
+    getTypeIcon(type: string): string {
+        const icons: { [key: string]: string } = {
+            'exam': 'quiz',
+            'homework': 'description',
+            'project': 'work',
+            'participation': 'record_voice_over'
+        };
+        return icons[type] || 'assignment';
+    }
+
+    isOverdue(dueDate: Date): boolean {
+        return new Date(dueDate) < new Date();
     }
 
     deleteEvaluation(id: number) {
@@ -99,15 +159,10 @@ export class EvaluationListComponent implements OnInit {
             this.evaluationsService.delete(id).subscribe({
                 next: () => {
                     this.notificationService.success('Evaluación eliminada correctamente');
-                    const currentSubject = this.filterForm.get('subjectId')?.value;
-                    if (currentSubject) {
-                        this.loadEvaluationsBySubject(currentSubject);
-                    } else {
-                        this.loadEvaluations();
-                    }
+                    this.loadEvaluations();
                 },
                 error: (err) => {
-                    console.error('Error deleting evaluation', err);
+                    console.error('❌ Error deleting evaluation', err);
                     this.notificationService.error('Error al eliminar la evaluación');
                 }
             });

@@ -1,24 +1,60 @@
-<mat-toolbar color="primary" class="navbar">
-    <button mat-icon-button (click)="toggleSidenav.emit()" aria-label="Alternar menú lateral">
-        <mat-icon>menu</mat-icon>
-    </button>
+<header class="navbar-v2">
+    <div class="navbar-content">
 
-    <span>Gestión Escolar</span>
-
-    <span class="spacer"></span>
-
-    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menú de usuario">
-        <mat-icon>account_circle</mat-icon>
-    </button>
-
-    <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="/profile">
-            <mat-icon>person</mat-icon>
-            <span>Perfil</span>
+        <!-- Mobile/Sidebar Toggle -->
+        <button mat-icon-button (click)="toggleSidenav.emit()" class="d-md-none navbar-action">
+            <mat-icon>menu</mat-icon>
         </button>
-        <button mat-menu-item (click)="onLogout()">
-            <mat-icon>exit_to_app</mat-icon>
-            <span>Cerrar Sesión</span>
-        </button>
-    </mat-menu>
-</mat-toolbar>
+
+        <!-- Logo + Nombre -->
+        <div class="navbar-brand">
+            <mat-icon class="logo-icon text-primary">school</mat-icon>
+            <span class="navbar-title">Gestión Escolar</span>
+        </div>
+
+        <!-- Búsqueda global (para maestras) -->
+        <div class="navbar-search">
+            <mat-icon>search</mat-icon>
+            <input type="text" placeholder="Buscar alumno, materia, grupo..." (input)="onSearch($event)">
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="navbar-actions">
+            <!-- Notificaciones -->
+            <button mat-icon-button [matMenuTriggerFor]="notifMenu" class="navbar-action">
+                <mat-icon [matBadge]="notifications" matBadgeColor="warn">notifications_none</mat-icon>
+            </button>
+
+            <!-- Ayuda contextual -->
+            <button mat-icon-button class="navbar-action">
+                <mat-icon>help_outline</mat-icon>
+            </button>
+
+            <!-- Perfil -->
+            <button mat-button [matMenuTriggerFor]="userMenu" class="navbar-profile">
+                <div class="navbar-avatar-placeholder bg-primary-light text-primary">
+                    {{ user.name.charAt(0) }}
+                </div>
+                <span class="navbar-username">{{ user.name }}</span>
+                <mat-icon>expand_more</mat-icon>
+            </button>
+        </div>
+    </div>
+</header>
+
+<mat-menu #userMenu="matMenu">
+    <button mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Perfil</span>
+    </button>
+    <button mat-menu-item (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Cerrar Sesión</span>
+    </button>
+</mat-menu>
+
+<mat-menu #notifMenu="matMenu">
+    <button mat-menu-item>
+        <span>No hay nuevas notificaciones</span>
+    </button>
+</mat-menu>

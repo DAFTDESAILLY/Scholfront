@@ -46,7 +46,7 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
 export class AttendanceComponent implements OnInit {
     attendanceForm: FormGroup;
     subjects: Subject[] = [];
-    students: Student[] = []; // This should ideally be loaded based on the selected subject's group
+    students: any[] = []; // Modified to accept extended student objects from getStudentsByGroup
     attendanceData: any[] = [];
     displayedColumns: string[] = ['name', 'status', 'notes'];
 
@@ -80,19 +80,27 @@ export class AttendanceComponent implements OnInit {
 
     onLoadStudents() {
         if (this.attendanceForm.valid) {
-            // filters students by group associated with subject. 
-            // For now, mocking with all students as we don't have the full relation setup in mock services efficiently
-            this.studentsService.getAll()
-                .pipe(
-                    catchError(error => {
-                        console.warn('No se pudieron cargar los estudiantes.');
-                        return of([]);
-                    })
-                )
-                .subscribe(data => {
-                    this.students = data;
-                    this.prepareAttendanceData();
-                });
+            const subjectId = this.attendanceForm.get('subjectId')?.value;
+            const subject = this.subjects.find(s => s.id === Number(subjectId));
+
+            if (subject && subject.groupId) {
+                console.log(`Searching students for Group ID: ${subject.groupId} (Subject: ${subject.name})`);
+                this.studentsService.getStudentsByGroup(subject.groupId)
+                    .pipe(
+                        catchError(error => {
+                            console.warn('No se pudieron cargar los estudiantes.', error);
+                            this.notificationService.error('Error al cargar estudiantes');
+                            return of([]);
+                        })
+                    )
+                    .subscribe(data => {
+                        this.students = data;
+                        this.prepareAttendanceData();
+                    });
+            } else {
+                console.warn('Subject has no group ID', subject);
+                this.notificationService.error('La materia seleccionada no tiene un grupo asignado.');
+            }
         }
     }
 

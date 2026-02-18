@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EvaluationsService } from '../../../core/services/evaluations.service';
 import { SubjectsService } from '../../../core/services/subjects.service';
@@ -33,6 +35,8 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
         MatButtonModule,
         MatTableModule,
         MatInputModule,
+        MatIconModule,
+        MatChipsModule,
         MatSnackBarModule
     ],
     templateUrl: './grading.component.html',
@@ -230,5 +234,49 @@ export class GradingComponent implements OnInit {
 
     onLoadGrades() {
        this.loadStudents();
+    }
+
+    // Métodos para estadísticas
+    getAverageScore(): number {
+        const validScores = this.students.filter(s => s.score !== null && s.score !== undefined && s.score !== '');
+        if (validScores.length === 0) return 0;
+        const sum = validScores.reduce((acc, s) => acc + parseFloat(s.score), 0);
+        return Math.round((sum / validScores.length) * 10) / 10;
+    }
+
+    getGradedCount(): number {
+        return this.students.filter(s => s.score !== null && s.score !== undefined && s.score !== '').length;
+    }
+
+    getPendingCount(): number {
+        return this.students.length - this.getGradedCount();
+    }
+
+    getHighestScore(): number {
+        const validScores = this.students.filter(s => s.score !== null && s.score !== undefined && s.score !== '');
+        if (validScores.length === 0) return 0;
+        return Math.max(...validScores.map(s => parseFloat(s.score)));
+    }
+
+    // Validación visual de calificaciones
+    getScoreClass(score: any): string {
+        if (score === null || score === undefined || score === '') return '';
+        const numScore = parseFloat(score);
+        if (numScore >= 90) return 'excellent';
+        if (numScore >= 70) return 'good';
+        if (numScore >= 60) return 'regular';
+        return 'poor';
+    }
+
+    getSelectedEvaluationName(): string {
+        const evalId = this.filterForm.get('evaluationId')?.value;
+        const evaluation = this.evaluations.find(e => e.id === evalId);
+        return evaluation ? evaluation.name : '';
+    }
+
+    getSelectedSubjectName(): string {
+        const subjectId = this.filterForm.get('subjectId')?.value;
+        const subject = this.subjects.find(s => s.id === subjectId);
+        return subject ? subject.name : '';
     }
 }

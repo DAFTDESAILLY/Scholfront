@@ -36,7 +36,7 @@ export class StudentsService {
 
     getStudentsByGroup(groupId: number): Observable<any[]> {
         console.log(`🔍 Buscando estudiantes para el grupo ID: ${groupId}`);
-        
+
         // Obtenemos alumnos y asignaciones por separado y cruzamos datos
         const students$ = this.http.get<Student[]>(this.apiUrl);
         const assignments$ = this.http.get<StudentAssignment[]>(`${environment.apiUrl}/student-assignments`);
@@ -44,31 +44,30 @@ export class StudentsService {
         return forkJoin([students$, assignments$]).pipe(
             map(([students, assignments]) => {
                 console.log(`📊 Datos recibidos: ${students.length} estudiantes, ${assignments.length} asignaciones`);
-                
+                if (students.length > 0) {
+                    console.log('🔍 Estudiante 0 (debug):', students[0]);
+                }
+
                 // Filtrar asignaciones del grupo
                 const groupAssignments = assignments.filter(a => {
-                    // Log para depurar por qué no hace match
-                    // console.log(`Checking assignment ${a.id}: Group ${a.groupId} vs ${groupId}`);
                     return Number(a.groupId) === Number(groupId) && a.status === 'active';
                 });
-                
+
                 console.log(`🎯 Asignaciones encontradas para el grupo ${groupId}: ${groupAssignments.length}`);
-                
+
                 if (groupAssignments.length === 0) {
-                     // Intento de fallback: si no hay asignaciones, de todas formas devolver estudiantes 
-                     // si el modo de depuración está activo o para pruebas.
-                     // O tal vez el groupId no coincide.
-                     console.warn('⚠️ No se encontraron asignaciones para este grupo.');
+                    console.warn('⚠️ No se encontraron asignaciones para este grupo.');
                 }
 
                 // Mapear a estudiantes con datos de asignación
-                const result = groupAssignments.map(assignment => {
+                // Usamos any[] explícitamente para permitir null en studentAssignmentId si es necesario en el futuro
+                const result: any[] = groupAssignments.map(assignment => {
                     const student = students.find(s => Number(s.id) === Number(assignment.studentId));
                     if (!student) {
                         console.warn(`⚠️ Asignación ${assignment.id} apunta a estudiante ${assignment.studentId} que no existe en la lista de estudiantes.`);
                         return null;
                     }
-                    
+
                     return {
                         ...student,
                         studentAssignmentId: assignment.id, // ID crítico para guardar notas
@@ -76,7 +75,26 @@ export class StudentsService {
                         groupId: assignment.groupId
                     };
                 }).filter(s => s !== null);
-                
+
+                // FALLBACK: Verificar si hay estudiantes que tienen groupId directo pero no asignación
+                if (students.length > 0) {
+                    // Check 'groupId' property existence on student object (any cast)
+                    const directStudents = students.filter(s => Number((s as any).groupId) === Number(groupId));
+                    if (directStudents.length > 0) {
+                        console.log(`⚠️ Encontrados ${directStudents.length} estudiantes con groupId directo sin asignación explícita.`);
+                        directStudents.forEach(ds => {
+                            if (!result.find(r => Number(r.id) === Number(ds.id))) {
+                                result.push({
+                                    ...ds,
+                                    studentAssignmentId: null,
+                                    assignmentId: null,
+                                    groupId: groupId
+                                });
+                            }
+                        });
+                    }
+                }
+
                 console.log(`✅ Estudiantes finales mapeados: ${result.length}`);
                 return result;
             })

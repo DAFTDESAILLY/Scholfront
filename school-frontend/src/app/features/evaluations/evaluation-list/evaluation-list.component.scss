@@ -1,6 +1,9 @@
+@use '../../../../assets/styles/mixins' as *;
+@use '../../../../styles.scss' as *;
+
 .evaluations-container {
-    padding: 24px;
-    max-width: 1200px;
+    padding: 0;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -8,36 +11,374 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 2rem;
+    padding: 0 0.5rem;
 
     .title-row {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 1rem;
 
-        h1 {
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
             margin: 0;
-            color: #333;
+            color: var(--neutral-900);
+            letter-spacing: -0.5px;
         }
     }
 }
 
-.filter-card {
-    margin-bottom: 24px;
+.add-button {
+    @include glass-button;
+    background: var(--primary-rose-dark) !important;
+    color: white !important;
+}
 
-    mat-card-content {
-        padding-top: 16px;
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    @include glass-panel;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        opacity: 0.9;
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        opacity: 0.8;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
     }
 }
 
-.full-width {
-    width: 100%;
+.stat-card.total-card {
+    background: linear-gradient(135deg, rgba(var(--primary-rose-rgb), 0.9) 0%, rgba(var(--primary-rose-dark-rgb), 0.9) 100%);
+    color: white;
+}
+
+.stat-card.exam-card {
+    background: linear-gradient(135deg, #ff8a80 0%, #d32f2f 100%);
+    color: white;
+}
+
+.stat-card.homework-card {
+    background: linear-gradient(135deg, #82b1ff 0%, #1976d2 100%);
+    color: white;
+}
+
+.stat-card.project-card {
+    background: linear-gradient(135deg, #ffe082 0%, #ffa000 100%);
+    color: white; // Or slightly darker text if yellow is too bright
+
+    .stat-value,
+    .stat-label {
+        color: #3e2723;
+    }
+
+    mat-icon {
+        color: #3e2723;
+    }
+}
+
+.filters-card {
+    @include glass-panel;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 16px;
+
+    form {
+        margin: 0;
+    }
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: start;
+
+    .filter-field,
+    .subject-filter,
+    .type-filter {
+        width: 100%;
+    }
+
+    .refresh-button {
+        @include glass-button;
+        height: 56px;
+    }
+}
+
+.table-card {
+    @include glass-panel;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 0; // Remove padding to let table sort headers touch edges
 }
 
 .table-container {
     overflow-x: auto;
 }
 
-table {
+.evaluations-table {
     width: 100%;
+    background: transparent;
+
+    th.mat-header-cell {
+        background: rgba(255, 255, 255, 0.5);
+        color: var(--neutral-700);
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+        &:first-of-type {
+            padding-left: 1.5rem;
+        }
+    }
+
+    td.mat-cell {
+        padding: 1rem;
+        color: var(--neutral-900);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+
+        &:first-of-type {
+            padding-left: 1.5rem;
+        }
+    }
+
+    tr.mat-row:hover {
+        background-color: rgba(var(--primary-rose-rgb), 0.05);
+    }
+}
+
+.evaluation-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.evaluation-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    mat-icon {
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    &.exam {
+        background: linear-gradient(135deg, #ef5350, #b71c1c);
+    }
+
+    &.homework {
+        background: linear-gradient(135deg, #42a5f5, #1565c0);
+    }
+
+    &.project {
+        background: linear-gradient(135deg, #ffca28, #ff6f00);
+    }
+
+    &.participation {
+        background: linear-gradient(135deg, #66bb6a, #2e7d32);
+    }
+}
+
+.evaluation-info {
+    display: flex;
+    flex-direction: column;
+
+    .evaluation-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--neutral-900);
+    }
+
+    .evaluation-id {
+        font-size: 0.75rem;
+        color: var(--neutral-500);
+    }
+}
+
+.type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px; // Pill shape
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    mat-icon {
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    &.type-exam {
+        background: rgba(239, 83, 80, 0.15);
+        color: #c62828;
+    }
+
+    &.type-homework {
+        background: rgba(66, 165, 245, 0.15);
+        color: #1565c0;
+    }
+
+    &.type-project {
+        background: rgba(255, 167, 38, 0.15);
+        color: #ef6c00;
+    }
+
+    &.type-participation {
+        background: rgba(102, 187, 106, 0.15);
+        color: #2e7d32;
+    }
+}
+
+.scoring-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .score-info,
+    .weight-info {
+        display: flex;
+        justify-content: space-between;
+        width: 100px;
+        /* Fixed width for alignment */
+        font-size: 0.8rem;
+    }
+
+    .score-label,
+    .weight-label {
+        color: var(--neutral-500);
+    }
+
+    .score-value,
+    .weight-value {
+        font-weight: 600;
+        color: var(--neutral-900);
+    }
+}
+
+.date-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--neutral-700);
+
+    mat-icon {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+        color: var(--neutral-400);
+    }
+
+    &.overdue {
+        color: #c62828;
+
+        mat-icon {
+            color: #ef5350;
+        }
+
+        font-weight: 600;
+    }
+}
+
+.actions-cell {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    .edit-btn {
+        color: var(--primary-rose-dark);
+    }
+
+    .delete-btn {
+        color: #ef5350;
+    }
+}
+
+.no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+
+    mat-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        color: var(--neutral-300);
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--neutral-600);
+        margin: 0;
+    }
+
+    .sub-text {
+        font-size: 0.9rem;
+        color: var(--neutral-400);
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .filters-row {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
 }

@@ -9,13 +9,13 @@ import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { DashboardService, DashboardStats, RecentActivity } from '../../core/services/dashboard.service';
 import { HelpIconComponent } from '../../shared/components/help-icon/help-icon.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule,
-    HelpIconComponent,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -29,8 +29,18 @@ import { HelpIconComponent } from '../../shared/components/help-icon/help-icon.c
 export class DashboardComponent implements OnInit {
   stats: DashboardStats | null = null;
   activities: RecentActivity[] = [];
+  user = { name: '' };
+  today = new Date();
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(
+    private dashboardService: DashboardService,
+    private authService: AuthService
+  ) {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser && currentUser.name) {
+      this.user.name = currentUser.name;
+    }
+  }
 
   ngOnInit() {
     this.loadDashboardData();

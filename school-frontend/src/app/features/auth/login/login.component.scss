@@ -4,8 +4,7 @@
     align-items: center;
     min-height: 100vh;
     padding: 24px;
-    // Background is handled by body globally, but we can darken this slightly if needed
-    // or let the glass effect shine
+    background: var(--bg-body);
 }
 
 mat-card {
@@ -17,7 +16,7 @@ mat-card {
     background: rgba(255, 255, 255, 0.9) !important;
     backdrop-filter: blur(20px);
     box-shadow: var(--shadow-lg) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--neutral-300);
 }
 
 mat-card-header {
@@ -31,13 +30,12 @@ mat-card-header {
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 8px;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Inter', sans-serif;
+        color: var(--primary-rose);
+    }
 
-        // Gradient text
-        background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    mat-card-subtitle {
+        color: var(--neutral-700);
     }
 }
 
@@ -55,14 +53,14 @@ mat-card-header {
 }
 
 .forgot-link {
-    color: var(--primary-600);
+    color: var(--primary-rose);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.2s;
 
     &:hover {
-        color: var(--primary-700);
+        color: var(--primary-rose-dark);
         text-decoration: underline;
     }
 }
@@ -80,16 +78,16 @@ mat-card-actions {
 mat-card-footer {
     text-align: center;
     padding-top: 16px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--neutral-300);
 
     p {
         font-size: 0.875rem;
-        color: var(--text-secondary);
+        color: var(--neutral-700);
         margin: 0;
     }
 
     a {
-        color: var(--primary-600);
+        color: var(--primary-rose);
         text-decoration: none;
         font-weight: 600;
         margin-left: 4px;

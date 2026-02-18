@@ -6,14 +6,14 @@
         <mat-card-content>
             <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
                 <div class="row">
-                    <mat-form-field appearance="outline" class="half-width">
+                    <mat-form-field appearance="outline">
                         <mat-label>Nombre</mat-label>
                         <input matInput formControlName="firstName" placeholder="Juan">
                         <mat-error *ngIf="studentForm.get('firstName')?.hasError('required')">El nombre es
                             requerido</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="half-width">
+                    <mat-form-field appearance="outline">
                         <mat-label>Apellido</mat-label>
                         <input matInput formControlName="lastName" placeholder="Pérez">
                         <mat-error *ngIf="studentForm.get('lastName')?.hasError('required')">El apellido es
@@ -22,12 +22,12 @@
                 </div>
 
                 <div class="row">
-                    <mat-form-field appearance="outline" class="half-width">
-                        <mat-label>ID Estudiante</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Matrícula / ID</mat-label>
                         <input matInput formControlName="studentId" placeholder="ej. 2026001">
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="half-width">
+                    <mat-form-field appearance="outline">
                         <mat-label>Correo Electrónico</mat-label>
                         <input matInput formControlName="email" type="email" placeholder="juan.perez@ejemplo.com">
                         <mat-error *ngIf="studentForm.get('email')?.hasError('email')">Formato de correo
@@ -36,12 +36,12 @@
                 </div>
 
                 <div class="row">
-                    <mat-form-field appearance="outline" class="half-width">
-                        <mat-label>Teléfono</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Teléfono de Tutor</mat-label>
                         <input matInput formControlName="phone" placeholder="555-555-5555">
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="half-width">
+                    <mat-form-field appearance="outline">
                         <mat-label>Fecha de Nacimiento</mat-label>
                         <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
                         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -51,7 +51,7 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Dirección</mat-label>
-                    <textarea matInput formControlName="address" rows="2"></textarea>
+                    <textarea matInput formControlName="address" rows="3" placeholder="Dirección completa"></textarea>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
@@ -69,7 +69,7 @@
                 <div class="actions">
                     <button mat-button type="button" routerLink="/students">Cancelar</button>
                     <button mat-raised-button color="primary" type="submit" [disabled]="studentForm.invalid">
-                        {{ isEditMode ? 'Actualizar' : 'Confirmar' }}
+                        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
                     </button>
                 </div>
             </form>

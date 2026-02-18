@@ -101,4 +101,24 @@ export class StudentConsentsComponent implements OnInit {
             });
         }
     }
+
+    getActiveCount(): number {
+        return this.consents.filter(c => this.getConsentStatus(c) === 'active').length;
+    }
+
+    getExpiredCount(): number {
+        return this.consents.filter(c => this.getConsentStatus(c) === 'expired').length;
+    }
+
+    getRevokedCount(): number {
+        return this.consents.filter(c => this.getConsentStatus(c) === 'revoked').length;
+    }
+
+    isExpiringSoon(consent: StudentShareConsent): boolean {
+        if (!consent.expiresAt) return false;
+        const daysUntilExpiry = Math.ceil(
+            (new Date(consent.expiresAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+    }
 }

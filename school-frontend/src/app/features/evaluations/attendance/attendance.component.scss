@@ -1,48 +1,131 @@
-.title-row {
-    display: flex;
-    align-items: center;
-}
-
-.title-row {
-    display: flex;
-    align-items: center;
-}
+@use '../../../../assets/styles/mixins' as *;
+@use '../../../../styles.scss' as *;
 
 .attendance-container {
-    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
 }
 
-.filter-form {
+.title-row {
     display: flex;
-    gap: 15px;
     align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
 
-    button {
-        height: 56px; // Align with form fields
+    h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--neutral-900);
     }
 }
 
-.attendance-table {
-    overflow: auto;
+mat-card {
+    @include glass-panel;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
 
-    table {
-        width: 100%;
+.filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: start;
+
+    .load-btn {
+        @include glass-button;
+        height: 56px;
+    }
+}
+
+.attendance-table-container {
+    @include glass-panel;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.attendance-table {
+    width: 100%;
+    background: transparent;
+
+    th.mat-header-cell {
+        background: rgba(255, 255, 255, 0.5);
+        color: var(--neutral-700);
+        font-weight: 600;
+        font-size: 0.875rem;
+        padding: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    td.mat-cell {
+        padding: 1rem;
+        color: var(--neutral-900);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    tr.mat-row:hover {
+        background-color: rgba(var(--primary-rose-rgb), 0.03);
+    }
+}
+
+.radio-group {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+mat-radio-button {
+    margin: 0;
+
+    // Custom styling for radio buttons status
+    &.status-present .mdc-label {
+        color: #2e7d32;
+    }
+
+    &.status-absent .mdc-label {
+        color: #c62828;
+    }
+
+    &.status-late .mdc-label {
+        color: #f57f17;
+    }
+
+    &.status-excused .mdc-label {
+        color: #1565c0;
     }
 }
 
 .dense-field {
     width: 100%;
-    font-size: 12px;
-}
-
-mat-radio-button {
-    margin-right: 10px;
 }
 
 .actions {
-    margin-top: 20px;
+    margin-top: 2rem;
     display: flex;
     justify-content: flex-end;
+
+    button {
+        @include glass-button;
+        background: var(--primary-rose-dark);
+        color: white;
+        padding: 0.5rem 3rem;
+        height: 48px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }

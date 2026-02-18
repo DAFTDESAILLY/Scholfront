@@ -80,7 +80,7 @@ export class AuthService {
         // Optionally fetch user details or set user state
     }
 
-    getCurrentUser(): { id: number; email: string } | null {
+    getCurrentUser(): { id: number; email: string; name?: string; role?: string } | null {
         const token = this.getToken();
         if (!token) return null;
 
@@ -89,7 +89,9 @@ export class AuthService {
             const payload = JSON.parse(atob(token.split('.')[1]));
             return {
                 id: payload.sub || payload.userId || payload.id, // Ajustar según tu JWT
-                email: payload.email
+                email: payload.email,
+                name: payload.name || payload.fullName || payload.given_name,
+                role: payload.role || payload.roles?.[0] || 'teacher' // Default to teacher if not found, or handle as needed
             };
         } catch (error) {
             console.error('Error decodificando token:', error);

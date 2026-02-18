@@ -1,30 +1,38 @@
 .sidenav-container {
-    height: 100%;
-    background: transparent; // Let body background show through
+    height: 100vh; // Full viewport height
+    background: var(--bg-body);
 }
 
 .sidenav {
-    width: 250px;
-    background: var(--surface-glass);
-    backdrop-filter: blur(var(--blur-md));
-    border-right: var(--glass-border);
-    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-    margin-right: 10px; // Spacing from content if needed, or remove for flush
-    box-shadow: var(--shadow-md);
+    background: transparent; // Sidebar component handles its own background/styles
+    border: none;
+    box-shadow: none;
+    width: auto; // Let content modify width
+    overflow: hidden; // Hide scrollbar if sidebar handles it
+}
+
+.sidenav-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto; // Enable scrolling here
+    scroll-behavior: smooth;
 }
 
 .main-content {
-    padding: 24px;
-    min-height: calc(100vh - 64px - 50px);
+    flex: 1;
+    padding: 0; // Padding handled by content-wrapper or components
 
-    // Fade in animation for content
-    animation: fadeIn 0.4s ease-out;
-}
+    .content-wrapper {
+        padding: 24px;
+        max-width: 1400px; // Limit content width for large screens
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
 
-mat-sidenav-content {
-    display: flex;
-    flex-direction: column;
-    background: transparent;
+        // Fade in animation
+        animation: fadeIn 0.4s ease-out;
+    }
 }
 
 @keyframes fadeIn {
@@ -39,8 +47,8 @@ mat-sidenav-content {
     }
 }
 
-@media (max-width: 600px) {
-    .main-content {
+@media (max-width: 768px) {
+    .main-content .content-wrapper {
         padding: 16px;
     }
 }

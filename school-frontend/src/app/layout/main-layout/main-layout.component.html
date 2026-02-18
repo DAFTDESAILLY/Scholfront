@@ -1,13 +1,17 @@
-<mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+<mat-sidenav-container class="sidenav-container" autosize>
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="false"
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+        [opened]="(isHandset$ | async) === false">
         <app-sidebar></app-sidebar>
     </mat-sidenav>
-    <mat-sidenav-content>
-        <app-navbar (toggleSidenav)="toggleDrawer()"></app-navbar>
+    <mat-sidenav-content class="sidenav-content">
+        <app-navbar (toggleSidenav)="drawer.toggle()"></app-navbar>
         <main class="main-content">
-            <router-outlet></router-outlet>
+            <div class="content-wrapper">
+                <router-outlet></router-outlet>
+            </div>
         </main>
-        <app-footer></app-footer>
+        <!-- Footer removed or moved? Proposal doesn't show footer in main view -->
+        <!-- <app-footer></app-footer> -->
     </mat-sidenav-content>
 </mat-sidenav-container>

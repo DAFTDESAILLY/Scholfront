@@ -1,7 +1,28 @@
-<mat-nav-list>
-    <a mat-list-item *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{exact: false}">
-        <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
-        <div matListItemTitle>{{item.label}}</div>
-    </a>
-</mat-nav-list>
+<aside class="sidebar-v2" [class.sidebar-collapsed]="isCollapsed">
+    <!-- Toggle collapse -->
+    <button mat-icon-button class="sidebar-toggle" (click)="toggleSidebar()">
+        <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+    </button>
+
+    <!-- Navegación principal -->
+    <nav class="sidebar-nav">
+        <a *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="sidebar-item-active"
+            class="sidebar-item" [matTooltip]="isCollapsed ? item.label : ''" matTooltipPosition="right">
+
+            <mat-icon class="sidebar-icon">{{ item.icon }}</mat-icon>
+            <span class="sidebar-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+
+            <!-- Badge para notificaciones -->
+            <span class="sidebar-badge" *ngIf="item['badge'] && !isCollapsed">
+                {{ item['badge'] }}
+            </span>
+        </a>
+    </nav>
+
+    <!-- Acceso rápido (bottom) -->
+    <div class="sidebar-footer">
+        <button mat-icon-button class="sidebar-item" matTooltip="Configuración">
+            <mat-icon>settings</mat-icon>
+        </button>
+    </div>
+</aside>

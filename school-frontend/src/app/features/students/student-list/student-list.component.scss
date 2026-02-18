@@ -1,46 +1,305 @@
-.title-row {
-    display: flex;
-    align-items: center;
-}
+@use '../../../../styles.scss' as *;
 
 .students-container {
-    padding: 0; // Padding handled by main content
+    padding: 0;
+    animation: fadeIn 0.4s ease-out;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 2rem;
 
     .title-row {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
 
         h2 {
             font-size: 1.75rem;
             font-weight: 700;
             margin: 0;
-            background: linear-gradient(to right, var(--text-main), var(--primary-600));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--neutral-900);
+            letter-spacing: -0.5px;
         }
     }
 }
 
-.filter-field {
-    width: 100%;
-    margin-bottom: 16px;
+.add-button {
+    box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.3);
+}
 
-    // Ensure the input looks clean
-    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        display: none; // Hide hint/error space if not used for cleaner look
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    @include glass-panel;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    }
+
+    mat-icon {
+        font-size: 3rem;
+        height: 3rem;
+        width: 3rem;
+        opacity: 0.8;
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+    }
+
+    &.total-card mat-icon {
+        color: #6366f1;
+    }
+
+    &.active-card mat-icon {
+        color: #10b981;
+    }
+
+    &.inactive-card mat-icon {
+        color: #ec4899;
+    }
+
+    &.enrolled-card mat-icon {
+        color: #3b82f6;
     }
 }
 
-// Table container style is now global, but we can override specific things here if needed
+.filters-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.filters-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .filter-field,
+    .status-filter {
+        flex: 1;
+        min-width: 250px;
+
+        ::ng-deep .mat-mdc-form-field-flex {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+        }
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+            padding: 0;
+        }
+    }
+
+    .refresh-button {
+        height: 56px;
+        @include glass-button;
+    }
+}
+
+.table-card {
+    @include glass-panel;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+}
+
 .table-container {
-    margin-bottom: 24px; // Spacing at bottom
+    overflow-x: auto;
+
+    table {
+        width: 100%;
+        background: transparent;
+
+        thead {
+            tr {
+                background-color: rgba(var(--primary-100), 0.3);
+
+                th.mat-header-cell {
+                    color: var(--text-secondary);
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    padding: 16px 24px;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                }
+            }
+        }
+
+        tbody {
+            tr.mat-row {
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                    background-color: rgba(var(--primary-100), 0.2);
+                }
+
+                td.mat-cell {
+                    padding: 16px 24px;
+                    color: var(--text-main);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+                    font-size: 0.95rem;
+                }
+            }
+        }
+    }
+
+    mat-paginator {
+        background: transparent;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+}
+
+.student-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .student-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+
+        mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .student-info {
+        display: flex;
+        flex-direction: column;
+
+        .student-name {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .student-id {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+    }
+}
+
+.email-cell,
+.enrollment-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: var(--primary-400);
+    }
+}
+
+.status-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+
+    &.status-active {
+        background-color: rgba(var(--success), 0.15);
+        color: darken(#10b981, 10%);
+        border: 1px solid rgba(var(--success), 0.2);
+    }
+
+    &.status-inactive {
+        background-color: rgba(var(--text-secondary), 0.1);
+        color: var(--text-secondary);
+        border: 1px solid rgba(var(--text-secondary), 0.2);
+    }
+}
+
+.actions-cell {
+    button {
+        color: var(--text-secondary);
+
+        &:hover {
+            color: var(--primary-600);
+        }
+
+        &.delete-btn:hover {
+            color: var(--warning);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-row {
+        flex-direction: column;
+
+        .filter-field,
+        .status-filter,
+        .refresh-button {
+            width: 100%;
+        }
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+
+        button {
+            width: 100%;
+        }
+    }
 }

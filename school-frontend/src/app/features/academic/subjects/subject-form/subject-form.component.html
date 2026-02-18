@@ -1,39 +1,41 @@
 <div class="form-container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ isEditMode ? 'Edit' : 'Create' }} Subject</mat-card-title>
+            <mat-card-title>{{ isEditMode ? 'Editar' : 'Crear' }} Materia</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Name</mat-label>
-                    <input matInput formControlName="name" placeholder="Ex. Mathematics">
-                    <mat-error *ngIf="subjectForm.get('name')?.hasError('required')">Name is required</mat-error>
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej. Matemáticas">
+                    <mat-error *ngIf="subjectForm.get('name')?.hasError('required')">El nombre es requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Group</mat-label>
+                    <mat-label>Grupo</mat-label>
                     <mat-select formControlName="groupId">
                         <mat-option *ngFor="let group of groups" [value]="group.id">
                             {{ group.name }}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="subjectForm.get('groupId')?.hasError('required')">Group is required</mat-error>
+                    <mat-error *ngIf="subjectForm.get('groupId')?.hasError('required')">El grupo es
+                        requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Status</mat-label>
+                    <mat-label>Estado</mat-label>
                     <mat-select formControlName="status">
-                        <mat-option value="active">Active</mat-option>
-                        <mat-option value="archived">Archived</mat-option>
+                        <mat-option value="active">Activo</mat-option>
+                        <mat-option value="archived">Archivado</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="subjectForm.get('status')?.hasError('required')">Status is required</mat-error>
+                    <mat-error *ngIf="subjectForm.get('status')?.hasError('required')">El estado es
+                        requerido</mat-error>
                 </mat-form-field>
 
                 <div class="actions">
-                    <button mat-button type="button" routerLink="/subjects">Cancel</button>
+                    <button mat-button type="button" routerLink="/subjects">Cancelar</button>
                     <button mat-raised-button color="primary" type="submit" [disabled]="subjectForm.invalid">
-                        {{ isEditMode ? 'Update' : 'Create' }}
+                        {{ isEditMode ? 'Actualizar' : 'Crear' }}
                     </button>
                 </div>
             </form>

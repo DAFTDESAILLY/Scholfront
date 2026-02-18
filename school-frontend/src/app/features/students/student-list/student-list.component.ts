@@ -8,6 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 import { StudentsService } from '../../../core/services/students.service';
 import { Student } from '../../../core/models/student.model';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -26,14 +29,19 @@ import { HelpIconComponent } from '../../../shared/components/help-icon/help-ico
         MatButtonModule,
         MatIconModule,
         MatInputModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatSelectModule,
+        MatChipsModule,
+        MatCardModule
     ],
     templateUrl: './student-list.component.html',
     styleUrls: ['./student-list.component.scss']
 })
 export class StudentListComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'enrollmentId', 'fullName', 'email', 'status', 'actions'];
+    displayedColumns: string[] = ['student', 'enrollmentId', 'email', 'status', 'actions'];
     dataSource!: MatTableDataSource<Student>;
+    allStudents: Student[] = [];
+    selectedStatus: string = 'all';
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -50,7 +58,8 @@ export class StudentListComponent implements OnInit {
     loadStudents() {
         this.studentsService.getAll().subscribe({
             next: (data) => {
-                console.log('Estudiantes cargados:', data);
+                console.log('📚 Estudiantes cargados:', data);
+                this.allStudents = data;
                 this.dataSource = new MatTableDataSource(data);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -66,7 +75,7 @@ export class StudentListComponent implements OnInit {
                 };
             },
             error: (err) => {
-                console.error('Error cargando estudiantes:', err);
+                console.error('❌ Error cargando estudiantes:', err);
                 this.notificationService.error('Error al cargar estudiantes');
             }
         });
@@ -79,6 +88,41 @@ export class StudentListComponent implements OnInit {
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
         }
+    }
+
+    clearFilter(input: HTMLInputElement) {
+        input.value = '';
+        this.dataSource.filter = '';
+    }
+
+    filterByStatus(status: string) {
+        this.selectedStatus = status;
+        if (status === 'all') {
+            this.dataSource.data = this.allStudents;
+        } else {
+            this.dataSource.data = this.allStudents.filter(s => s.status === status);
+        }
+    }
+
+    refreshData() {
+        this.notificationService.success('Actualizando datos...');
+        this.loadStudents();
+    }
+
+    getTotalStudents(): number {
+        return this.allStudents.length;
+    }
+
+    getActiveStudents(): number {
+        return this.allStudents.filter(s => s.status === 'active').length;
+    }
+
+    getInactiveStudents(): number {
+        return this.allStudents.filter(s => s.status === 'inactive').length;
+    }
+
+    getEnrolledStudents(): number {
+        return this.allStudents.filter(s => s.enrollmentId).length;
     }
 
     deleteStudent(id: number) {

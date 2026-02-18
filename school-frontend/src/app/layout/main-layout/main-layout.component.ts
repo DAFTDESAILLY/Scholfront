@@ -28,8 +28,7 @@ import { environment } from '../../../environments/environment';
         MatIconModule,
         MatButtonModule,
         NavbarComponent,
-        SidebarComponent,
-        FooterComponent
+        SidebarComponent
     ],
     templateUrl: './main-layout.component.html',
     styleUrls: ['./main-layout.component.scss']

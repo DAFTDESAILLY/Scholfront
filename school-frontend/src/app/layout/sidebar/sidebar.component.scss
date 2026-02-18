@@ -1,53 +1,128 @@
-// Container for list to add padding
-:host {
-    display: block;
-    padding: 16px 12px;
-}
+.sidebar-v2 {
+    background: var(--neutral-100);
+    height: calc(100vh - 64px);
+    position: sticky;
+    top: 64px;
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 1px solid var(--neutral-300);
 
-// Target material list items
-::ng-deep .mat-mdc-list-item {
-    border-radius: 8px !important;
-    margin-bottom: 4px !important;
-    transition: all 0.2s ease;
-    color: var(--text-secondary) !important;
+    &.sidebar-collapsed {
+        width: 72px; // Slightly wider for icon centering
 
-    // Icon styles
-    .mat-icon {
-        color: var(--text-secondary);
-        margin-right: 12px;
-        transition: color 0.2s ease;
-    }
+        .sidebar-label,
+        .sidebar-badge {
+            display: none;
+        }
 
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.5) !important;
-        transform: translateX(4px);
-        color: var(--primary-600) !important;
-
-        .mat-icon {
-            color: var(--primary-600);
+        .sidebar-item {
+            justify-content: center;
+            padding: 12px;
+            margin: 0 8px 4px;
+            width: calc(100% - 16px);
         }
     }
-}
 
-// Active state
-.active-link {
-    background: linear-gradient(90deg, var(--primary-50), transparent) !important;
-    color: var(--primary-600) !important;
-    font-weight: 500;
+    .sidebar-toggle {
+        align-self: flex-end;
+        margin: 8px;
+        color: var(--neutral-700);
 
-    // Left accent bar
-    &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 10%;
-        bottom: 10%;
-        width: 4px;
-        border-radius: 4px;
-        background-color: var(--primary-600);
+        &:hover {
+            color: var(--primary-rose);
+            background: var(--primary-rose-light);
+        }
     }
 
-    mat-icon {
-        color: var(--primary-600) !important;
+    .sidebar-nav {
+        flex: 1;
+        padding: 8px 0;
+        overflow-y: auto;
+
+        // Ocultar scrollbar
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--neutral-300);
+            border-radius: 2px;
+        }
+    }
+
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 24px;
+        margin: 0 8px 4px; // Reduce margin to avoid overflow
+        color: var(--neutral-700);
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        width: calc(100% - 16px);
+        box-sizing: border-box;
+
+        &:hover {
+            background: var(--white);
+            color: var(--primary-rose);
+            transform: translateX(2px);
+
+            .sidebar-icon {
+                color: var(--primary-rose);
+            }
+        }
+
+        &.sidebar-item-active {
+            background: var(--primary-rose-light);
+            color: var(--primary-rose);
+            font-weight: 600;
+
+            .sidebar-icon {
+                color: var(--primary-rose);
+            }
+        }
+
+        .sidebar-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            color: var(--neutral-700);
+            transition: color 0.2s;
+        }
+
+        .sidebar-label {
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--primary-rose);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+    }
+
+    .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid var(--neutral-300);
+        display: flex;
+        justify-content: center;
+
+        .sidebar-item {
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
     }
 }

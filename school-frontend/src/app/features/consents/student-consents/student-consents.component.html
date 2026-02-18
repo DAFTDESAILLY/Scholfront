@@ -1,76 +1,157 @@
-<div class="container">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Consentimientos del Estudiante</mat-card-title>
-        </mat-card-header>
-
-        <mat-card-content>
-            <table mat-table [dataSource]="consents" class="mat-elevation-z2">
-                <!-- Consent Type Column -->
-                <ng-container matColumnDef="consentType">
-                    <th mat-header-cell *matHeaderCellDef>Tipo de Consentimiento</th>
-                    <td mat-cell *matCellDef="let consent">
-                        <span *ngFor="let t of (consent.types || []); let last = last">
-                            {{ t.name || t.recordType }}<span *ngIf="!last">, </span>
-                        </span>
-                        <span *ngIf="!consent.types?.length">N/A</span>
-                    </td>
-                </ng-container>
-
-                <!-- Granted By Column -->
-                <ng-container matColumnDef="grantedBy">
-                    <th mat-header-cell *matHeaderCellDef>Otorgado Por (ID)</th>
-                    <td mat-cell *matCellDef="let consent">{{ consent.fromUserId }}</td>
-                </ng-container>
-
-                <!-- Granted At Column -->
-                <ng-container matColumnDef="grantedAt">
-                    <th mat-header-cell *matHeaderCellDef>Fecha de Otorgamiento</th>
-                    <td mat-cell *matCellDef="let consent">
-                        {{ consent.createdAt | date:'dd/MM/yyyy' }}
-                    </td>
-                </ng-container>
-
-                <!-- Expires At Column -->
-                <ng-container matColumnDef="expiresAt">
-                    <th mat-header-cell *matHeaderCellDef>Fecha de Expiración</th>
-                    <td mat-cell *matCellDef="let consent">
-                        {{ consent.expiresAt ? (consent.expiresAt | date:'dd/MM/yyyy') : 'Sin expiración' }}
-                    </td>
-                </ng-container>
-
-                <!-- Status Column -->
-                <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef>Estado</th>
-                    <td mat-cell *matCellDef="let consent">
-                        <mat-chip [color]="getStatusColor(getConsentStatus(consent))">
-                            {{ getConsentStatus(consent) === 'active' ? 'Activo' :
-                            getConsentStatus(consent) === 'revoked' ? 'Revocado' : 'Expirado' }}
-                        </mat-chip>
-                    </td>
-                </ng-container>
-
-                <!-- Actions Column -->
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                    <td mat-cell *matCellDef="let consent">
-                        <button mat-icon-button *ngIf="consent.isActive" (click)="revokeConsent(consent)"
-                            matTooltip="Revocar consentimiento">
-                            <mat-icon>block</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" (click)="deleteConsent(consent.id)" matTooltip="Eliminar">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-
-            <div *ngIf="consents.length === 0 && !isLoading" class="no-data">
-                No hay consentimientos registrados para este estudiante
-            </div>
-        </mat-card-content>
+<div class="consents-container">
+  <!-- Resumen de consentimientos -->
+  <div class="summary-section">
+    <mat-card class="summary-card active-card">
+      <mat-icon>check_circle</mat-icon>
+      <div class="summary-info">
+        <span class="summary-label">Activos</span>
+        <span class="summary-value">{{ getActiveCount() }}</span>
+      </div>
     </mat-card>
+
+    <mat-card class="summary-card expired-card">
+      <mat-icon>event_busy</mat-icon>
+      <div class="summary-info">
+        <span class="summary-label">Expirados</span>
+        <span class="summary-value">{{ getExpiredCount() }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card revoked-card">
+      <mat-icon>block</mat-icon>
+      <div class="summary-info">
+        <span class="summary-label">Revocados</span>
+        <span class="summary-value">{{ getRevokedCount() }}</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Tabla de consentimientos mejorada -->
+  <mat-card class="consents-table-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>verified_user</mat-icon>
+      <mat-card-title>Registro de Consentimientos</mat-card-title>
+      <mat-card-subtitle>Historial de permisos y autorizaciones</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container" *ngIf="consents.length > 0; else noConsents">
+        <table mat-table [dataSource]="consents" class="consents-table">
+          <!-- Tipo de Consentimiento -->
+          <ng-container matColumnDef="consentType">
+            <th mat-header-cell *matHeaderCellDef> Tipo de Consentimiento </th>
+            <td mat-cell *matCellDef="let consent">
+              <div class="consent-type-cell">
+                <mat-icon>description</mat-icon>
+                <div class="consent-types">
+                  <span *ngFor="let t of (consent.types || []); let last = last" class="type-tag">
+                    {{ t.name || t.recordType }}<span *ngIf="!last">, </span>
+                  </span>
+                  <span *ngIf="!consent.types?.length" class="no-type">No especificado</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Otorgado Por -->
+          <ng-container matColumnDef="grantedBy">
+            <th mat-header-cell *matHeaderCellDef> Otorgado Por </th>
+            <td mat-cell *matCellDef="let consent">
+              <div class="granted-by-cell">
+                <mat-icon>person</mat-icon>
+                <span>Usuario ID: {{ consent.fromUserId }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Fecha de Otorgamiento -->
+          <ng-container matColumnDef="grantedAt">
+            <th mat-header-cell *matHeaderCellDef> Fecha de Registro </th>
+            <td mat-cell *matCellDef="let consent">
+              <div class="date-cell">
+                <mat-icon>event</mat-icon>
+                <span>{{ consent.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Fecha de Expiración -->
+          <ng-container matColumnDef="expiresAt">
+            <th mat-header-cell *matHeaderCellDef> Expiración </th>
+            <td mat-cell *matCellDef="let consent">
+              <div class="expiry-cell">
+                <mat-icon [class.warning]="isExpiringSoon(consent)">
+                  {{ consent.expiresAt ? 'schedule' : 'all_inclusive' }}
+                </mat-icon>
+                <span [class.warning-text]="isExpiringSoon(consent)">
+                  {{ consent.expiresAt ? (consent.expiresAt | date:'dd/MM/yyyy') : 'Sin expiración' }}
+                </span>
+                <mat-chip *ngIf="isExpiringSoon(consent) && getConsentStatus(consent) === 'active'" 
+                          class="warning-chip">
+                  ¡Próximo a vencer!
+                </mat-chip>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Estado -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let consent">
+              <mat-chip class="status-chip" 
+                        [class.status-active]="getConsentStatus(consent) === 'active'"
+                        [class.status-revoked]="getConsentStatus(consent) === 'revoked'"
+                        [class.status-expired]="getConsentStatus(consent) === 'expired'">
+                <mat-icon>
+                  {{ getConsentStatus(consent) === 'active' ? 'check_circle' : 
+                     getConsentStatus(consent) === 'revoked' ? 'cancel' : 'event_busy' }}
+                </mat-icon>
+                {{ getConsentStatus(consent) === 'active' ? 'Activo' :
+                   getConsentStatus(consent) === 'revoked' ? 'Revocado' : 'Expirado' }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let consent">
+              <div class="actions-cell">
+                <button mat-icon-button 
+                        *ngIf="consent.isActive" 
+                        (click)="revokeConsent(consent)"
+                        matTooltip="Revocar consentimiento"
+                        class="revoke-btn">
+                  <mat-icon>block</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        color="warn" 
+                        (click)="deleteConsent(consent.id)" 
+                        matTooltip="Eliminar"
+                        class="delete-btn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="consent-row"></tr>
+        </table>
+      </div>
+
+      <ng-template #noConsents>
+        <div class="no-data">
+          <mat-icon>shield</mat-icon>
+          <p>No hay consentimientos registrados</p>
+          <p class="sub-text">Los consentimientos otorgados aparecerán aquí</p>
+        </div>
+      </ng-template>
+
+      <div *ngIf="isLoading" class="loading">
+        <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+        <p>Cargando consentimientos...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
