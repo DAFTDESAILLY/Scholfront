@@ -1,1 +1,173 @@
-<p>student-profile works!</p>
+<div class="profile-container" *ngIf="student">
+    <!-- Header mejorado con avatar y estado -->
+    <div class="profile-header">
+        <div class="header-content">
+            <div class="avatar-section">
+                <div class="student-avatar">
+                    <mat-icon>person</mat-icon>
+                </div>
+                <div class="status-badge" [class.active]="student.status === 'active'">
+                    {{ student.status === 'active' ? 'Activo' : 'Inactivo' }}
+                </div>
+            </div>
+
+            <div class="student-info">
+                <h1>{{ student.fullName }}</h1>
+                <div class="student-meta">
+                    <span class="meta-item">
+                        <mat-icon>badge</mat-icon>
+                        <span>ID: {{ student.id }}</span>
+                    </span>
+                    <span class="meta-item" *ngIf="student.enrollmentId">
+                        <mat-icon>school</mat-icon>
+                        <span>Matrícula: {{ student.enrollmentId }}</span>
+                    </span>
+                    <span class="meta-item" *ngIf="student.email">
+                        <mat-icon>email</mat-icon>
+                        <span>{{ student.email }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button mat-raised-button (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+                Regresar
+            </button>
+            <button mat-raised-button color="primary" (click)="editStudent()">
+                <mat-icon>edit</mat-icon>
+                Editar
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabs mejorados -->
+    <mat-tab-group class="student-tabs" animationDuration="300ms">
+        <!-- Tab General -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">person</mat-icon>
+                General
+            </ng-template>
+
+            <div class="tab-content">
+                <div class="cards-grid">
+                    <!-- Tarjeta de Información Personal -->
+                    <mat-card class="info-card">
+                        <mat-card-header>
+                            <mat-icon mat-card-avatar>account_circle</mat-icon>
+                            <mat-card-title>Información Personal</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="info-list">
+                                <div class="info-row">
+                                    <span class="label">Nombre Completo</span>
+                                    <span class="value">{{ student.fullName }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Fecha de Nacimiento</span>
+                                    <span class="value">{{ student.birthDate ? (student.birthDate | date: 'dd/MM/yyyy')
+                                        : 'N/A' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Email</span>
+                                    <span class="value">{{ student.email || 'N/A' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Estado</span>
+                                    <span class="value">
+                                        <span class="status-chip" [class.active]="student.status === 'active'">
+                                            {{ student.status === 'active' ? 'Activo' : 'Inactivo' }}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- Tarjeta de Contacto -->
+                    <mat-card class="info-card">
+                        <mat-card-header>
+                            <mat-icon mat-card-avatar>contact_phone</mat-icon>
+                            <mat-card-title>Información de Contacto</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="info-list">
+                                <div class="info-row">
+                                    <span class="label">Dirección</span>
+                                    <span class="value">{{ student.address || 'N/A' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Teléfono de Padres</span>
+                                    <span class="value">{{ student.parentPhone || 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- Tarjeta de Notas Adicionales -->
+                    <mat-card class="info-card full-width" *ngIf="student.notes">
+                        <mat-card-header>
+                            <mat-icon mat-card-avatar>notes</mat-icon>
+                            <mat-card-title>Notas</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p class="notes-text">{{ student.notes }}</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-tab>
+
+        <!-- Tab Calificaciones -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">grade</mat-icon>
+                Calificaciones
+            </ng-template>
+            <div class="tab-content">
+                <app-student-grades [studentId]="student.id"></app-student-grades>
+            </div>
+        </mat-tab>
+
+        <!-- Tab Asistencias -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">event_available</mat-icon>
+                Asistencias
+            </ng-template>
+            <div class="tab-content">
+                <app-student-attendance [studentId]="student.id"></app-student-attendance>
+            </div>
+        </mat-tab>
+
+        <!-- Tab Expediente -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">folder</mat-icon>
+                Expediente
+            </ng-template>
+            <div class="tab-content">
+                <app-student-records [studentId]="student.id"></app-student-records>
+            </div>
+        </mat-tab>
+
+        <!-- Tab Consentimientos -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">verified_user</mat-icon>
+                Consentimientos
+            </ng-template>
+            <div class="tab-content">
+                <app-student-consents [studentId]="student.id"></app-student-consents>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<!-- Estado de carga -->
+<div class="loading-container" *ngIf="!student">
+    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+    <p>Cargando información del estudiante...</p>
+</div>

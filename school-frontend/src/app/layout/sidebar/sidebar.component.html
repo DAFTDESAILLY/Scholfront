@@ -21,8 +21,9 @@
 
     <!-- Acceso rápido (bottom) -->
     <div class="sidebar-footer">
-        <button mat-icon-button class="sidebar-item" matTooltip="Configuración">
-            <mat-icon>settings</mat-icon>
+        <button mat-icon-button (click)="toggleNotifications()" class="notification-btn" aria-label="Notificaciones">
+            <mat-icon [matBadge]="unreadCount" matBadgeColor="warn" [matBadgeHidden]="unreadCount === 0"
+                aria-hidden="false">notifications_none</mat-icon>
         </button>
     </div>
 </aside>

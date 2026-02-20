@@ -1,0 +1,260 @@
+@use '../../../../styles.scss' as *;
+
+.profile-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    color: var(--neutral-900); // Darker text for white/light contrast
+    box-shadow: var(--shadow-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-content {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex: 1;
+}
+
+.avatar-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.student-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--primary-light);
+}
+
+.student-avatar mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.status-badge.active {
+    background: var(--color-success);
+}
+
+.student-info h1 {
+    margin: 0 0 12px 0;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.student-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.meta-item mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.header-actions button {
+    background: white;
+    color: var(--primary-color);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+}
+
+.student-tabs {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid var(--neutral-300);
+}
+
+.student-tabs ::ng-deep .mat-mdc-tab-labels {
+    background: var(--neutral-100);
+}
+
+.tab-icon {
+    margin-right: 8px;
+}
+
+.tab-content {
+    padding: 24px;
+    min-height: 400px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.info-card {
+    height: fit-content;
+    border: 1px solid var(--neutral-300);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.info-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-card mat-card-header {
+    margin-bottom: 16px;
+    padding: 0;
+}
+
+.info-card mat-icon[mat-card-avatar] {
+    background: var(--primary-color);
+    color: white;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--neutral-100);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    font-weight: 500;
+    color: var(--neutral-500);
+    font-size: 14px;
+}
+
+.info-row .value {
+    font-size: 15px;
+    color: var(--neutral-900);
+    text-align: right;
+    font-weight: 600;
+}
+
+.status-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+}
+
+.status-chip.active {
+    background: var(--color-success-light);
+    color: var(--color-success-dark);
+}
+
+.notes-text {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--neutral-700);
+    white-space: pre-wrap;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: var(--neutral-500);
+}
+
+.loading-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    animation: pulse 1.5s ease-in-out infinite;
+    color: var(--primary-color);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 20px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .student-info h1 {
+        font-size: 24px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

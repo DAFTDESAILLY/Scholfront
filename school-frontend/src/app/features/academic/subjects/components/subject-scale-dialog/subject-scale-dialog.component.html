@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Configurar Escala Evaluativa</h2>
+<mat-dialog-content>
+    <p>Define el peso porcentual para cada criterio de evaluación. La suma debe ser 100%.</p>
+
+    <form [formGroup]="scaleForm">
+        <div formArrayName="items">
+            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="scale-row">
+                <mat-form-field appearance="outline" class="type-field">
+                    <mat-label>Criterio</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option *ngFor="let opt of typeOptions" [value]="opt.value">
+                            {{opt.label}}
+                        </mat-option>
+                        <!-- Fallback for custom types not in list -->
+                        <mat-option *ngIf="isCustomType(i)" [value]="getTypeValue(i)">
+                            {{getTypeValue(i)}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="weight-field">
+                    <mat-label>% Peso</mat-label>
+                    <input matInput type="number" formControlName="weight" min="0" max="100">
+                    <span matSuffix>%</span>
+                </mat-form-field>
+
+                <button mat-icon-button color="warn" (click)="removeType(i)" *ngIf="items.length > 1">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <button mat-button color="primary" (click)="addType()">
+            <mat-icon>add</mat-icon> Agregar Criterio
+        </button>
+
+        <div class="total-row" [style.color]="isValid() ? 'green' : 'red'">
+            Total: {{ getTotal() }}%
+        </div>
+        <div *ngIf="!isValid() && scaleForm.valid" class="error-text" style="text-align: right;">
+            El total debe ser exactamente 100%
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" [disabled]="!isValid()" (click)="onSave()">
+        Guardar Escala
+    </button>
+</mat-dialog-actions>

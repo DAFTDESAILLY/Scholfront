@@ -60,10 +60,15 @@ form {
     }
 
     button[type="submit"] {
-        @include glass-button;
-        background: var(--primary-rose-dark);
+        background: var(--primary-color);
         color: white;
         padding: 0 2rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+
+        &:hover {
+            background: var(--primary-dark);
+        }
     }
 }
 

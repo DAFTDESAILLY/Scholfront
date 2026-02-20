@@ -8,5 +8,5 @@ export const EVALUATIONS_ROUTES: Routes = [
     { path: 'definitions', loadComponent: () => import('./evaluation-list/evaluation-list.component').then(m => m.EvaluationListComponent) },
     { path: 'definitions/new', loadComponent: () => import('./evaluation-form/evaluation-form.component').then(m => m.EvaluationFormComponent) },
     { path: 'definitions/:id/edit', loadComponent: () => import('./evaluation-form/evaluation-form.component').then(m => m.EvaluationFormComponent) },
-    { path: '', redirectTo: 'attendance', pathMatch: 'full' }
+    { path: '', redirectTo: 'definitions', pathMatch: 'full' }
 ];

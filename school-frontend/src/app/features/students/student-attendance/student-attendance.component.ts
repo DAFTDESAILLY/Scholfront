@@ -143,6 +143,13 @@ interface AttendanceWithSubject extends Attendance {
       padding: 0;
     }
 
+    mat-card {
+      display: block !important;
+      background: white !important;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
     .summary-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -151,7 +158,7 @@ interface AttendanceWithSubject extends Attendance {
     }
 
     .summary-card {
-      display: flex;
+      display: flex !important;
       align-items: center;
       gap: 16px;
       padding: 20px;
@@ -159,36 +166,37 @@ interface AttendanceWithSubject extends Attendance {
       color: white;
       transition: transform 0.2s, box-shadow 0.2s;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
 
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      }
+    .summary-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md) !important;
     }
 
     .summary-card.present-card {
-      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%) !important;
     }
 
     .summary-card.late-card {
-      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-dark) 100%) !important;
     }
 
     .summary-card.absent-card {
-      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      background: linear-gradient(135deg, var(--color-danger) 0%, var(--color-danger-dark) 100%) !important;
     }
 
     .summary-card.excused-card {
-      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-color) 100%) !important;
     }
 
-    .card-icon {
-      mat-icon {
-        font-size: 48px;
-        width: 48px;
-        height: 48px;
-        opacity: 0.9;
-      }
+    .card-icon mat-icon {
+      font-size: 44px;
+      width: 44px;
+      height: 44px;
+      opacity: 0.8;
     }
 
     .card-info {
@@ -197,34 +205,60 @@ interface AttendanceWithSubject extends Attendance {
     }
 
     .card-label {
-      font-size: 13px;
-      opacity: 0.9;
+      font-size: 14px;
+      opacity: 0.8;
+      font-weight: 500;
       margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .card-value {
       font-size: 32px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .table-card {
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      border: 1px solid var(--neutral-300);
       overflow: hidden;
+      background: white !important;
     }
 
     .table-container {
       overflow-x: auto;
+      padding: 8px;
     }
 
     .attendance-table {
       width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
 
       th {
-        background: #f5f7fa;
-        font-weight: 600;
-        color: #333;
-        font-size: 14px;
+        background: transparent;
+        font-weight: 700;
+        color: var(--neutral-500);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0 24px;
+      }
+
+      td {
+        padding: 20px 24px;
+        background: white;
+        border-top: 1px solid var(--neutral-100);
+        border-bottom: 1px solid var(--neutral-100);
+        
+        &:first-child { 
+          border-left: 1px solid var(--neutral-100); 
+          border-radius: 12px 0 0 12px; 
+        }
+        &:last-child { 
+          border-right: 1px solid var(--neutral-100); 
+          border-radius: 0 12px 12px 0; 
+        }
       }
     }
 
@@ -234,7 +268,7 @@ interface AttendanceWithSubject extends Attendance {
       gap: 8px;
 
       mat-icon {
-        color: #667eea;
+        color: var(--primary-color);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -242,7 +276,7 @@ interface AttendanceWithSubject extends Attendance {
 
       span {
         font-size: 14px;
-        color: #666;
+        color: var(--neutral-700);
         font-weight: 500;
       }
     }
@@ -253,7 +287,7 @@ interface AttendanceWithSubject extends Attendance {
       gap: 8px;
 
       mat-icon {
-        color: #2196f3;
+        color: var(--secondary-color);
         font-size: 18px;
         width: 18px;
         height: 18px;
@@ -261,7 +295,7 @@ interface AttendanceWithSubject extends Attendance {
 
       span {
         font-size: 14px;
-        color: #666;
+        color: var(--neutral-700);
       }
     }
 
@@ -269,59 +303,40 @@ interface AttendanceWithSubject extends Attendance {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+      color: var(--neutral-900);
 
       mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
       }
 
       &.status-present {
-        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-        color: white;
-
-        &:hover {
-          box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
-        }
+        background: var(--color-success);
       }
 
       &.status-late {
-        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-        color: white;
-
-        &:hover {
-          box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
-        }
+        background: var(--color-warning);
       }
 
       &.status-absent {
-        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-        color: white;
-
-        &:hover {
-          box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
-        }
+        background: var(--color-danger);
       }
 
       &.status-excused {
-        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-        color: white;
-
-        &:hover {
-          box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
-        }
+        background: var(--accent-color);
       }
     }
 
     .notes-text {
       font-size: 14px;
-      color: #666;
+      color: var(--neutral-500);
       font-style: italic;
     }
 
@@ -329,7 +344,7 @@ interface AttendanceWithSubject extends Attendance {
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: #f5f7fa;
+        background-color: var(--primary-light);
       }
     }
 
@@ -339,7 +354,7 @@ interface AttendanceWithSubject extends Attendance {
       align-items: center;
       justify-content: center;
       padding: 80px 20px;
-      color: #999;
+      color: var(--neutral-500);
 
       p {
         margin-top: 16px;
@@ -353,7 +368,7 @@ interface AttendanceWithSubject extends Attendance {
       align-items: center;
       justify-content: center;
       padding: 80px 20px;
-      color: #999;
+      color: var(--neutral-500);
       text-align: center;
 
       mat-icon {
@@ -362,7 +377,7 @@ interface AttendanceWithSubject extends Attendance {
         height: 96px;
         margin-bottom: 24px;
         opacity: 0.3;
-        color: #667eea;
+        color: var(--primary-color);
       }
 
       p {
@@ -372,7 +387,7 @@ interface AttendanceWithSubject extends Attendance {
 
       .sub-text {
         font-size: 14px;
-        color: #bbb;
+        color: var(--neutral-300);
       }
     }
 
@@ -385,7 +400,7 @@ interface AttendanceWithSubject extends Attendance {
 })
 export class StudentAttendanceComponent implements OnInit {
   @Input() studentId!: number;
-  
+
   attendances: AttendanceWithSubject[] = [];
   loading = true;
   displayedColumns = ['subject', 'date', 'status', 'notes'];
@@ -393,49 +408,152 @@ export class StudentAttendanceComponent implements OnInit {
   constructor(
     private attendanceService: AttendanceService,
     private subjectsService: SubjectsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    console.log('🚀 StudentAttendanceComponent initialized');
+    console.log('   studentId recibido:', this.studentId);
+    console.log('   tipo de studentId:', typeof this.studentId);
+    
+    if (!this.studentId) {
+      console.error('❌ ADVERTENCIA: studentId no está definido en ngOnInit');
+    }
+    
     this.loadAttendance();
   }
 
   loadAttendance(): void {
+    if (!this.studentId) {
+      console.warn('⚠️ No se puede cargar asistencia sin studentId');
+      this.loading = false;
+      return;
+    }
+
+    console.log('🔄 Iniciando carga de asistencias para estudiante:', this.studentId);
     this.loading = true;
-    
-    // Get all subjects first, then get attendance for each
+    this.attendances = [];
+
     this.subjectsService.getAll().subscribe({
       next: (subjects) => {
-        const attendanceRequests = subjects.map(subject =>
-          this.attendanceService.getStudentAttendance(this.studentId, subject.id)
-        );
+        console.log('📚 Asignaturas cargadas:', subjects?.length);
+        
+        if (!subjects || subjects.length === 0) {
+          console.warn('⚠️ No se encontraron asignaturas.');
+          this.attendances = [];
+          this.loading = false;
+          return;
+        }
+
+        const attendanceRequests = subjects.map(subject => {
+          console.log(`📡 Solicitando asistencias para: studentId=${this.studentId}, subjectId=${subject.id} (${subject.name})`);
+          return this.attendanceService.getStudentAttendance(this.studentId, subject.id);
+        });
 
         forkJoin(attendanceRequests).subscribe({
           next: (results) => {
-            this.attendances = [];
+            console.log('✅ Respuestas recibidas:', results.length, 'grupos');
+            
             results.forEach((attendanceList, index) => {
-              attendanceList.forEach(attendance => {
-                this.attendances.push({
-                  ...attendance,
-                  subjectName: subjects[index].name
-                });
+              const subject = subjects[index];
+              console.log(`\n📊 Procesando materia[${index}]: ${subject.name} (ID: ${subject.id})`);
+              
+              if (!attendanceList || !Array.isArray(attendanceList)) {
+                console.log(`   Sin registros o formato inválido`);
+                return;
+              }
+
+              console.log(`   Total registros recibidos: ${attendanceList.length}`);
+              
+              attendanceList.forEach((attendance: any, idx: number) => {
+                if (!attendance) {
+                  console.warn(`   ⚠️ Registro ${idx} es null/undefined`);
+                  return;
+                }
+
+                console.log(`\n   📋 Registro #${idx}:`, JSON.stringify(attendance, null, 2));
+                console.log(`   📋 Campos disponibles:`, Object.keys(attendance));
+                
+                // Obtener el studentId del registro de todas las formas posibles
+                const recordStudentId = attendance.studentId || 
+                                       attendance.student_id || 
+                                       attendance.StudentId ||
+                                       (attendance.student && attendance.student.id) ||
+                                       (attendance.studentAssignment && attendance.studentAssignment.studentId) ||
+                                       (attendance.studentAssignment && attendance.studentAssignment.student && attendance.studentAssignment.student.id);
+                
+                console.log(`   🔍 recordStudentId encontrado: "${recordStudentId}" (tipo: ${typeof recordStudentId})`);
+                console.log(`   🔍 this.studentId esperado: "${this.studentId}" (tipo: ${typeof this.studentId})`);
+                
+                // Convertir ambos a número para comparar
+                const recordIdNum = recordStudentId ? Number(recordStudentId) : null;
+                const expectedIdNum = Number(this.studentId);
+                
+                console.log(`   🔍 Comparación numérica: ${recordIdNum} === ${expectedIdNum} = ${recordIdNum === expectedIdNum}`);
+                
+                // VERIFICAR que sea del estudiante correcto
+                if (recordIdNum !== expectedIdNum) {
+                  console.log(`   ❌ FILTRADO: No coincide el studentId (esperado: ${expectedIdNum}, recibido: ${recordIdNum})`);
+                  return;
+                }
+                
+                console.log(`   ✅ Match de studentId confirmado`);
+                
+                // Obtener la fecha
+                const dateValue = attendance.date || attendance.attendanceDate;
+                
+                if (!dateValue) {
+                  console.warn(`   ⚠️ Registro sin fecha, ignorado`);
+                  return;
+                }
+                
+                // Crear el registro de asistencia
+                const attendanceRecord: AttendanceWithSubject = {
+                  id: attendance.id,
+                  subjectId: attendance.subjectId || subject.id,
+                  studentId: expectedIdNum,
+                  date: dateValue,
+                  status: attendance.status || 'present',
+                  notes: attendance.notes || attendance.observation || '',
+                  createdAt: attendance.createdAt || new Date(),
+                  updatedAt: attendance.updatedAt || new Date(),
+                  subjectName: subject.name
+                };
+                
+                this.attendances.push(attendanceRecord);
+                console.log(`   ✅✅ AGREGADO EXITOSAMENTE: ${subject.name} - ${dateValue} - ${attendance.status}`);
               });
             });
+
+            console.log(`\n📈 TOTAL ASISTENCIAS CARGADAS: ${this.attendances.length}`);
             
-            // Sort by date descending
-            this.attendances.sort((a, b) => 
+            // Ordenar por fecha descendente
+            this.attendances.sort((a, b) =>
               new Date(b.date).getTime() - new Date(a.date).getTime()
             );
-            
+
+            if (this.attendances.length > 0) {
+              console.log('✅ Asistencias procesadas y ordenadas correctamente');
+              console.log('📊 Resumen:', {
+                total: this.attendances.length,
+                presentes: this.getPresentCount(),
+                retardos: this.getLateCount(),
+                faltas: this.getAbsentCount(),
+                justificadas: this.getExcusedCount()
+              });
+            } else {
+              console.log('ℹ️ No se encontraron asistencias para este estudiante');
+            }
+
             this.loading = false;
           },
           error: (error) => {
-            console.error('❌ Error loading attendance:', error);
+            console.error('❌ Error al cargar asistencias:', error);
             this.loading = false;
           }
         });
       },
       error: (error) => {
-        console.error('❌ Error loading subjects:', error);
+        console.error('❌ Error al cargar materias:', error);
         this.loading = false;
       }
     });

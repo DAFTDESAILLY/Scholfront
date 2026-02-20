@@ -22,10 +22,26 @@ export class AttendanceService {
     }
 
     getBySubjectAndDate(subjectId: number, date: string): Observable<Attendance[]> {
-        return this.http.get<Attendance[]>(`${this.apiUrl}?subjectId=${subjectId}&date=${date}`);
+        console.log(`📡 API Call: GET ${this.apiUrl}?subjectId=${subjectId}&date=${date}`);
+        return this.http.get<Attendance[]>(`${this.apiUrl}?subjectId=${subjectId}&date=${date}`)
+            .pipe(
+                catchError(error => {
+                    console.error('❌ Error en getBySubjectAndDate:', error);
+                    return of([]);
+                })
+            );
     }
 
     getStudentAttendance(studentId: number, subjectId: number): Observable<Attendance[]> {
-        return this.http.get<Attendance[]>(`${this.apiUrl}?studentId=${studentId}&subjectId=${subjectId}`);
+        const url = `${this.apiUrl}?studentId=${studentId}&subjectId=${subjectId}`;
+        console.log(`📡 API Call: GET ${url}`);
+        return this.http.get<Attendance[]>(url)
+            .pipe(
+                catchError(error => {
+                    console.error(`❌ Error en getStudentAttendance (studentId=${studentId}, subjectId=${subjectId}):`, error);
+                    // Devolver array vacío en lugar de propagar el error
+                    return of([]);
+                })
+            );
     }
 }

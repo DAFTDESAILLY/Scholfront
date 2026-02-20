@@ -8,7 +8,8 @@ export interface Evaluation {
     maxScore?: number;
     dueDate?: string;
     description?: string;
-    status?: 'active' | 'archived';
+    grade?: number; // Optional, for student view
+    status?: 'pending' | 'completed';
     createdAt?: Date;
     updatedAt?: Date;
 }

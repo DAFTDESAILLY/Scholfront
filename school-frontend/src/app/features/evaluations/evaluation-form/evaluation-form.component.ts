@@ -104,7 +104,7 @@ export class EvaluationFormComponent implements OnInit {
             operation.subscribe({
                 next: () => {
                     this.notificationService.success('Evaluación guardada exitosamente');
-                    this.router.navigate(['/evaluations']);
+                    this.router.navigate(['/evaluations/definitions']);
                 },
                 error: (err) => {
                     console.error('❌ Error saving evaluation', err);

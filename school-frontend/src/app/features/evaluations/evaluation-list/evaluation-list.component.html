@@ -98,10 +98,9 @@
                     <th mat-header-cell *matHeaderCellDef> Evaluación </th>
                     <td mat-cell *matCellDef="let row">
                         <div class="evaluation-cell">
-                            <div class="evaluation-icon" [class.exam]="row.type === 'exam'" 
-                                 [class.homework]="row.type === 'homework'"
-                                 [class.project]="row.type === 'project'"
-                                 [class.participation]="row.type === 'participation'">
+                            <div class="evaluation-icon" [class.exam]="row.type === 'exam'"
+                                [class.homework]="row.type === 'homework'" [class.project]="row.type === 'project'"
+                                [class.participation]="row.type === 'participation'">
                                 <mat-icon>{{ getTypeIcon(row.type) }}</mat-icon>
                             </div>
                             <div class="evaluation-info">
@@ -115,11 +114,10 @@
                 <ng-container matColumnDef="type">
                     <th mat-header-cell *matHeaderCellDef> Tipo </th>
                     <td mat-cell *matCellDef="let row">
-                        <mat-chip class="type-chip"
-                                  [class.type-exam]="row.type === 'exam'"
-                                  [class.type-homework]="row.type === 'homework'"
-                                  [class.type-project]="row.type === 'project'"
-                                  [class.type-participation]="row.type === 'participation'">
+                        <mat-chip class="type-chip" [class.type-exam]="row.type === 'exam'"
+                            [class.type-homework]="row.type === 'homework'"
+                            [class.type-project]="row.type === 'project'"
+                            [class.type-participation]="row.type === 'participation'">
                             <mat-icon>{{ getTypeIcon(row.type) }}</mat-icon>
                             {{ getTypeLabel(row.type) }}
                         </mat-chip>
@@ -133,6 +131,17 @@
                             <mat-icon>menu_book</mat-icon>
                             <span>{{ getSubjectName(row.subjectId) }}</span>
                         </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-chip [class.status-completed]="row.status === 'completed'"
+                            [class.status-pending]="!row.status || row.status === 'pending'">
+                            <mat-icon>{{ row.status === 'completed' ? 'check_circle' : 'hourglass_empty' }}</mat-icon>
+                            {{ row.status === 'completed' ? 'Completada' : 'Pendiente' }}
+                        </mat-chip>
                     </td>
                 </ng-container>
 
@@ -166,10 +175,12 @@
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let row">
                         <div class="actions-cell">
-                            <button mat-icon-button [routerLink]="[row.id, 'edit']" matTooltip="Editar" class="edit-btn">
+                            <button mat-icon-button [routerLink]="[row.id, 'edit']" matTooltip="Editar"
+                                class="edit-btn">
                                 <mat-icon>edit</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="deleteEvaluation(row.id)" matTooltip="Eliminar" class="delete-btn">
+                            <button mat-icon-button (click)="deleteEvaluation(row.id)" matTooltip="Eliminar"
+                                class="delete-btn">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </div>
@@ -185,7 +196,8 @@
             <div class="no-data">
                 <mat-icon>assignment_outlined</mat-icon>
                 <p>No se encontraron evaluaciones</p>
-                <p class="sub-text">{{ input?.value ? 'Intenta con otro término de búsqueda' : 'Comienza creando una nueva evaluación' }}</p>
+                <p class="sub-text">{{ input?.value ? 'Intenta con otro término de búsqueda' : 'Comienza creando una
+                    nueva evaluación' }}</p>
                 <button mat-raised-button color="primary" routerLink="new" *ngIf="!input?.value">
                     <mat-icon>assignment_add</mat-icon>
                     Crear Primera Evaluación

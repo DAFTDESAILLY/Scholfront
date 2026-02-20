@@ -16,4 +16,10 @@ export interface Grade {
             fullName: string;
         };
     };
+    evaluationItem?: {
+        id: number;
+        subjectId: number;
+        name: string;
+        type: string;
+    };
 }

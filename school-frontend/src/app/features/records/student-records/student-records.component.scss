@@ -1,12 +1,25 @@
+@use '../../../../styles.scss' as *;
+
 .records-card {
     margin: 20px;
+    border: 1px solid var(--neutral-300);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 mat-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    padding: 20px;
+    background: var(--neutral-100);
+    border-bottom: 1px solid var(--neutral-300);
+
+    mat-card-title {
+        color: var(--neutral-900);
+        font-weight: 600;
+        margin: 0;
+    }
 }
 
 .header-actions {
@@ -15,12 +28,39 @@ mat-card-header {
 
 .no-files {
     text-align: center;
-    padding: 30px;
-    color: #757575;
+    padding: 60px 20px;
+    color: var(--neutral-500);
     font-style: italic;
+
+    mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+        color: var(--primary-color);
+    }
 }
 
 mat-list-item {
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    margin: 8px 16px;
+    border-bottom: 1px solid var(--neutral-100);
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: var(--primary-light);
+    }
+}
+
+.file-icon {
+    color: var(--primary-color);
+}
+
+.action-icon {
+    color: var(--neutral-500);
+
+    &:hover {
+        color: var(--primary-color);
+    }
 }

@@ -15,6 +15,8 @@ import { SubjectsService } from '../../../../core/services/subjects.service';
 import { Subject } from '../../../../core/models/subject.model';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { HelpIconComponent } from '../../../../shared/components/help-icon/help-icon.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SubjectScaleDialogComponent } from '../components/subject-scale-dialog/subject-scale-dialog.component';
 
 @Component({
     selector: 'app-subject-list',
@@ -32,7 +34,8 @@ import { HelpIconComponent } from '../../../../shared/components/help-icon/help-
         MatFormFieldModule,
         MatSelectModule,
         MatChipsModule,
-        MatCardModule
+        MatCardModule,
+        MatDialogModule
     ],
     templateUrl: './subject-list.component.html',
     styleUrls: ['./subject-list.component.scss']
@@ -48,8 +51,31 @@ export class SubjectListComponent implements OnInit {
 
     constructor(
         private subjectsService: SubjectsService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private dialog: MatDialog
     ) { }
+
+    openScaleDialog(subject: Subject) {
+        const dialogRef = this.dialog.open(SubjectScaleDialogComponent, {
+            width: '500px',
+            data: { subject }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.subjectsService.update(subject.id, { gradingScale: result }).subscribe({
+                    next: () => {
+                        this.notificationService.success('Escala actualizada correctamente');
+                        this.loadSubjects();
+                    },
+                    error: (err) => {
+                        console.error('Error updating scale:', err);
+                        this.notificationService.error('Error al actualizar escala');
+                    }
+                });
+            }
+        });
+    }
 
     ngOnInit() {
         this.loadSubjects();

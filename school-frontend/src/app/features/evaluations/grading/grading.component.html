@@ -1,174 +1,607 @@
-<div class="grading-container">
+﻿<div class="grading-container">
     <!-- Header -->
     <div class="header">
         <div class="title-row">
             <h2>Calificaciones</h2>
-            <app-help-icon message="Asigna calificaciones a los estudiantes para cada evaluación y periodo académico."></app-help-icon>
+            <app-help-icon
+                message="Asigna calificaciones a los estudiantes para cada evaluaciÃ³n y periodo acadÃ©mico."></app-help-icon>
         </div>
     </div>
 
-    <!-- Filtros -->
-    <mat-card class="filters-card">
-        <form [formGroup]="filterForm" class="filter-form">
-            <mat-form-field appearance="outline" class="subject-field">
-                <mat-label>Materia</mat-label>
-                <mat-select formControlName="subjectId">
-                    <mat-option *ngFor="let subject of subjects" [value]="subject.id">
-                        {{ subject.name }}
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>book</mat-icon>
-            </mat-form-field>
+    <!-- Toggle de Vista -->
+    <mat-button-toggle-group [(value)]="currentView" (change)="onViewChange($any($event.value))" class="view-toggle">
+        <mat-button-toggle value="grading">
+            <mat-icon>edit</mat-icon>
+            Calificar
+        </mat-button-toggle>
+        <mat-button-toggle value="global">
+            <mat-icon>assessment</mat-icon>
+            Vista Global
+        </mat-button-toggle>
+        <mat-button-toggle value="final">
+            <mat-icon>grade</mat-icon>
+            Promedios Finales
+        </mat-button-toggle>
+    </mat-button-toggle-group>
 
-            <mat-form-field appearance="outline" class="evaluation-field">
-                <mat-label>Evaluación</mat-label>
-                <mat-select formControlName="evaluationId">
-                    <mat-option *ngFor="let evaluation of evaluations" [value]="evaluation.id">
-                        {{ evaluation.name }} ({{ evaluation.type }})
-                    </mat-option>
-                </mat-select>
-                <mat-icon matPrefix>assignment</mat-icon>
-            </mat-form-field>
+    <!-- Vista de Calificar -->
+    <div *ngIf="currentView === 'grading'">
+        <!-- Filtros -->
+        <mat-card class="filters-card">
+            <form [formGroup]="filterForm" class="filter-form">
+                <mat-form-field appearance="outline" class="subject-field">
+                    <mat-label>Materia</mat-label>
+                    <mat-select formControlName="subjectId">
+                        <mat-option *ngFor="let subject of subjects" [value]="subject.id">
+                            {{ subject.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>book</mat-icon>
+                </mat-form-field>
 
-            <button mat-raised-button color="primary" (click)="onLoadGrades()" [disabled]="filterForm.invalid" class="load-button">
-                <mat-icon>download</mat-icon>
-                Cargar Estudiantes
-            </button>
-        </form>
-    </mat-card>
-
-    <!-- Tarjetas de estadísticas -->
-    <div class="stats-cards" *ngIf="gradingData.length > 0">
-        <mat-card class="stat-card total-card">
-            <mat-icon>people</mat-icon>
-            <div class="stat-info">
-                <span class="stat-label">Total Estudiantes</span>
-                <span class="stat-value">{{ students.length }}</span>
-            </div>
-        </mat-card>
-
-        <mat-card class="stat-card graded-card">
-            <mat-icon>check_circle</mat-icon>
-            <div class="stat-info">
-                <span class="stat-label">Calificados</span>
-                <span class="stat-value">{{ getGradedCount() }}</span>
-            </div>
-        </mat-card>
-
-        <mat-card class="stat-card pending-card">
-            <mat-icon>pending</mat-icon>
-            <div class="stat-info">
-                <span class="stat-label">Pendientes</span>
-                <span class="stat-value">{{ getPendingCount() }}</span>
-            </div>
-        </mat-card>
-
-        <mat-card class="stat-card average-card">
-            <mat-icon>trending_up</mat-icon>
-            <div class="stat-info">
-                <span class="stat-label">Promedio</span>
-                <span class="stat-value">{{ getAverageScore() }}</span>
-            </div>
-        </mat-card>
-    </div>
-
-    <!-- Información de evaluación seleccionada -->
-    <mat-card class="evaluation-info" *ngIf="gradingData.length > 0">
-        <div class="info-row">
-            <div class="info-item">
-                <mat-icon>book</mat-icon>
-                <div class="info-text">
-                    <span class="info-label">Materia</span>
-                    <span class="info-value">{{ getSelectedSubjectName() }}</span>
-                </div>
-            </div>
-            <div class="info-item">
-                <mat-icon>assignment</mat-icon>
-                <div class="info-text">
-                    <span class="info-label">Evaluación</span>
-                    <span class="info-value">{{ getSelectedEvaluationName() }}</span>
-                </div>
-            </div>
-        </div>
-    </mat-card>
-
-    <!-- Tabla de calificaciones -->
-    <mat-card class="table-card" *ngIf="gradingData.length > 0">
-        <div class="table-container">
-            <table mat-table [dataSource]="gradingData" class="grading-table">
-                <!-- Columna de Estudiante -->
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>Estudiante</th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="student-cell">
-                            <div class="student-avatar">
-                                <mat-icon>person</mat-icon>
+                <mat-form-field appearance="outline" class="evaluation-field">
+                    <mat-label>EvaluaciÃ³n</mat-label>
+                    <mat-select formControlName="evaluationId">
+                        <mat-option *ngFor="let evaluation of evaluations" [value]="evaluation.id">
+                            <div class="evaluation-option">
+                                <span>{{ evaluation.name }} ({{ evaluation.type }})</span>
+                                <span *ngIf="evaluation.status === 'completed'" class="status-indicator completed">
+                                    <mat-icon>check_circle</mat-icon> Completado
+                                </span>
+                                <span *ngIf="!evaluation.status || evaluation.status === 'pending'"
+                                    class="status-indicator pending">
+                                    <mat-icon>hourglass_empty</mat-icon>
+                                </span>
                             </div>
-                            <span class="student-name">{{ row.studentName }}</span>
-                        </div>
-                    </td>
-                </ng-container>
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>assignment</mat-icon>
+                </mat-form-field>
 
-                <!-- Columna de Puntuación -->
-                <ng-container matColumnDef="score">
-                    <th mat-header-cell *matHeaderCellDef>Calificación</th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="score-cell">
-                            <mat-form-field appearance="outline" class="score-field">
-                                <mat-label>Puntos</mat-label>
-                                <input matInput 
-                                       type="number" 
-                                       [(ngModel)]="row.score" 
-                                       min="0" 
-                                       max="100"
-                                       [class]="getScoreClass(row.score)"
-                                       placeholder="0-100">
-                                <mat-icon matSuffix>grade</mat-icon>
+                <button mat-raised-button color="primary" (click)="onLoadGrades()" [disabled]="filterForm.invalid"
+                    class="load-button">
+                    <mat-icon>download</mat-icon>
+                    Cargar Estudiantes
+                </button>
+            </form>
+        </mat-card>
+
+        <!-- Tarjetas de estadÃ­sticas -->
+        <div class="stats-cards" *ngIf="gradingData.length > 0">
+            <mat-card class="stat-card total-card">
+                <mat-icon>people</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Total Estudiantes</span>
+                    <span class="stat-value">{{ students.length }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card graded-card">
+                <mat-icon>check_circle</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Calificados</span>
+                    <span class="stat-value">{{ getGradedCount() }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card pending-card">
+                <mat-icon>pending</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Pendientes</span>
+                    <span class="stat-value">{{ getPendingCount() }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card average-card">
+                <mat-icon>trending_up</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Promedio</span>
+                    <span class="stat-value">{{ getAverageScore() }}</span>
+                </div>
+            </mat-card>
+        </div>
+
+        <!-- InformaciÃ³n de evaluaciÃ³n seleccionada -->
+        <mat-card class="evaluation-info" *ngIf="gradingData.length > 0">
+            <div class="info-row">
+                <div class="info-item">
+                    <mat-icon>book</mat-icon>
+                    <div class="info-text">
+                        <span class="info-label">Materia</span>
+                        <span class="info-value">{{ getSelectedSubjectName() }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <mat-icon>assignment</mat-icon>
+                    <div class="info-text">
+                        <span class="info-label">EvaluaciÃ³n</span>
+                        <span class="info-value">{{ getSelectedEvaluationName() }}</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+
+        <!-- Tabla de calificaciones -->
+        <mat-card class="table-card" *ngIf="gradingData.length > 0">
+            <div class="table-container">
+                <table mat-table [dataSource]="gradingData" class="grading-table">
+                    <!-- Columna de Estudiante -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="student-cell">
+                                <div class="student-avatar">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <span class="student-name">{{ row.studentName }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna de Estado -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Estado</th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="status-cell">
+                                <mat-chip [class]="getStatusClass(row.status)">
+                                    <mat-icon>{{ getStatusIcon(row.status) }}</mat-icon>
+                                    {{ getStatusText(row.status) }}
+                                </mat-chip>
+                                <button mat-icon-button [color]="row.notSubmitted ? 'warn' : 'accent'"
+                                    (click)="toggleNotSubmitted(row)"
+                                    [matTooltip]="row.notSubmitted ? 'Desmarcar como No EntregÃ³' : 'Marcar como No EntregÃ³'"
+                                    class="toggle-not-submitted">
+                                    <mat-icon>{{ row.notSubmitted ? 'undo' : 'block' }}</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna de PuntuaciÃ³n -->
+                    <ng-container matColumnDef="score">
+                        <th mat-header-cell *matHeaderCellDef>CalificaciÃ³n</th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="score-cell">
+                                <!-- Mostrar calificaciÃ³n actual si estÃ¡ calificado -->
+                                <div class="current-score" *ngIf="row.status === 'graded' && row.score > 0">
+                                    <span class="score-display" [class]="getScoreClass(row.score)">
+                                        {{ row.score }}
+                                    </span>
+                                    <span class="score-label">Puntos</span>
+                                </div>
+
+                                <!-- Mostrar mensaje si no entregÃ³ -->
+                                <div class="not-submitted-message" *ngIf="row.status === 'not-submitted'">
+                                    <mat-icon>cancel</mat-icon>
+                                    <span>No entregÃ³ (0 puntos)</span>
+                                </div>
+
+                                <!-- Campo de calificaciÃ³n solo si no es "no entregado" -->
+                                <mat-form-field appearance="outline" class="score-field"
+                                    *ngIf="row.status !== 'not-submitted'">
+                                    <mat-label>{{ row.status === 'graded' ? 'Modificar' : 'Calificar' }}</mat-label>
+                                    <input matInput type="number" [(ngModel)]="row.score" min="0" max="100"
+                                        [class]="getScoreClass(row.score)" placeholder="0-100">
+                                    <mat-icon matSuffix>grade</mat-icon>
+                                </mat-form-field>
+                                <span class="score-badge" [class]="getScoreClass(row.score)"
+                                    *ngIf="row.score !== null && row.score !== undefined && row.score !== ''">
+                                    {{ getScoreClass(row.score) === 'excellent' ? 'Excelente' :
+                                    getScoreClass(row.score) === 'good' ? 'Bueno' :
+                                    getScoreClass(row.score) === 'regular' ? 'Regular' : 'Insuficiente' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna de RetroalimentaciÃ³n -->
+                    <ng-container matColumnDef="feedback">
+                        <th mat-header-cell *matHeaderCellDef>RetroalimentaciÃ³n</th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-form-field appearance="outline" class="feedback-field">
+                                <mat-label>Comentarios</mat-label>
+                                <input matInput [(ngModel)]="row.feedback" placeholder="Escribe comentarios opcionales">
+                                <mat-icon matPrefix>comment</mat-icon>
                             </mat-form-field>
-                            <span class="score-badge" [class]="getScoreClass(row.score)" *ngIf="row.score !== null && row.score !== undefined && row.score !== ''">
-                                {{ getScoreClass(row.score) === 'excellent' ? 'Excelente' : 
-                                   getScoreClass(row.score) === 'good' ? 'Bueno' : 
-                                   getScoreClass(row.score) === 'regular' ? 'Regular' : 'Insuficiente' }}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
+                        </td>
+                    </ng-container>
 
-                <!-- Columna de Retroalimentación -->
-                <ng-container matColumnDef="feedback">
-                    <th mat-header-cell *matHeaderCellDef>Retroalimentación</th>
-                    <td mat-cell *matCellDef="let row">
-                        <mat-form-field appearance="outline" class="feedback-field">
-                            <mat-label>Comentarios</mat-label>
-                            <input matInput 
-                                   [(ngModel)]="row.feedback" 
-                                   placeholder="Escribe comentarios opcionales">
-                            <mat-icon matPrefix>comment</mat-icon>
-                        </mat-form-field>
-                    </td>
-                </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="grade-row"></tr>
+                </table>
+            </div>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="grade-row"></tr>
-            </table>
+            <div class="actions">
+                <button mat-raised-button (click)="loadStudents()" class="refresh-button">
+                    <mat-icon>refresh</mat-icon>
+                    Recargar
+                </button>
+                <button mat-raised-button color="primary" (click)="saveGrades()" class="save-button">
+                    <mat-icon>save</mat-icon>
+                    Guardar Calificaciones
+                </button>
+            </div>
+        </mat-card>
+
+        <!-- Sin datos -->
+        <div class="no-data" *ngIf="gradingData.length === 0">
+            <mat-icon>grading</mat-icon>
+            <p>No hay estudiantes para calificar</p>
+            <span class="sub-text">Selecciona una materia y evaluaciÃ³n para comenzar</span>
+        </div>
+    </div>
+
+    <!-- Vista Global -->
+    <div *ngIf="currentView === 'global'" class="global-view">
+        <!-- Filtros Globales -->
+        <mat-card class="filters-card">
+            <form [formGroup]="globalFiltersForm" class="filter-form">
+                <mat-form-field appearance="outline" class="subject-field">
+                    <mat-label>Materia (Opcional)</mat-label>
+                    <mat-select formControlName="subjectId">
+                        <mat-option [value]="null">Todas las materias</mat-option>
+                        <mat-option *ngFor="let subject of subjects" [value]="subject.id">
+                            {{ subject.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>book</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="evaluation-field">
+                    <mat-label>EvaluaciÃ³n (Opcional)</mat-label>
+                    <mat-select formControlName="evaluationId">
+                        <mat-option [value]="null">Todas las evaluaciones</mat-option>
+                        <mat-option *ngFor="let evaluation of evaluations" [value]="evaluation.id">
+                            {{ evaluation.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>assignment</mat-icon>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" (click)="loadGlobalGrades()" class="load-button">
+                    <mat-icon>search</mat-icon>
+                    Consultar
+                </button>
+            </form>
+        </mat-card>
+
+        <!-- EstadÃ­sticas Globales -->
+        <div class="stats-cards global-stats" *ngIf="globalGradesData.length > 0">
+            <mat-card class="stat-card total-card">
+                <mat-icon>people</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Total Estudiantes</span>
+                    <span class="stat-value">{{ getGlobalTotalStudents() }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card average-card">
+                <mat-icon>trending_up</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">Promedio General</span>
+                    <span class="stat-value">{{ getGlobalAverageScore() }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card highest-card">
+                <mat-icon>arrow_upward</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">CalificaciÃ³n MÃ¡s Alta</span>
+                    <span class="stat-value">{{ getGlobalHighestScore() }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card lowest-card">
+                <mat-icon>arrow_downward</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-label">CalificaciÃ³n MÃ¡s Baja</span>
+                    <span class="stat-value">{{ getGlobalLowestScore() }}</span>
+                </div>
+            </mat-card>
         </div>
 
-        <div class="actions">
-            <button mat-raised-button (click)="loadStudents()" class="refresh-button">
-                <mat-icon>refresh</mat-icon>
-                Recargar
-            </button>
-            <button mat-raised-button color="primary" (click)="saveGrades()" class="save-button">
-                <mat-icon>save</mat-icon>
-                Guardar Calificaciones
-            </button>
-        </div>
-    </mat-card>
+        <!-- Tabla Global -->
+        <mat-card class="table-card" *ngIf="globalGradesData.length > 0">
+            <div class="table-container">
+                <table mat-table [dataSource]="globalGradesData" class="global-grades-table">
+                    <!-- Columna Estudiante -->
+                    <ng-container matColumnDef="student">
+                        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="student-cell">
+                                <div class="student-avatar">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <span class="student-name">{{ row.studentName }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
 
-    <!-- Sin datos -->
-    <div class="no-data" *ngIf="gradingData.length === 0">
-        <mat-icon>grading</mat-icon>
-        <p>No hay estudiantes para calificar</p>
-        <span class="sub-text">Selecciona una materia y evaluación para comenzar</span>
+                    <!-- Columna Evaluaciones -->
+                    <ng-container matColumnDef="evaluations">
+                        <th mat-header-cell *matHeaderCellDef>Evaluaciones</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="total-badge">{{ row.evaluationsCount }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna Promedio -->
+                    <ng-container matColumnDef="average">
+                        <th mat-header-cell *matHeaderCellDef>Promedio</th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="average-cell">
+                                <span class="count-badge" [class]="getAverageClass(row.average)"
+                                    *ngIf="row.average && row.average > 0">
+                                    {{ row.average }}
+                                </span>
+                                <span class="no-grade" *ngIf="!row.average || row.average === 0">
+                                    Sin calificaciones
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna MÃ¡s Alta -->
+                    <ng-container matColumnDef="highest">
+                        <th mat-header-cell *matHeaderCellDef>MÃ¡s Alta</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="count-badge excellent" *ngIf="row.highest && row.highest > 0">{{ row.highest
+                                }}</span>
+                            <span class="no-grade" *ngIf="!row.highest || row.highest === 0">-</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna MÃ¡s Baja -->
+                    <ng-container matColumnDef="lowest">
+                        <th mat-header-cell *matHeaderCellDef>MÃ¡s Baja</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="count-badge poor" *ngIf="row.lowest && row.lowest > 0">{{ row.lowest }}</span>
+                            <span class="no-grade" *ngIf="!row.lowest || row.lowest === 0">-</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna Total Calificaciones -->
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef>Total</th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="total-badge">{{ row.totalGrades }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Columna Acciones -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                        <td mat-cell *matCellDef="let row">
+                            <button mat-raised-button color="primary" (click)="viewStudentDetail(row.studentId)"
+                                class="action-button">
+                                <mat-icon>visibility</mat-icon>
+                                Ver Detalles
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="globalDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: globalDisplayedColumns;" class="global-row"></tr>
+                </table>
+            </div>
+        </mat-card>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="loadingGlobal">
+            <mat-spinner></mat-spinner>
+            <p>Cargando calificaciones...</p>
+        </div>
+
+        <!-- Sin datos -->
+        <div class="no-data" *ngIf="!loadingGlobal && globalGradesData.length === 0">
+            <mat-icon>assessment</mat-icon>
+            <p>No hay calificaciones para mostrar</p>
+            <span class="sub-text">Usa los filtros para consultar las calificaciones</span>
+        </div>
+    </div>
+
+    <!-- Vista Final -->
+    <div *ngIf="currentView === 'final'" class="final-view">
+        <!-- Filtro de Materia -->
+        <mat-card class="filters-card">
+            <form [formGroup]="filterForm" class="filter-form">
+                <mat-form-field appearance="outline" class="subject-field">
+                    <mat-label>Selecciona Materia</mat-label>
+                    <mat-select formControlName="subjectId" (selectionChange)="loadFinalGrades()">
+                        <mat-option *ngFor="let subject of subjects" [value]="subject.id">
+                            {{ subject.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>book</mat-icon>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" (click)="loadFinalGrades()" 
+                        [disabled]="!filterForm.get('subjectId')?.value" class="load-button">
+                    <mat-icon>calculate</mat-icon>
+                    Calcular Promedios
+                </button>
+            </form>
+        </mat-card>
+
+        <!-- Escala Evaluativa -->
+        <mat-card class="scale-card" *ngIf="selectedSubjectForFinal && selectedSubjectForFinal.gradeScale">
+            <div class="scale-header">
+                <mat-icon>assessment</mat-icon>
+                <h3>Escala Evaluativa - {{ selectedSubjectForFinal.name }}</h3>
+            </div>
+            <div class="scale-items">
+                <div class="scale-item superior">
+                    <span class="scale-range">{{ selectedSubjectForFinal.gradeScale.superiorMin }} - 100</span>
+                    <span class="scale-label">{{ selectedSubjectForFinal.gradeScale.superiorLabel || 'Superior' }}</span>
+                </div>
+                <div class="scale-item high">
+                    <span class="scale-range">{{ selectedSubjectForFinal.gradeScale.highMin }} - {{ selectedSubjectForFinal.gradeScale.superiorMin - 0.1 }}</span>
+                    <span class="scale-label">{{ selectedSubjectForFinal.gradeScale.highLabel || 'Alto' }}</span>
+                </div>
+                <div class="scale-item basic">
+                    <span class="scale-range">{{ selectedSubjectForFinal.gradeScale.basicMin }} - {{ selectedSubjectForFinal.gradeScale.highMin - 0.1 }}</span>
+                    <span class="scale-label">{{ selectedSubjectForFinal.gradeScale.basicLabel || 'Básico' }}</span>
+                </div>
+                <div class="scale-item low">
+                    <span class="scale-range">{{ selectedSubjectForFinal.gradeScale.lowMin }} - {{ selectedSubjectForFinal.gradeScale.basicMin - 0.1 }}</span>
+                    <span class="scale-label">{{ selectedSubjectForFinal.gradeScale.lowLabel || 'Bajo' }}</span>
+                </div>
+                <div class="scale-item insufficient">
+                    <span class="scale-range">0 - {{ selectedSubjectForFinal.gradeScale.lowMin - 0.1 }}</span>
+                    <span class="scale-label">Insuficiente</span>
+                </div>
+            </div>
+        </mat-card>
+
+        <!-- Tabla de Promedios -->
+        <mat-card class="grades-table-card" *ngIf="filterForm.get('subjectId')?.value">
+            <div *ngIf="loadingGlobal" class="loading-spinner">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Calculando promedios finales...</p>
+            </div>
+
+            <div class="table-container" *ngIf="!loadingGlobal && finalGradesData.length > 0">
+                <table mat-table [dataSource]="finalGradesData" class="final-grades-table">
+                    <!-- Student Column -->
+                    <ng-container matColumnDef="student">
+                        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="student-cell">
+                                <div class="student-avatar">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <span class="student-name">{{ element.studentName }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Tasks Column -->
+                    <ng-container matColumnDef="tasks">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="header-with-icon">
+                                <mat-icon>assignment</mat-icon>
+                                <span>Tareas</span>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="grade-detail" *ngIf="element.tasksCount > 0; else noData">
+                                <span class="grade-value" [class]="getPerformanceClass(element.tasksAverage)">
+                                    {{ element.tasksAverage }}
+                                </span>
+                                <span class="grade-count">{{ element.tasksCount }} eval.</span>
+                            </div>
+                            <ng-template #noData>
+                                <span class="no-data">Sin datos</span>
+                            </ng-template>
+                        </td>
+                    </ng-container>
+
+                    <!-- Exams Column -->
+                    <ng-container matColumnDef="exams">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="header-with-icon">
+                                <mat-icon>quiz</mat-icon>
+                                <span>Exámenes</span>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="grade-detail" *ngIf="element.examsCount > 0; else noData">
+                                <span class="grade-value" [class]="getPerformanceClass(element.examsAverage)">
+                                    {{ element.examsAverage }}
+                                </span>
+                                <span class="grade-count">{{ element.examsCount }} eval.</span>
+                            </div>
+                            <ng-template #noData>
+                                <span class="no-data">Sin datos</span>
+                            </ng-template>
+                        </td>
+                    </ng-container>
+
+                    <!-- Projects Column -->
+                    <ng-container matColumnDef="projects">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="header-with-icon">
+                                <mat-icon>folder</mat-icon>
+                                <span>Proyectos</span>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="grade-detail" *ngIf="element.projectsCount > 0; else noData">
+                                <span class="grade-value" [class]="getPerformanceClass(element.projectsAverage)">
+                                    {{ element.projectsAverage }}
+                                </span>
+                                <span class="grade-count">{{ element.projectsCount }} eval.</span>
+                            </div>
+                            <ng-template #noData>
+                                <span class="no-data">Sin datos</span>
+                            </ng-template>
+                        </td>
+                    </ng-container>
+
+                    <!-- Attendance Column -->
+                    <ng-container matColumnDef="attendance">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="header-with-icon">
+                                <mat-icon>event_available</mat-icon>
+                                <span>Asistencia</span>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="grade-detail" *ngIf="element.attendanceAverage && element.attendanceAverage > 0; else noData">
+                                <span class="grade-value" [class]="getPerformanceClass(element.attendanceAverage)">
+                                    {{ element.attendanceAverage }}
+                                </span>
+                                <span class="grade-count">{{ element.attendancePercentage }}%</span>
+                            </div>
+                            <ng-template #noData>
+                                <span class="no-data">Sin datos</span>
+                            </ng-template>
+                        </td>
+                    </ng-container>
+
+                    <!-- Average Column -->
+                    <ng-container matColumnDef="average">
+                        <th mat-header-cell *matHeaderCellDef>Promedio Final</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="average-display">
+                                <span class="average-value" [class]="getPerformanceClass(element.average)">
+                                    {{ element.average }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Performance Column -->
+                    <ng-container matColumnDef="performance">
+                        <th mat-header-cell *matHeaderCellDef>Desempeño</th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-chip [class]="getPerformanceClass(element.average)" class="performance-chip">
+                                {{ getPerformanceLevel(element.average) }}
+                            </mat-chip>
+                        </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Estado</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="status-badge" [class.passing]="element.average >= 70" [class.failing]="element.average < 70">
+                                <mat-icon>{{ element.average >= 70 ? 'check_circle' : 'cancel' }}</mat-icon>
+                                <span>{{ element.average >= 70 ? 'Aprobado' : 'Reprobado' }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="finalDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: finalDisplayedColumns;" class="final-row"></tr>
+                </table>
+            </div>
+
+            <div *ngIf="!loadingGlobal && finalGradesData.length === 0" class="no-data">
+                <mat-icon>assessment</mat-icon>
+                <p>No hay datos disponibles</p>
+                <span class="sub-text">Selecciona una materia para ver los promedios finales</span>
+            </div>
+        </mat-card>
     </div>
 </div>

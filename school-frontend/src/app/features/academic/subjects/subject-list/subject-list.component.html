@@ -116,6 +116,10 @@
                                 class="edit-btn">
                                 <mat-icon>edit</mat-icon>
                             </button>
+                            <button mat-icon-button (click)="openScaleDialog(row)" matTooltip="Configurar Escala"
+                                class="scale-btn">
+                                <mat-icon>tune</mat-icon>
+                            </button>
                             <button mat-icon-button (click)="deleteSubject(row.id)" matTooltip="Eliminar"
                                 class="delete-btn">
                                 <mat-icon>delete</mat-icon>

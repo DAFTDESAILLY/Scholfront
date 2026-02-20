@@ -9,36 +9,56 @@
 // CSS VARIABLES - MINIMALIST / AMIGABLE THEME (Rose/Mint)
 // =============================================================================
 :root {
-  // Primary Palette (Rose)
-  --primary-rose-light: #FFE4E9;
-  --primary-rose: #F2A2B1;
-  --primary-rose-dark: #E07A8D;
+  // Primary Palette (Rosa Pastel Solicitado - #ecbcbc)
+  --primary-color: #ecbcbc;
+  --primary-light: #f9eaea;
+  --primary-dark: #d4a5a5; // Darker variant for contrast
 
-  // Secondary/Accent (Mint/Sage)
-  --accent-mint: #A8E6CF;
-  --accent-sage: #7FB3B3;
+  // Secondary/Accent (Azul Acero - #a8c8e5)
+  --secondary-color: #a8c8e5;
+  --secondary-light: #eef4f9;
+  --secondary-dark: #88accb;
+
+  // Accent (Azul Lavanda - #b5cbea)
+  --accent-color: #b5cbea;
+  --accent-light: #f0f4fb;
+  --accent-dark: #91abc9;
 
   // Feedback Colors
-  --color-success: #81C995;
-  --color-warning: #FFD89B;
-  --color-danger: #FF8B94;
+  // Success (Menta - #baeeca)
+  --color-success: #baeeca;
+  --color-success-light: rgba(186, 238, 202, 0.2);
+  --color-success-dark: #8ecf9f;
+
+  // Information (Aqua - #b6f0ef)
+  --color-info: #b6f0ef;
+  --color-info-light: rgba(182, 240, 239, 0.2);
+  --color-info-dark: #8bd4d3;
+
+  --color-warning: #FFDDA9; // Integrated pastel amber
+  --color-warning-light: rgba(255, 221, 169, 0.2);
+  --color-warning-dark: #e1b376;
+
+  --color-danger: #f7bdbd; // Integrated pastel red
+  --color-danger-light: rgba(247, 189, 189, 0.15);
+  --color-danger-dark: #c58686;
 
   // Neutral / Surface
-  --neutral-900: #2C3E50; // Textos principales
-  --neutral-700: #5A6C7D; // Textos secundarios
-  --neutral-500: #95A5A6; // Textos deshabilitados
-  --neutral-300: #E8ECEF; // Bordes
-  --neutral-100: #F8FAFB; // Fondos claros
+  --neutral-900: #2d3748; // Softer deep navy for pastel harmony
+  --neutral-700: #4a5568;
+  --neutral-500: #718096;
+  --neutral-300: #e2e8f0;
+  --neutral-100: #f7fafc;
   --white: #FFFFFF;
 
-  --bg-body: #FAFBFC;
+  --bg-body: #f8fafc; // Very light clean background
   --bg-card: #FFFFFF;
 
   // Effects
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --shadow-primary: 0 4px 16px rgba(242, 162, 177, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(194, 130, 130, 0.15);
+  --shadow-primary: 0 4px 20px rgba(194, 130, 130, 0.3);
 
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -97,7 +117,7 @@ h6 {
 
 // Buttons
 .mat-mdc-raised-button.mat-primary {
-  background-color: var(--primary-rose) !important;
+  background-color: var(--primary-color) !important;
   color: var(--white) !important;
   border-radius: var(--radius-sm) !important;
   box-shadow: none !important;
@@ -106,17 +126,17 @@ h6 {
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--primary-rose-dark) !important;
+    background-color: var(--primary-dark) !important;
     transform: translateY(-1px);
     box-shadow: var(--shadow-primary) !important;
   }
 }
 
 .mat-mdc-button.mat-primary {
-  color: var(--primary-rose) !important;
+  color: var(--primary-color) !important;
 
   &:hover {
-    background-color: var(--primary-rose-light) !important;
+    background-color: var(--primary-light) !important;
   }
 }
 
@@ -130,8 +150,8 @@ h6 {
   }
 
   &.mat-focused .mat-mdc-text-field-wrapper {
-    border-color: var(--primary-rose);
-    box-shadow: 0 0 0 3px var(--primary-rose-light);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
   }
 
   // Hide default underline
@@ -160,7 +180,7 @@ input.mat-mdc-input-element {
 // =============================================================================
 
 .text-primary {
-  color: var(--primary-rose);
+  color: var(--primary-color);
 }
 
 .text-secondary {
@@ -176,11 +196,16 @@ input.mat-mdc-input-element {
 }
 
 .bg-primary-light {
-  background-color: var(--primary-rose-light);
+  background-color: var(--primary-light);
 }
 
-.bg-mint {
-  background-color: var(--accent-mint);
+.bg-accent-light {
+  background-color: var(--accent-light);
+}
+
+.bg-info-light {
+  background-color: var(--color-info);
+  opacity: 0.1;
 }
 
 .card-v2 {
@@ -244,7 +269,7 @@ input.mat-mdc-input-element {
         transition: background-color 0.2s;
 
         &:hover {
-          background-color: var(--primary-rose-light);
+          background-color: var(--primary-light);
         }
 
         td.mat-mdc-cell {

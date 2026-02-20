@@ -42,7 +42,7 @@ export class EvaluationListComponent implements OnInit {
     filteredEvaluations: Evaluation[] = [];
     subjects: Subject[] = [];
     filterForm: FormGroup;
-    displayedColumns: string[] = ['evaluation', 'type', 'subject', 'scoring', 'dueDate', 'actions'];
+    displayedColumns: string[] = ['evaluation', 'type', 'subject', 'status', 'scoring', 'dueDate', 'actions'];
     textFilter: string = '';
 
     constructor(
@@ -108,7 +108,7 @@ export class EvaluationListComponent implements OnInit {
         // Filtro por texto
         if (this.textFilter) {
             const searchTerm = this.textFilter.toLowerCase();
-            filtered = filtered.filter(e => 
+            filtered = filtered.filter(e =>
                 e.name.toLowerCase().includes(searchTerm)
             );
         }
